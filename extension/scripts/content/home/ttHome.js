@@ -1,6 +1,7 @@
 "use strict";
 
 let networthInterval = false;
+let featureManager = new FeatureManager();
 
 (async () => {
 	if (isFlying() || isAbroad()) return;
@@ -8,22 +9,33 @@ let networthInterval = false;
 	await loadDatabase();
 	console.log("TT: Home - Loading script. ");
 
+	loadHome();
+
 	storageListeners.settings.push(loadHome);
 	storageListeners.userdata.push(async (oldUserdata) => {
 		if (oldUserdata.networth && userdata.networth && oldUserdata.networth.date !== userdata.networth.date) {
-			await displayNetworth();
+			featureManager.reload('Live Networth');
 		}
 	});
-
-	loadHome();
 
 	console.log("TT: Home - Script loaded.");
 })();
 
 function loadHome() {
 	requireContent().then(async () => {
-		await displayNetworth().catch((error) => console.error("Couldn't load the live networth.", error));
-		await displayEffectiveBattleStats().catch((error) => console.error("Couldn't load the effective battle stats.", error));
+		featureManager.clear();
+		featureManager.load({
+			name: 'Live Networth',
+			enabled: !!(settings.apiUsage.user.networth && settings.pages.home.networthDetails && hasAPIData()),
+			func: displayNetworth,
+			runWhenDisabled: true
+		});
+		featureManager.load({
+			name: 'Effective Battle Stats',
+			enabled: settings.pages.home.effectiveStats,
+			func: displayEffectiveBattleStats,
+			runWhenDisabled: true
+		});
 	});
 }
 
@@ -46,119 +58,134 @@ async function displayNetworth() {
 			return;
 		}
 
-		let networthRow = newRow("(Live) Networth", `$${formatNumber(userdata.networth.total)}`);
-		networthRow.style.backgroundColor = "#65c90069";
+		if (settings.apiUsage.user.networth && settings.pages.home.networthDetails && hasAPIData()) {
+			const { content } = createContainer("Live Networth", {
+				collapsible: false,
+				showHeader: false,
+				parentElement: document.find("h5=General Information").parentElement.nextElementSibling.find("ul.info-cont-wrap"),
+			});
 
-		// Networth last updated info icon
-		let infoIcon = document.newElement({
-			type: "i",
-			class: "networth-info-icon",
-			attributes: {
-				seconds: (Date.now() - userdata.networth.date) / 1000,
-				title: "Last updated " + formatTime({ milliseconds: userdata.networth.date }, { type: "ago" }),
-				style: "margin-left: 9px;",
-			},
-		});
-		networthRow.find(".desc").appendChild(infoIcon);
-		content.appendChild(networthRow);
-
-		// Update 'last updated'
-		networthInterval = setInterval(() => {
-			let seconds = parseInt(infoIcon.getAttribute("seconds")) + 1;
-
-			infoIcon.setAttribute("title", `Last updated: ${formatTime({ milliseconds: Date.now() - seconds * 1000 }, { type: "ago" })}`);
-			infoIcon.setAttribute("seconds", `${seconds}`);
-		}, 1000);
-
-		const table = document.newElement({
-			type: "table",
-			class: "tt-networth-comparison",
-			children: [
-				document.newElement({
-					type: "tr",
-					children: ["Type", "Value", "Change"].map((value) => document.newElement({ type: "th", text: value })),
-				}),
-			],
-		});
-
-		for (let type of [
-			"Cash (Wallet and Vault)",
-			"Points",
-			"Items",
-			"Bazaar",
-			"Display Case",
-			"Bank",
-			"Trade",
-			"Piggy Bank",
-			"Stock Market",
-			"Company",
-			"Bookie",
-			"Auction House",
-			"Cayman",
-			"Total",
-		]) {
-			let current, previous;
-
-			let name = type.toLowerCase().replaceAll(" ", "");
-			if (type === "Trade") name = "pending";
-
-			if (type.includes("Cash")) {
-				current = userdata.networth.wallet + userdata.networth.vault;
-				previous = userdata.personalstats.networthwallet + userdata.personalstats.networthvault;
-			} else if (type === "Total") {
-				current = userdata.networth.total;
-				previous = userdata.personalstats.networth;
-			} else {
-				current = userdata.networth[name];
-				previous = userdata.personalstats[`networth` + name];
+			if (!userdata.networth || Date.now() - userdata.networth.date >= TO_MILLIS.MINUTES * 5) {
+				chrome.runtime.sendMessage({ action: "updateData", type: "networth" });
+				return;
 			}
-			if (current === previous) continue;
 
-			const isPositive = current > previous;
+			let networthRow = newRow("(Live) Networth", `$${formatNumber(userdata.networth.total)}`);
+			networthRow.style.backgroundColor = "#65c90069";
 
-			table.appendChild(
-				document.newElement({
-					type: "tr",
-					children: [
-						document.newElement({ type: "td", text: type }),
-						document.newElement({ type: "td", text: `$${formatNumber(current, { shorten: true })}` }),
-						document.newElement({
-							type: "td",
-							text: `${isPositive ? "+" : "-"}$${formatNumber(Math.abs(current - previous), { shorten: true })}`,
-							class: isPositive ? "positive" : "negative",
-						}),
-					],
-				})
-			);
-		}
+			// Networth last updated info icon
+			let infoIcon = document.newElement({
+				type: "i",
+				class: "networth-info-icon",
+				attributes: {
+					seconds: (Date.now() - userdata.networth.date) / 1000,
+					title: "Last updated " + formatTime({ milliseconds: userdata.networth.date }, { type: "ago" }),
+					style: "margin-left: 9px;",
+				},
+			});
+			networthRow.find(".desc").appendChild(infoIcon);
+			content.appendChild(networthRow);
 
-		content.appendChild(
-			document.newElement({
-				type: "li",
-				class: "comparison",
-				children: [
-					table,
-					document.newElement({ type: "div", class: "tt-networth-footer", text: "Networth change compared to Torn's last known Networth" }),
-				],
-			})
-		);
+			// Update 'last updated'
+			networthInterval = setInterval(() => {
+				let seconds = parseInt(infoIcon.getAttribute("seconds")) + 1;
 
-		function newRow(name, value) {
-			return document.newElement({
-				type: "li",
+				infoIcon.setAttribute("title", `Last updated: ${formatTime({ milliseconds: Date.now() - seconds * 1000 }, { type: "ago" })}`);
+				infoIcon.setAttribute("seconds", seconds);
+			}, 1000);
+
+			const table = document.newElement({
+				type: "table",
+				class: "tt-networth-comparison",
 				children: [
 					document.newElement({
-						type: "div",
-						class: "divider",
-						children: [document.newElement({ type: "span", text: name, style: { backgroundColor: "transparent" } })],
-					}),
-					document.newElement({
-						type: "div",
-						class: "desc",
-						children: [document.newElement({ type: "span", text: value, style: { paddingLeft: "3px" } })],
+						type: "tr",
+						children: ["Type", "Value", "Change"].map((value) => document.newElement({ type: "th", text: value })),
 					}),
 				],
 			});
+
+			for (let type of [
+				"Cash (Wallet and Vault)",
+				"Points",
+				"Items",
+				"Bazaar",
+				"Display Case",
+				"Bank",
+				"Trade",
+				"Piggy Bank",
+				"Stock Market",
+				"Company",
+				"Bookie",
+				"Auction House",
+				"Cayman",
+				"Total",
+			]) {
+				let current, previous;
+
+				let name = type.toLowerCase().replaceAll(" ", "");
+				if (type === "Trade") name = "pending";
+
+				if (type.includes("Cash")) {
+					current = userdata.networth.wallet + userdata.networth.vault;
+					previous = userdata.personalstats.networthwallet + userdata.personalstats.networthvault;
+				} else if (type === "Total") {
+					current = userdata.networth.total;
+					previous = userdata.personalstats.networth;
+				} else {
+					current = userdata.networth[name];
+					previous = userdata.personalstats[`networth` + name];
+				}
+				if (current === previous) continue;
+
+				const isPositive = current > previous;
+
+				table.appendChild(
+					document.newElement({
+						type: "tr",
+						children: [
+							document.newElement({ type: "td", text: type }),
+							document.newElement({ type: "td", text: `$${formatNumber(current, { shorten: true })}` }),
+							document.newElement({
+								type: "td",
+								text: `${isPositive ? "+" : "-"}$${formatNumber(Math.abs(current - previous), { shorten: true })}`,
+								class: isPositive ? "positive" : "negative",
+							}),
+						],
+					})
+				);
+			}
+
+			content.appendChild(
+				document.newElement({
+					type: "li",
+					class: "comparison",
+					children: [
+						table,
+						document.newElement({ type: "div", class: "tt-networth-footer", text: "Networth change compared to Torn's last known Networth" }),
+					],
+				})
+			);
+
+			function newRow(name, value) {
+				return document.newElement({
+					type: "li",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "divider",
+							children: [document.newElement({ type: "span", text: name, style: { backgroundColor: "transparent" } })],
+						}),
+						document.newElement({
+							type: "div",
+							class: "desc",
+							children: [document.newElement({ type: "span", text: value, style: { paddingLeft: "3px" } })],
+						}),
+					],
+				});
+			}
+		} else {
+			removeContainer("Live Networth");
 		}
 	} else {
 		removeContainer("Live Networth");
