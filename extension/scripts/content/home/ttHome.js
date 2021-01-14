@@ -14,7 +14,7 @@ let featureManager = new FeatureManager();
 	storageListeners.settings.push(loadHome);
 	storageListeners.userdata.push(async (oldUserdata) => {
 		if (oldUserdata.networth && userdata.networth && oldUserdata.networth.date !== userdata.networth.date) {
-			featureManager.reload('Live Networth');
+			featureManager.reload("Live Networth");
 		}
 	});
 
@@ -25,16 +25,16 @@ function loadHome() {
 	requireContent().then(async () => {
 		featureManager.clear();
 		featureManager.load({
-			name: 'Live Networth',
+			name: "Live Networth",
 			enabled: !!(settings.apiUsage.user.networth && settings.pages.home.networthDetails && hasAPIData()),
 			func: displayNetworth,
-			runWhenDisabled: true
+			runWhenDisabled: true,
 		});
 		featureManager.load({
-			name: 'Effective Battle Stats',
+			name: "Effective Battle Stats",
 			enabled: settings.pages.home.effectiveStats,
 			func: displayEffectiveBattleStats,
-			runWhenDisabled: true
+			runWhenDisabled: true,
 		});
 	});
 }
