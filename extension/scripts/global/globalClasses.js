@@ -68,7 +68,7 @@ class FeatureManager {
 					return resolve();
 				})
 				.catch(error => {
-					console.log('Feature failed to load:', error);
+					console.error('Feature failed to load:', error);
 					this.addResult({ success: false, name: feature.name })
 					return resolve();
 				})
