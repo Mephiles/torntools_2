@@ -302,13 +302,13 @@
 
 #tt-page-status {
 	position: absolute;
-    top: 80px;
-    right: 100px;
-    background-color: white;
-    padding: 7px 14px;
+	top: 80px;
+	right: 100px;
+	background-color: white;
+	padding: 7px 14px;
 	width: 150px;
-    border-radius: 10px;
-    border: 2px solid lightgray;
+	border-radius: 10px;
+	border: 2px solid lightgray;
 }
 
 .tt-page-status-header {
@@ -317,6 +317,17 @@
 	margin-bottom: 5px;
 	display: inline-flex;
 	width: 100%;
+	cursor: pointer;
+}
+.tt-page-status-header.collapsed {
+	border-bottom: none;
+	margin-bottom: 0;
+}
+.tt-page-status-header.collapsed + .tt-page-status-content {
+	display: none;
+}
+.tt-page-status-header.collapsed i {
+	transform: rotate(-90deg);
 }
 .tt-page-status-header span {
 	width: 100%;

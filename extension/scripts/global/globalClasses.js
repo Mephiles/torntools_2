@@ -23,63 +23,78 @@ class FeatureManager {
 	}
 
 	createPopup() {
-		document.find('.content').appendChild(document.newElement({
-			id: 'tt-page-status',
-			type: 'div',
-			children: [
-				document.newElement({
-					type: 'div',
-					class: 'tt-page-status-header',
-					children: [
-						document.newElement({
-							type: 'span',
-							text: 'TornTools activated'
-						}),
-						document.newElement({
-							type: 'i',
-							class: 'icon fas fa-caret-down'
-						})
-					]
-				})
-			]
-		}));
+		let containerID = "tt-page-status";
+		let collapsed = containerID in filters.containers ? filters.containers[containerID] : false;
+
+		document.find(".content").appendChild(
+			document.newElement({
+				id: containerID,
+				type: "div",
+				children: [
+					document.newElement({
+						type: "div",
+						class: `tt-page-status-header ${collapsed ? "collapsed" : ""}`,
+						children: [
+							document.newElement({
+								type: "span",
+								text: "TornTools activated",
+							}),
+							document.newElement({
+								type: "i",
+								class: "icon fas fa-caret-down",
+							}),
+						],
+					}),
+					document.newElement({
+						type: "div",
+						class: "tt-page-status-content",
+					}),
+				],
+			})
+		);
+
+		document.find(".tt-page-status-header").onclick = function () {
+			this.classList.toggle("collapsed");
+			ttStorage.change({ filters: { containers: { [containerID]: this.classList.contains("collapsed") } } });
+		};
 	}
 
 	async load(feature) {
-		console.log('Loading feature:', feature.name);
+		console.log("Loading feature:", feature.name);
 		for (let _feature in this.features) {
 			if (_feature.name === feature.name) {
-				_feature = feature;  // Update the previous entry
+				_feature = feature; // Update the previous entry
 			}
 		}
 
 		if (!feature.enabled) {
-			console.log('Feature disabled:', feature.name);
+			console.log("Feature disabled:", feature.name);
 			this.addResult({ enabled: false, name: feature.name });
 			if (feature.runWhenDisabled) feature.func();
 			return;
 		}
 
 		await new Promise((resolve, reject) => {
-			feature.func()
+			feature
+				.func()
 				.then(() => {
-					console.log('Successfully loaded feature:', feature.name);
-					this.addResult({ success: true, name: feature.name })
+					console.log("Successfully loaded feature:", feature.name);
+					this.addResult({ success: true, name: feature.name });
 					return resolve();
 				})
-				.catch(error => {
-					console.error('Feature failed to load:', error);
-					this.addResult({ success: false, name: feature.name })
+				.catch((error) => {
+					console.error("Feature failed to load:", error);
+					this.addResult({ success: false, name: feature.name });
 					return resolve();
-				})
+				});
 		});
 	}
 
 	reload(name) {
-		console.log('reloading', name);
+		console.log("reloading", name);
 		for (let _feature in this.features) {
 			if (_feature.name === name) {
-				console.log('found', _feature);
+				console.log("found", _feature);
 				this.load(_feature);
 			}
 		}
@@ -87,24 +102,27 @@ class FeatureManager {
 
 	addResult(options) {
 		let newRow;
-		if (document.find(`tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, '-')}`)) {
-			newRow = document.find(`tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, '-')}`);
+		if (document.find(`tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`)) {
+			newRow = document.find(`tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`);
 		} else {
 			newRow = document.newElement({
-				type: 'div',
-				class: 'tt-page-status-feature',
-				id: `tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, '-')}`
+				type: "div",
+				class: "tt-page-status-feature",
+				id: `tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`,
 			});
-			document.find(`#tt-page-status`).appendChild(newRow);
+			document.find(`.tt-page-status-content`).appendChild(newRow);
 		}
 
-		if (options.enabled === false) newRow.innerHTML = `<span class="tt-page-status-feature-icon disabled"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
-		else if (options.success) newRow.innerHTML = `<span class="tt-page-status-feature-icon success"><i class="fas fa-check"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
-		else newRow.innerHTML = `<span class="tt-page-status-feature-icon failed"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+		if (options.enabled === false)
+			newRow.innerHTML = `<span class="tt-page-status-feature-icon disabled"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+		else if (options.success)
+			newRow.innerHTML = `<span class="tt-page-status-feature-icon success"><i class="fas fa-check"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+		else
+			newRow.innerHTML = `<span class="tt-page-status-feature-icon failed"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
 	}
 
 	clear() {
-		for (let element of document.findAll('.tt-page-status-feature')) {
+		for (let element of document.findAll(".tt-page-status-feature")) {
 			element.remove();
 		}
 	}
