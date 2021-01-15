@@ -25,7 +25,9 @@ class FeatureManager {
 		this.resultQueue = [];
 	}
 
-	createPopup() {
+	async createPopup() {
+		if (await checkMobile()) return;
+
 		let containerID = "tt-page-status";
 		let collapsed = containerID in filters.containers ? filters.containers[containerID] : false;
 
@@ -127,11 +129,13 @@ class FeatureManager {
 
 	reload(name) {
 		console.log("Reloading feature:", name);
-		let feature = this.findFeatureByName(name);
-		this.load(feature);
+		// let feature = this.findFeatureByName(name);
+		this.load(name);
 	}
 
-	addResult(options) {
+	async addResult(options) {
+		if (await checkMobile()) return;
+
 		if (!this.popupLoaded) {
 			this.resultQueue.push(options);
 			return;
