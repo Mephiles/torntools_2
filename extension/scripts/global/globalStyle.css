@@ -333,6 +333,9 @@
 	width: 100%;
 }
 
+.tt-page-status-feature {
+	padding: 1px 0;
+}
 .tt-page-status-feature-icon i {
 	margin-right: 3px;
 }

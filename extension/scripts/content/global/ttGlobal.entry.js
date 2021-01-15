@@ -1,70 +1,233 @@
 "use strict";
 
+let featureManager, globalFeatures;
+
 (async () => {
 	await loadDatabase();
 	console.log("TT: Global Entry - Loading script. ");
 
-	storageListeners.settings.push(loadGlobalEntry);
-	storageListeners.userdata.push(loadGlobalEntry);
+	featureManager = new FeatureManager();
+	globalFeatures = new GlobalFeatures();
 
-	await loadGlobalEntry();
+	globalFeatures.init();
+
+	storageListeners.settings.push(function () {
+		globalFeatures.init();
+	});
+	storageListeners.userdata.push(function () {
+		globalFeatures.init();
+	});
+
+	// await loadGlobalEntry();
 
 	console.log("TT: Global Entry - Script loaded.");
+
+	requireContent().then(() => {
+		featureManager.createPopup();
+	});
 })();
 
-async function loadGlobalEntry() {
-	if (settings.pages.global.alignLeft) document.documentElement.classList.add("tt-align-left");
-	else document.documentElement.classList.remove("tt-align-left");
+class GlobalFeatures {
+	constructor() {}
 
-	document.documentElement.style.setProperty("--torntools-hide-upgrade-button", settings.pages.global.hideLevelUpgrade ? "none" : "block");
+	init() {
+		this.alignLeft();
+		this.hideLevelUpgrade();
+		this.hideLeaveButton();
+		this.hideIcons();
+		this.hideAreas();
+		// this.hideChats(); // todo
+		// this.cleanFlight(); // todo
+		this.chatFontSize();
 
-	document.documentElement.style.setProperty("--torntools-hide-leave-button", settings.pages.global.hideQuitButtons ? "none" : "flex");
+		if (hasAPIData()) this.highlightRefills();
 
-	for (let icon of ALL_ICONS) {
-		document.documentElement.style.setProperty(`--torntools-hide-icons-${icon}`, settings.hideIcons.includes(icon) ? "none" : "initial");
+		requireElement("#chatRoot").then((chats) => {
+			this.blockZalgo(chats);
+		});
+
+		// mobile check
+		checkMobile().then((mobile) => {
+			if (mobile) document.documentElement.classList.add("tt-mobile");
+			else document.documentElement.classList.remove("tt-mobile");
+		});
+
+		if (getSearchParameters().has("popped")) document.documentElement.classList.add("tt-popout");
+		else document.documentElement.classList.remove("tt-popout");
+
+		this.forceUpdate().catch(() => {});
+		this.load();
+	}
+	load() {
+		featureManager.load("Align Left");
+		featureManager.load("Hide Level Upgrade");
+		featureManager.load("Hide Leave Buttons");
+		featureManager.load("Hide Icons");
+		featureManager.load("Hide Areas");
+		// featureManager.load("Hide Chats");
+		// featureManager.load("Clean Flight");
+		featureManager.load("Chat Font Size");
+		featureManager.load("Highlight Energy Refill");
+		featureManager.load("Highlight Nerve Refill");
 	}
 
-	for (let area of ALL_AREAS.map((area) => area.class)) {
-		document.documentElement.style.setProperty(`--torntools-hide-area-${area}`, settings.hideAreas.includes(area) ? "none" : "initial");
+	alignLeft() {
+		featureManager.new({
+			name: "Align Left",
+			scope: "global",
+			enabled: settings.pages.global.alignLeft,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			if (settings.pages.global.alignLeft) document.documentElement.classList.add("tt-align-left");
+			else document.documentElement.classList.remove("tt-align-left");
+		}
+	}
+	hideLevelUpgrade() {
+		featureManager.new({
+			name: "Hide Level Upgrade",
+			scope: "global",
+			enabled: settings.pages.global.hideLevelUpgrade,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			document.documentElement.style.setProperty("--torntools-hide-upgrade-button", settings.pages.global.hideLevelUpgrade ? "none" : "block");
+		}
+	}
+	hideLeaveButton() {
+		featureManager.new({
+			name: "Hide Leave Buttons",
+			scope: "global",
+			enabled: settings.pages.global.hideQuitButtons,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			document.documentElement.style.setProperty("--torntools-hide-leave-button", settings.pages.global.hideQuitButtons ? "none" : "flex");
+		}
+	}
+	hideIcons() {
+		featureManager.new({
+			name: "Hide Icons",
+			scope: "global",
+			enabled: settings.hideIcons.length > 0,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			for (let icon of ALL_ICONS) {
+				document.documentElement.style.setProperty(`--torntools-hide-icons-${icon}`, settings.hideIcons.includes(icon) ? "none" : "initial");
+			}
+		}
+	}
+	hideAreas() {
+		featureManager.new({
+			name: "Hide Areas",
+			scope: "global",
+			enabled: settings.hideAreas.length > 0,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			for (let area of ALL_AREAS.map((area) => area.class)) {
+				document.documentElement.style.setProperty(`--torntools-hide-area-${area}`, settings.hideAreas.includes(area) ? "none" : "initial");
+			}
+		}
+	}
+	hideChats() {
+		featureManager.new({
+			name: "Hide Chats",
+			scope: "global",
+			enabled: settings.hideChats,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			// todo
+		}
+	}
+	cleanFlight() {
+		featureManager.new({
+			name: "Clean Flight",
+			scope: "global",
+			enabled: settings.cleanFlight,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			// todo
+		}
+	}
+	chatFontSize() {
+		featureManager.new({
+			name: "Chat Font Size",
+			scope: "global",
+			enabled: settings.pages.chat.fontSize,
+			func: feature,
+			runWhenDisabled: true,
+		});
+
+		async function feature() {
+			document.documentElement.style.setProperty("--torntools-chat-font-size", `${settings.pages.chat.fontSize || 12}px`);
+		}
+	}
+	highlightRefills() {
+		featureManager.new({
+			name: "Highlight Energy Refill",
+			scope: "global",
+			enabled: settings.pages.sidebar.highlightEnergy,
+			func: feature_1,
+			runWhenDisabled: true,
+		});
+		featureManager.new({
+			name: "Highlight Nerve Refill",
+			scope: "global",
+			enabled: settings.pages.sidebar.highlightNerve,
+			func: feature_2,
+			runWhenDisabled: true,
+		});
+
+		async function feature_1() {
+			document.documentElement.style.setProperty(
+				"--torntools-highlight-energy",
+				!userdata.refills.energy_refill_used && settings.pages.sidebar.highlightEnergy ? `#6e8820` : "#333"
+			);
+		}
+		async function feature_2() {
+			document.documentElement.style.setProperty(
+				"--torntools-highlight-nerve",
+				!userdata.refills.nerve_refill_used && settings.pages.sidebar.highlightNerve ? `#6e8820` : "#333"
+			);
+		}
+	}
+	blockZalgo(chats) {
+		featureManager.new({
+			name: "Block Zalgo",
+			scope: "global",
+			enabled: settings.pages.chat.blockZalgo,
+			func: feature,
+			runWhenDisabled: true,
+		});
+		featureManager.load("Block Zalgo");
+
+		async function feature() {
+			if (settings.pages.chat.blockZalgo) chats.classList.add("no-zalgo");
+			else chats.classList.remove("no-zalgo");
+		}
 	}
 
-	// hide chats
+	async forceUpdate() {
+		await requireContent();
 
-	// clean flight
-
-	document.documentElement.style.setProperty("--torntools-chat-font-size", `${settings.pages.chat.fontSize || 12}px`);
-
-	if (hasAPIData()) {
-		// Highlight refills.
-		document.documentElement.style.setProperty(
-			"--torntools-highlight-energy",
-			!userdata.refills.energy_refill_used && settings.pages.sidebar.highlightEnergy ? `#6e8820` : "#333"
-		);
-		document.documentElement.style.setProperty(
-			"--torntools-highlight-nerve",
-			!userdata.refills.nerve_refill_used && settings.pages.sidebar.highlightNerve ? `#6e8820` : "#333"
-		);
+		document.find("#sidebarroot ul[class*='status-icons']").setAttribute("updated", Date.now());
 	}
-
-	requireElement("#chatRoot").then((chats) => {
-		if (settings.pages.chat.blockZalgo) chats.classList.add("no-zalgo");
-		else chats.classList.remove("no-zalgo");
-	});
-
-	// mobile check
-	checkMobile().then((mobile) => {
-		if (mobile) document.documentElement.classList.add("tt-mobile");
-		else document.documentElement.classList.remove("tt-mobile");
-	});
-
-	if (getSearchParameters().has("popped")) document.documentElement.classList.add("tt-popout");
-	else document.documentElement.classList.remove("tt-popout");
-
-	forceUpdate().catch(() => {});
-}
-
-async function forceUpdate() {
-	await requireContent();
-
-	document.find("#sidebarroot ul[class*='status-icons']").setAttribute("updated", Date.now());
 }
