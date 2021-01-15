@@ -11,6 +11,7 @@ let pendingActions = {};
 
 	storageListeners.settings.push(function () {
 		itemsFeatures.init();
+		featureManager.display(settings.featureDisplay);
 	});
 
 	itemsFeatures.loadItemsOnce();
@@ -90,7 +91,7 @@ class ItemsFeatures {
 			} else {
 				removeContainer("Quick Items");
 			}
-		}
+		};
 
 		featureManager.new({
 			name: "Quick Items",

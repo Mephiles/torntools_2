@@ -13,6 +13,7 @@ let networthInterval = false;
 
 	storageListeners.settings.push(function () {
 		homeFeatures.init();
+		featureManager.display(settings.featureDisplay);
 	});
 	storageListeners.userdata.push(async (oldUserdata) => {
 		if (oldUserdata.networth && userdata.networth && oldUserdata.networth.date !== userdata.networth.date) {

@@ -23,17 +23,24 @@ class FeatureManager {
 		this.features = [];
 		this.popupLoaded = false;
 		this.resultQueue = [];
+		this.containerID = "tt-page-status";
+	}
+
+	display(show) {
+		try {
+			if (show) document.find(`#${this.containerID}`).classList.remove("hidden");
+			else document.find(`#${this.containerID}`).classList.add("hidden");
+		} catch (err) {}
 	}
 
 	async createPopup() {
 		if (await checkMobile()) return;
 
-		let containerID = "tt-page-status";
-		let collapsed = containerID in filters.containers ? filters.containers[containerID] : false;
+		let collapsed = this.containerID in filters.containers ? filters.containers[this.containerID] : false;
 
 		document.find(".content").appendChild(
 			document.newElement({
-				id: containerID,
+				id: this.containerID,
 				type: "div",
 				children: [
 					document.newElement({

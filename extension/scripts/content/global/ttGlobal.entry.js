@@ -13,6 +13,7 @@ let featureManager, globalFeatures;
 
 	storageListeners.settings.push(function () {
 		globalFeatures.init();
+		featureManager.display(settings.featureDisplay);
 	});
 	storageListeners.userdata.push(function () {
 		globalFeatures.init();
