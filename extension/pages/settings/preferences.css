@@ -228,7 +228,7 @@ body.dark #preferences #hide-areas span {
 	width: 70px;
 	height: 40px;
 	position: relative;
-	margin-left: 20px;
+	margin-left: 40px;
 }
 #featureDisplayDemo input[type="radio"] {position: absolute;}
 #featureDisplayDemo .top {top: 1px;}
