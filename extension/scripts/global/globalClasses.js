@@ -28,8 +28,7 @@ class FeatureManager {
 
 	display(show) {
 		try {
-			if (show) document.find(`#${this.containerID}`).classList.remove("hidden");
-			else document.find(`#${this.containerID}`).classList.add("hidden");
+			document.find(`#${this.containerID}`).setAttribute('class', `${show? '':'hidden'} ${settings.featureDisplayPosition}`);
 		} catch (err) {}
 	}
 
@@ -38,10 +37,11 @@ class FeatureManager {
 
 		let collapsed = this.containerID in filters.containers ? filters.containers[this.containerID] : false;
 
-		document.find(".content").appendChild(
+		document.find("body").appendChild(
 			document.newElement({
 				id: this.containerID,
 				type: "div",
+				class: settings.featureDisplayPosition,
 				children: [
 					document.newElement({
 						type: "div",
