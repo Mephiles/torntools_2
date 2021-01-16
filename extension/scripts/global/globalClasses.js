@@ -67,7 +67,7 @@ class FeatureManager {
 
 		document.find(".tt-page-status-header").onclick = function () {
 			this.classList.toggle("collapsed");
-			ttStorage.change({ filters: { containers: { [containerID]: this.classList.contains("collapsed") } } });
+			ttStorage.change({ filters: { containers: { [this.containerID]: this.classList.contains("collapsed") } } });
 		};
 
 		this.popupLoaded = true;

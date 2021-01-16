@@ -9,9 +9,8 @@ let pendingActions = {};
 	let itemsFeatures = new ItemsFeatures();
 	itemsFeatures.init();
 
-	storageListeners.settings.push(function () {
+	storageListeners.settings.push(() => {
 		itemsFeatures.init();
-		featureManager.display(settings.featureDisplay);
 	});
 
 	itemsFeatures.loadItemsOnce();

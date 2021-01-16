@@ -11,11 +11,11 @@ let featureManager, globalFeatures;
 
 	globalFeatures.init();
 
-	storageListeners.settings.push(function () {
+	storageListeners.settings.push(() => {
 		globalFeatures.init();
 		featureManager.display(settings.featureDisplay);
 	});
-	storageListeners.userdata.push(function () {
+	storageListeners.userdata.push(() => {
 		globalFeatures.init();
 	});
 
@@ -40,8 +40,7 @@ class GlobalFeatures {
 		// this.hideChats(); // todo
 		// this.cleanFlight(); // todo
 		this.chatFontSize();
-
-		if (hasAPIData()) this.highlightRefills();
+		this.highlightRefills(); 
 
 		requireElement("#chatRoot").then((chats) => {
 			this.blockZalgo(chats);
@@ -172,7 +171,7 @@ class GlobalFeatures {
 		featureManager.new({
 			name: "Chat Font Size",
 			scope: "global",
-			enabled: settings.pages.chat.fontSize,
+			enabled: settings.pages.chat.fontSize !== '12',
 			func: feature,
 			runWhenDisabled: true,
 		});
@@ -186,28 +185,32 @@ class GlobalFeatures {
 			name: "Highlight Energy Refill",
 			scope: "global",
 			enabled: settings.pages.sidebar.highlightEnergy,
-			func: feature_1,
+			func: feature_energy,
 			runWhenDisabled: true,
 		});
 		featureManager.new({
 			name: "Highlight Nerve Refill",
 			scope: "global",
 			enabled: settings.pages.sidebar.highlightNerve,
-			func: feature_2,
+			func: feature_nerve,
 			runWhenDisabled: true,
 		});
 
-		async function feature_1() {
-			document.documentElement.style.setProperty(
-				"--torntools-highlight-energy",
-				!userdata.refills.energy_refill_used && settings.pages.sidebar.highlightEnergy ? `#6e8820` : "#333"
-			);
+		async function feature_energy() {
+			if (hasAPIData()) {
+				document.documentElement.style.setProperty(
+					"--torntools-highlight-energy",
+					!userdata.refills.energy_refill_used && settings.pages.sidebar.highlightEnergy ? `#6e8820` : "#333"
+				);
+			} else throw 'No api data';
 		}
-		async function feature_2() {
-			document.documentElement.style.setProperty(
-				"--torntools-highlight-nerve",
-				!userdata.refills.nerve_refill_used && settings.pages.sidebar.highlightNerve ? `#6e8820` : "#333"
-			);
+		async function feature_nerve() {
+			if (hasAPIData()) {
+				document.documentElement.style.setProperty(
+					"--torntools-highlight-nerve",
+					!userdata.refills.nerve_refill_used && settings.pages.sidebar.highlightNerve ? `#6e8820` : "#333"
+				);
+			} else throw "No api data";
 		}
 	}
 	blockZalgo(chats) {
