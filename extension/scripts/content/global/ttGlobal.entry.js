@@ -171,7 +171,7 @@ class GlobalFeatures {
 		featureManager.new({
 			name: "Chat Font Size",
 			scope: "global",
-			enabled: settings.pages.chat.fontSize !== '12',
+			enabled: settings.pages.chat.fontSize !== 12,
 			func: feature,
 			runWhenDisabled: true,
 		});
