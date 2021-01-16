@@ -28,7 +28,7 @@ class FeatureManager {
 
 	display(show) {
 		try {
-			document.find(`#${this.containerID}`).setAttribute('class', `${show? '':'hidden'} ${settings.featureDisplayPosition}`);
+			document.find(`#${this.containerID}`).setAttribute("class", `${show ? "" : "hidden"} ${settings.featureDisplayPosition}`);
 		} catch (err) {}
 	}
 
@@ -65,9 +65,9 @@ class FeatureManager {
 			})
 		);
 
-		document.find(".tt-page-status-header").onclick = function () {
-			this.classList.toggle("collapsed");
-			ttStorage.change({ filters: { containers: { [this.containerID]: this.classList.contains("collapsed") } } });
+		document.find(".tt-page-status-header").onclick = () => {
+			document.find(".tt-page-status-header").classList.toggle("collapsed");
+			ttStorage.change({ filters: { containers: { [this.containerID]: document.find(".tt-page-status-header").classList.contains("collapsed") } } });
 		};
 
 		this.popupLoaded = true;
