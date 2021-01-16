@@ -37,7 +37,7 @@ class FeatureManager {
 
 		let collapsed = this.containerID in filters.containers ? filters.containers[this.containerID] : false;
 
-		document.find("body").appendChild(
+		document.body.appendChild(
 			document.newElement({
 				id: this.containerID,
 				type: "div",
