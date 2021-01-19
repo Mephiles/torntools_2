@@ -17,7 +17,7 @@ let initiatedIconMoving = false;
 		}
 	});
 	storageListeners.version.push(() => {
-		requireSidebar()
+		REQUIRES.requireSidebar()
 			.then(async () => {
 				await showUpdateNotice();
 			})
@@ -102,7 +102,7 @@ function loadGlobal() {
 		})
 		.catch((reason) => console.error("TT failed during loading chats.", reason));
 
-	requireSidebar()
+	REQUIRES.requireSidebar()
 		.then(async () => {
 			showUpdateNotice().catch((error) => console.error("Couldn't show an update notice", error));
 
@@ -121,7 +121,7 @@ function loadGlobal() {
 		})
 		.catch((reason) => console.error("TT failed during loading sidebar.", reason));
 
-	requireContent()
+	REQUIRES.requireContent()
 		.then(() => {
 			new Promise(() => {
 				if (settings.pages.global.hideLevelUpgrade) {
@@ -150,14 +150,14 @@ function loadGlobalOnce() {
 				continue;
 			}
 
-			countdown.innerText = formatTime({ seconds }, JSON.parse(countdown.dataset.timeSettings));
+			countdown.innerText = FORMATTING.formatTime({ seconds }, JSON.parse(countdown.dataset.timeSettings));
 			// noinspection JSValidateTypes
 			countdown.dataset.seconds = seconds;
 		}
 	}, 1000);
 
 	if (settings.pages.global.miniProfileLastAction) {
-		addFetchListener((event) => {
+		INTERCEPT_REQUESTS.addFetchListener((event) => {
 			if (!event.detail) return;
 			const { page, json, fetch } = event.detail;
 
@@ -176,7 +176,7 @@ function loadGlobalOnce() {
 }
 
 function requireChatsLoaded() {
-	return requireElement("[class*='overview_']");
+	return REQUIRES.requireElement("[class*='overview_']");
 }
 
 function addChatSearch() {
@@ -313,9 +313,9 @@ async function showUpdateNotice() {
 function showMiniprofileInformation(information) {
 	const miniProfile = document.find("#profile-mini-root .mini-profile-wrapper");
 
-	const lastAction = formatTime({ seconds: information.user.lastAction.seconds }, { type: "wordTimer", showDays: true });
+	const lastAction = FORMATTING.formatTime({ seconds: information.user.lastAction.seconds }, { type: "wordTimer", showDays: true });
 
-	requireElement("div[class*='-profile-mini-_userProfileWrapper']", { parent: miniProfile }).then(() => {
+	REQUIRES.requireElement("div[class*='-profile-mini-_userProfileWrapper']", { parent: miniProfile }).then(() => {
 		const data = document.newElement({
 			type: "div",
 			class: "tt-mini-data",
@@ -392,7 +392,7 @@ function addChatColoring() {
 }
 
 async function showComputerLink() {
-	if (!isFlying() && !isAbroad()) return;
+	if (!USER_INFORMATION.isFlying() && !USER_INFORMATION.isAbroad()) return;
 	if (!document.find("#top-page-links-list") || document.find("#top-page-links-list > .laptop, #top-page-links-list > .tt-computer")) return;
 	if (!settings.apiUsage.user.inventory || !findItemsInObject(userdata.inventory, { ID: 61 }, { single: true })) return;
 
@@ -443,7 +443,7 @@ function moveIcons(observer) {
 
 async function showNotes() {
 	if (settings.pages.sidebar.notes && !(await checkMobile())) {
-		const { content } = createContainer("Notes", {
+		const { content } = CONTAINERS.createContainer("Notes", {
 			id: "sidebarNotes",
 			applyRounding: false,
 			contentBackground: false,
@@ -471,7 +471,7 @@ async function showNotes() {
 			})
 		);
 	} else {
-		removeContainer("Notes", { id: "sidebarNotes" });
+		CONTAINERS.removeContainer("Notes", { id: "sidebarNotes" });
 	}
 }
 
@@ -508,7 +508,7 @@ async function showOCTime() {
 			else if (timeLeft <= TO_MILLIS.HOURS * 12) timeLeftElement.setAttribute("color", "darkorange");
 
 			if (timeLeft > 0) {
-				timeLeftElement.innerText = formatTime({ milliseconds: timeLeft }, { type: "wordTimer", extraShort: true, showDays: true });
+				timeLeftElement.innerText = FORMATTING.formatTime({ milliseconds: timeLeft }, { type: "wordTimer", extraShort: true, showDays: true });
 
 				// noinspection JSValidateTypes
 				timeLeftElement.dataset.seconds = (timeLeft / 1000).dropDecimals();
@@ -534,7 +534,12 @@ async function showCustomLinks() {
 		const areas = findParent(document.find("h2=Areas"), { class: "^=sidebar-block_" });
 
 		if (settings.customLinks.filter((link) => link.location === "above").length) {
-			const { content } = createContainer("Custom Links", { id: "customLinksAbove", applyRounding: false, contentBackground: false, nextElement: areas });
+			const { content } = CONTAINERS.createContainer("Custom Links", {
+				id: "customLinksAbove",
+				applyRounding: false,
+				contentBackground: false,
+				nextElement: areas,
+			});
 
 			for (let link of settings.customLinks.filter((link) => link.location === "above")) {
 				content.appendChild(
@@ -555,11 +560,11 @@ async function showCustomLinks() {
 				);
 			}
 		} else {
-			removeContainer("Custom Links", { id: "customLinksAbove" });
+			CONTAINERS.removeContainer("Custom Links", { id: "customLinksAbove" });
 		}
 
 		if (settings.customLinks.filter((link) => link.location === "under").length) {
-			const { content } = createContainer("Custom Links", {
+			const { content } = CONTAINERS.createContainer("Custom Links", {
 				id: "customLinksUnder",
 				applyRounding: false,
 				contentBackground: false,
@@ -585,7 +590,7 @@ async function showCustomLinks() {
 				);
 			}
 		} else {
-			removeContainer("Custom Links", { id: "customLinksUnder" });
+			CONTAINERS.removeContainer("Custom Links", { id: "customLinksUnder" });
 		}
 
 		for (let link of areas.findAll(".custom-link")) link.remove();

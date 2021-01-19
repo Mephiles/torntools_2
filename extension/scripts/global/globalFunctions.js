@@ -115,6 +115,20 @@ Number.prototype.dropDecimals = function () {
 String.prototype.camelCase = function (lowerCamelCase) {
 	return (this.trim().charAt(0)[lowerCamelCase ? "toLowerCase" : "toUpperCase"]() + this.slice(1)).trim().replaceAll(" ", "");
 };
+String.prototype.capitalize = function (options = {}) {
+	options = {
+		everyWord: false,
+		...options,
+	};
+
+	if (!options.everyWord) return this[0].toUpperCase() + text.slice(1);
+
+	return this.trim()
+		.split(" ")
+		.map((word) => word.capitalize())
+		.join(" ")
+		.trim();
+};
 
 DOMTokenList.prototype.contains = function (className) {
 	const classes = [...this];
@@ -201,69 +215,64 @@ function rotateElement(element, degrees) {
 	};
 }
 
-function requireCondition(condition, options = {}) {
-	options = {
-		delay: 10,
-		maxCycles: -1,
-		...options,
-	};
+const REQUIRES = {
+	requireCondition: (condition, options = {}) => {
+		options = {
+			delay: 10,
+			maxCycles: -1,
+			...options,
+		};
 
-	return new Promise((resolve, reject) => {
-		if (checkCondition()) return;
+		return new Promise((resolve, reject) => {
+			if (checkCondition()) return;
 
-		let counter = 0;
-		let checker = setInterval(() => {
-			if (checkCounter(counter++) || checkCondition()) return clearInterval(checker);
-		}, options.delay);
+			let counter = 0;
+			let checker = setInterval(() => {
+				if (checkCounter(counter++) || checkCondition()) return clearInterval(checker);
+			}, options.delay);
 
-		function checkCondition() {
-			let response = condition();
-			if (!response) return;
+			function checkCondition() {
+				let response = condition();
+				if (!response) return;
 
-			if (typeof response === "boolean") {
-				if (response) return resolve();
-			} else if (typeof response === "object") {
-				if (response.hasOwnProperty("success")) {
-					if (response.success === true) resolve(response.value);
-					else reject(response.value);
-				} else {
-					resolve(response);
+				if (typeof response === "boolean") {
+					if (response) return resolve();
+				} else if (typeof response === "object") {
+					if (response.hasOwnProperty("success")) {
+						if (response.success === true) resolve(response.value);
+						else reject(response.value);
+					} else {
+						resolve(response);
+					}
 				}
 			}
-		}
 
-		function checkCounter(count) {
-			if (options.maxCycles <= 0) return false;
+			function checkCounter(count) {
+				if (options.maxCycles <= 0) return false;
 
-			if (count > options.maxCycles) {
-				reject("Maximum cycles reached.");
-				return true;
+				if (count > options.maxCycles) {
+					reject("Maximum cycles reached.");
+					return true;
+				}
+				return false;
 			}
-			return false;
-		}
-	});
-}
+		});
+	},
+	requireElement: (selector, attributes) => {
+		attributes = {
+			invert: false,
+			parent: document,
+			...attributes,
+		};
 
-function requireElement(selector, attributes) {
-	attributes = {
-		invert: false,
-		parent: document,
-		...attributes,
-	};
-
-	return requireCondition(
-		() => (attributes.invert && !attributes.parent.find(selector)) || (!attributes.invert && attributes.parent.find(selector)),
-		attributes
-	);
-}
-
-function requireSidebar() {
-	return requireElement("#sidebar");
-}
-
-function requireContent() {
-	return requireElement(".box-title, .title-black[role=heading], .title-black > div[role=heading], .travel-agency-travelling");
-}
+		return REQUIRES.requireCondition(
+			() => (attributes.invert && !attributes.parent.find(selector)) || (!attributes.invert && attributes.parent.find(selector)),
+			attributes
+		);
+	},
+	requireSidebar: () => REQUIRES.requireElement("#sidebar"),
+	requireContent: () => REQUIRES.requireElement(".box-title, .title-black[role=heading], .title-black > div[role=heading], .travel-agency-travelling"),
+};
 
 function hasParent(element, options = {}) {
 	options = {
@@ -506,198 +515,250 @@ function showLoadingPlaceholder(element, show) {
 	}
 }
 
-function changeAPIKey(key) {
-	return new Promise((resolve, reject) => {
-		fetchApi("torn", { section: "user", selections: ["profile"], key, silent: true })
-			.then(async () => {
-				await ttStorage.change({ api: { torn: { key } } });
+const API_HELPER = {
+	changeAPIKey: (key) => {
+		return new Promise((resolve, reject) => {
+			fetchApi("torn", { section: "user", selections: ["profile"], key, silent: true })
+				.then(async () => {
+					await ttStorage.change({ api: { torn: { key } } });
 
-				chrome.runtime.sendMessage({ action: "initialize" }, async () => {
-					resolve();
+					chrome.runtime.sendMessage({ action: "initialize" }, async () => {
+						resolve();
+					});
+				})
+				.catch((error) => {
+					reject(error.error);
 				});
-			})
-			.catch((error) => {
-				reject(error.error);
-			});
-	});
-}
+		});
+	},
+	hasAPIData: () => api.torn.key && !api.torn.error && userdata && Object.keys(userdata).length,
+};
 
-function toSeconds(milliseconds) {
-	if (!milliseconds) return toSeconds(Date.now());
-	else if (typeof milliseconds === "object" && milliseconds instanceof Date) return toSeconds(milliseconds.getTime());
-	else if (!isNaN(milliseconds)) return Math.trunc(milliseconds / 1000);
-	else return toSeconds(Date.now());
-}
+const FORMATTING = {
+	toSeconds: (milliseconds) => {
+		if (!milliseconds) return FORMATTING.toSeconds(Date.now());
+		else if (typeof milliseconds === "object" && milliseconds instanceof Date) return FORMATTING.toSeconds(milliseconds.getTime());
+		else if (!isNaN(milliseconds)) return Math.trunc(milliseconds / 1000);
+		else return FORMATTING.toSeconds(Date.now());
+	},
+	toMultipleDigits: (number, digits = 2) => {
+		if (number === undefined) return undefined;
+		return number.toString().length < digits ? FORMATTING.toMultipleDigits(`0${number}`, digits) : number;
+	},
+	formatTime: (time = {}, options = {}) => {
+		if (typeof time === "number") return FORMATTING.formatTime({ milliseconds: time, attributes: options });
 
-function toMultipleDigits(number, digits = 2) {
-	if (number === undefined) return undefined;
-	return number.toString().length < digits ? toMultipleDigits(`0${number}`, digits) : number;
-}
+		time = {
+			milliseconds: undefined,
+			seconds: undefined,
+			...time,
+		};
+		options = {
+			type: "normal",
+			showDays: false,
+			hideHours: false,
+			hideSeconds: false,
+			short: false,
+			extraShort: false,
+			agoFilter: false,
+			...options,
+		};
 
-function formatTime(time = {}, options = {}) {
-	if (typeof time === "number") return formatTime({ milliseconds: time, attributes: options });
+		let millis = 0;
+		if (isDefined(time.milliseconds)) millis += time.milliseconds;
+		if (isDefined(time.seconds)) millis += time.seconds * TO_MILLIS.SECONDS;
 
-	time = {
-		milliseconds: undefined,
-		seconds: undefined,
-		...time,
-	};
-	options = {
-		type: "normal",
-		showDays: false,
-		hideHours: false,
-		hideSeconds: false,
-		short: false,
-		extraShort: false,
-		agoFilter: false,
-		...options,
-	};
+		let date;
+		let parts;
+		switch (options.type) {
+			case "normal":
+				date = new Date(millis);
 
-	let millis = 0;
-	if (isDefined(time.milliseconds)) millis += time.milliseconds;
-	if (isDefined(time.seconds)) millis += time.seconds * TO_MILLIS.SECONDS;
+				let hours = FORMATTING.toMultipleDigits(date.getHours());
+				let minutes = FORMATTING.toMultipleDigits(date.getMinutes());
+				let seconds = FORMATTING.toMultipleDigits(date.getSeconds());
 
-	let date;
-	let parts;
-	switch (options.type) {
-		case "normal":
-			date = new Date(millis);
+				switch (settings.formatting.time) {
+					case "us":
+						const afternoon = hours >= 12;
+						hours = FORMATTING.toMultipleDigits(hours % 12 || 12);
 
-			let hours = toMultipleDigits(date.getHours());
-			let minutes = toMultipleDigits(date.getMinutes());
-			let seconds = toMultipleDigits(date.getSeconds());
+						return seconds ? `${hours}:${minutes}:${seconds} ${afternoon ? "PM" : "AM"}` : `${hours}:${minutes} ${afternoon ? "PM" : "AM"}`;
+					case "eu":
+					default:
+						return seconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`;
+				}
+			case "timer":
+				date = new Date(millis);
 
-			switch (settings.formatting.time) {
-				case "us":
-					const afternoon = hours >= 12;
-					hours = toMultipleDigits(hours % 12 || 12);
+				parts = [];
+				if (options.showDays) parts.push(Math.floor(date.getTime() / TO_MILLIS.DAYS));
+				if (!options.hideHours) parts.push(date.getUTCHours());
+				parts.push(date.getUTCMinutes());
+				if (!options.hideSeconds) parts.push(date.getUTCSeconds());
 
-					return seconds ? `${hours}:${minutes}:${seconds} ${afternoon ? "PM" : "AM"}` : `${hours}:${minutes} ${afternoon ? "PM" : "AM"}`;
-				case "eu":
-				default:
-					return seconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`;
-			}
-		case "timer":
-			date = new Date(millis);
+				return parts.map((p) => FORMATTING.toMultipleDigits(p, 2)).join(":");
+			case "wordTimer":
+				date = new Date(millis);
 
-			parts = [];
-			if (options.showDays) parts.push(Math.floor(date.getTime() / TO_MILLIS.DAYS));
-			if (!options.hideHours) parts.push(date.getUTCHours());
-			parts.push(date.getUTCMinutes());
-			if (!options.hideSeconds) parts.push(date.getUTCSeconds());
+				parts = [];
+				if (options.showDays && (date.getTime() / TO_MILLIS.DAYS).dropDecimals() > 0)
+					parts.push(formatUnit(Math.floor(date.getTime() / TO_MILLIS.DAYS), { normal: "day", short: "day", extraShort: "d" }));
+				if (!options.hideHours && date.getUTCHours()) parts.push(formatUnit(date.getUTCHours(), { normal: "hour", short: "hr", extraShort: "h" }));
+				if (date.getUTCMinutes()) parts.push(formatUnit(date.getUTCMinutes(), { normal: "minute", short: "min", extraShort: "m" }));
+				if (!options.hideSeconds && date.getUTCSeconds())
+					parts.push(formatUnit(date.getUTCSeconds(), { normal: "second", short: "sec", extraShort: "s" }));
 
-			return parts.map((p) => toMultipleDigits(p, 2)).join(":");
-		case "wordTimer":
-			date = new Date(millis);
-
-			parts = [];
-			if (options.showDays && (date.getTime() / TO_MILLIS.DAYS).dropDecimals() > 0)
-				parts.push(formatUnit(Math.floor(date.getTime() / TO_MILLIS.DAYS), { normal: "day", short: "day", extraShort: "d" }));
-			if (!options.hideHours && date.getUTCHours()) parts.push(formatUnit(date.getUTCHours(), { normal: "hour", short: "hr", extraShort: "h" }));
-			if (date.getUTCMinutes()) parts.push(formatUnit(date.getUTCMinutes(), { normal: "minute", short: "min", extraShort: "m" }));
-			if (!options.hideSeconds && date.getUTCSeconds()) parts.push(formatUnit(date.getUTCSeconds(), { normal: "second", short: "sec", extraShort: "s" }));
-
-			if (parts.length > 1 && !options.extraShort) {
-				parts.insertAt(parts.length - 1, "and");
-			}
-
-			function formatUnit(amount, unit) {
-				let formatted = `${amount}`;
-
-				if (options.extraShort) {
-					formatted += unit.extraShort;
-				} else if (options.short) {
-					formatted += ` ${unit.short}${applyPlural(amount)}`;
-				} else {
-					formatted += ` ${unit.normal}${applyPlural(amount)}`;
+				if (parts.length > 1 && !options.extraShort) {
+					parts.insertAt(parts.length - 1, "and");
 				}
 
-				return formatted;
-			}
+				function formatUnit(amount, unit) {
+					let formatted = `${amount}`;
 
-			return parts.join(" ");
-		case "ago":
-			let timeAgo = Date.now() - millis;
+					if (options.extraShort) {
+						formatted += unit.extraShort;
+					} else if (options.short) {
+						formatted += ` ${unit.short}${applyPlural(amount)}`;
+					} else {
+						formatted += ` ${unit.normal}${applyPlural(amount)}`;
+					}
 
-			let token = "ago";
-			if (timeAgo < 0) {
-				token = "from now";
-				timeAgo = Math.abs(timeAgo);
-			}
-
-			const UNITS = [
-				{ unit: "day", millis: TO_MILLIS.DAYS },
-				{ unit: "hour", millis: TO_MILLIS.HOURS },
-				{ unit: "minute", millis: TO_MILLIS.MINUTES },
-				{ unit: "second", millis: TO_MILLIS.SECONDS },
-				{ text: "just now", millis: 0 },
-			];
-
-			let _units = UNITS;
-			if (options.agoFilter) _units = UNITS.filter((value) => value.millis <= options.agoFilter);
-
-			for (let unit of _units) {
-				if (timeAgo < unit.millis) continue;
-
-				if (unit.unit) {
-					let amount = Math.floor(timeAgo / unit.millis);
-
-					return `${amount} ${unit.unit}${amount > 1 ? "s" : ""} ${token}`;
-				} else if (unit.text) {
-					return unit.text;
+					return formatted;
 				}
+
+				return parts.join(" ");
+			case "ago":
+				let timeAgo = Date.now() - millis;
+
+				let token = "ago";
+				if (timeAgo < 0) {
+					token = "from now";
+					timeAgo = Math.abs(timeAgo);
+				}
+
+				const UNITS = [
+					{ unit: "day", millis: TO_MILLIS.DAYS },
+					{ unit: "hour", millis: TO_MILLIS.HOURS },
+					{ unit: "minute", millis: TO_MILLIS.MINUTES },
+					{ unit: "second", millis: TO_MILLIS.SECONDS },
+					{ text: "just now", millis: 0 },
+				];
+
+				let _units = UNITS;
+				if (options.agoFilter) _units = UNITS.filter((value) => value.millis <= options.agoFilter);
+
+				for (let unit of _units) {
+					if (timeAgo < unit.millis) continue;
+
+					if (unit.unit) {
+						let amount = Math.floor(timeAgo / unit.millis);
+
+						return `${amount} ${unit.unit}${amount > 1 ? "s" : ""} ${token}`;
+					} else if (unit.text) {
+						return unit.text;
+					}
+				}
+
+				return timeAgo;
+			default:
+				return -1;
+		}
+	},
+	formatDate: (date = {}, options = {}) => {
+		if (typeof date === "number") return FORMATTING.formatDate({ milliseconds: date, attributes: options });
+
+		date = {
+			milliseconds: undefined,
+			...date,
+		};
+		options = {
+			showYear: false,
+			...options,
+		};
+
+		let millis = 0;
+		if (isDefined(date.milliseconds)) millis += date.milliseconds;
+		if (isDefined(date.seconds)) millis += date.seconds * TO_MILLIS.SECONDS;
+
+		const _date = new Date(millis);
+		let parts = [];
+		let separator;
+
+		switch (settings.formatting.date) {
+			case "us":
+				separator = "/";
+
+				parts.push(_date.getMonth() + 1, _date.getDate());
+				if (options.showYear) parts.push(_date.getFullYear());
+				break;
+			case "iso":
+				separator = "-";
+
+				if (options.showYear) parts.push(_date.getFullYear());
+				parts.push(_date.getMonth() + 1, _date.getDate());
+				break;
+			case "eu":
+			default:
+				separator = ".";
+
+				parts.push(_date.getDate(), _date.getMonth() + 1);
+				if (options.showYear) parts.push(_date.getFullYear());
+				break;
+		}
+
+		return parts.map((p) => FORMATTING.toMultipleDigits(p)).join(separator);
+	},
+	formatNumber: (number, options = {}) => {
+		options = {
+			shorten: false,
+			formatter: false,
+			decimals: -1,
+			...options,
+		};
+		if (typeof number !== "number") {
+			if (isNaN(number)) return number;
+			else number = parseFloat(number);
+		}
+
+		if (options.decimals !== -1) {
+			number = options.decimals === 0 ? parseInt(number) : parseFloat(number.toFixed(options.decimals));
+		}
+
+		if (options.formatter) {
+			return formatter.format(number);
+		}
+
+		if (options.shorten) {
+			let words;
+			if (options.shorten === true || options.shorten === 1) {
+				words = {
+					thousand: "k",
+					million: "mil",
+					billion: "bill",
+				};
+			} else {
+				words = {
+					thousand: "k",
+					million: "m",
+					billion: "b",
+				};
 			}
 
-			return timeAgo;
-		default:
-			return -1;
-	}
-}
+			if (Math.abs(number) >= 1e9) {
+				if (Math.abs(number) % 1e9 === 0) return (number / 1e9).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + words.billion;
+				else return (number / 1e9).toFixed(3) + words.billion;
+			} else if (Math.abs(number) >= 1e6) {
+				if (Math.abs(number) % 1e6 === 0) return number / 1e6 + words.million;
+				else return (number / 1e6).toFixed(3) + words.million;
+			} else if (Math.abs(number) >= 1e3) {
+				if (Math.abs(number) % 1e3 === 0) return number / 1e3 + words.thousand;
+			}
+		}
 
-function formatDate(date = {}, options = {}) {
-	if (typeof date === "number") return formatDate({ milliseconds: date, attributes: options });
-
-	date = {
-		milliseconds: undefined,
-		...date,
-	};
-	options = {
-		showYear: false,
-		...options,
-	};
-
-	let millis = 0;
-	if (isDefined(date.milliseconds)) millis += date.milliseconds;
-	if (isDefined(date.seconds)) millis += date.seconds * TO_MILLIS.SECONDS;
-
-	const _date = new Date(millis);
-	let parts = [];
-	let separator;
-
-	switch (settings.formatting.date) {
-		case "us":
-			separator = "/";
-
-			parts.push(_date.getMonth() + 1, _date.getDate());
-			if (options.showYear) parts.push(_date.getFullYear());
-			break;
-		case "iso":
-			separator = "-";
-
-			if (options.showYear) parts.push(_date.getFullYear());
-			parts.push(_date.getMonth() + 1, _date.getDate());
-			break;
-		case "eu":
-		default:
-			separator = ".";
-
-			parts.push(_date.getDate(), _date.getMonth() + 1);
-			if (options.showYear) parts.push(_date.getFullYear());
-			break;
-	}
-
-	return parts.map((p) => toMultipleDigits(p)).join(separator);
-}
+		return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	},
+};
 
 function isDefined(object) {
 	return typeof object !== "undefined";
@@ -733,83 +794,11 @@ function getAudioPlayer() {
 	return audioPlayer;
 }
 
-function usingChrome() {
-	return navigator.userAgent.includes("Chrome");
-}
-
-function usingFirefox() {
-	return navigator.userAgent.includes("Firefox");
-}
-
-function usingYandex() {
-	return navigator.userAgent.includes("YaBrowser");
-}
-
-function formatNumber(number, options = {}) {
-	options = {
-		shorten: false,
-		formatter: false,
-		decimals: -1,
-		...options,
-	};
-	if (typeof number !== "number") {
-		if (isNaN(number)) return number;
-		else number = parseFloat(number);
-	}
-
-	if (options.decimals !== -1) {
-		number = options.decimals === 0 ? parseInt(number) : parseFloat(number.toFixed(options.decimals));
-	}
-
-	if (options.formatter) {
-		return formatter.format(number);
-	}
-
-	if (options.shorten) {
-		let words;
-		if (options.shorten === true || options.shorten === 1) {
-			words = {
-				thousand: "k",
-				million: "mil",
-				billion: "bill",
-			};
-		} else {
-			words = {
-				thousand: "k",
-				million: "m",
-				billion: "b",
-			};
-		}
-
-		if (Math.abs(number) >= 1e9) {
-			if (Math.abs(number) % 1e9 === 0) return (number / 1e9).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + words.billion;
-			else return (number / 1e9).toFixed(3) + words.billion;
-		} else if (Math.abs(number) >= 1e6) {
-			if (Math.abs(number) % 1e6 === 0) return number / 1e6 + words.million;
-			else return (number / 1e6).toFixed(3) + words.million;
-		} else if (Math.abs(number) >= 1e3) {
-			if (Math.abs(number) % 1e3 === 0) return number / 1e3 + words.thousand;
-		}
-	}
-
-	return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function capitalizeText(text, options = {}) {
-	options = {
-		everyWord: false,
-		...options,
-	};
-
-	if (!options.everyWord) return text[0].toUpperCase() + text.slice(1);
-
-	return text
-		.trim()
-		.split(" ")
-		.map((word) => capitalizeText(word))
-		.join(" ")
-		.trim();
-}
+const BROWSER_INFORMATION = {
+	isChrome: () => navigator.userAgent.includes("Chrome"),
+	isFirefox: () => navigator.userAgent.includes("Firefox"),
+	isYandex: () => navigator.userAgent.includes("YaBrowser"),
+};
 
 function isSellable(id) {
 	if (!torndata || !torndata.items) return true;
@@ -989,156 +978,153 @@ function sortTable(table, columnPlace, order) {
 	}
 }
 
-function hasAPIData() {
-	return api.torn.key && !api.torn.error && userdata && Object.keys(userdata).length;
-}
+const INTERCEPT_REQUESTS = {
+	injectedXHR: false,
+	injectXHR: () => {
+		if (INTERCEPT_REQUESTS.injectedXHR) return;
 
-function injectXHR() {
-	if (injectedXHR) return;
+		document.find("head").appendChild(
+			document.newElement({
+				type: "script",
+				attributes: { type: "text/javascript", src: chrome.runtime.getURL("/scripts/global/xhr.inject.js") },
+			})
+		);
+		INTERCEPT_REQUESTS.injectedXHR = true;
+	},
+	addXHRListener: (callback) => {
+		INTERCEPT_REQUESTS.injectXHR();
 
-	document.find("head").appendChild(
-		document.newElement({
-			type: "script",
-			attributes: { type: "text/javascript", src: chrome.runtime.getURL("/scripts/global/xhr.inject.js") },
-		})
-	);
-	injectedXHR = true;
-}
+		window.addEventListener("tt-xhr", callback);
+	},
+	injectedFetch: false,
+	injectFetch: () => {
+		if (INTERCEPT_REQUESTS.injectedFetch) return;
 
-function addXHRListener(callback) {
-	injectXHR();
+		document.find("head").appendChild(
+			document.newElement({
+				type: "script",
+				attributes: { type: "text/javascript", src: chrome.runtime.getURL("/scripts/global/fetch.inject.js") },
+			})
+		);
+		INTERCEPT_REQUESTS.injectedFetch = true;
+	},
+	addFetchListener: (callback) => {
+		INTERCEPT_REQUESTS.injectFetch();
 
-	window.addEventListener("tt-xhr", callback);
-}
+		window.addEventListener("tt-fetch", callback);
+	},
+};
 
-function injectFetch() {
-	if (injectedFetch) return;
+const CONTAINERS = {
+	createContainer: (title, options = {}) => {
+		options = {
+			id: title.camelCase(true),
+			parentElement: false,
+			nextElement: false,
+			previousElement: false,
+			showHeader: true,
+			collapsible: true,
+			applyRounding: true,
+			spacer: false,
+			contentBackground: true,
+			allowDragging: false,
+			...options,
+		};
 
-	document.find("head").appendChild(
-		document.newElement({
-			type: "script",
-			attributes: { type: "text/javascript", src: chrome.runtime.getURL("/scripts/global/fetch.inject.js") },
-		})
-	);
-	injectedFetch = true;
-}
+		const container = _createContainer(title, options);
 
-function addFetchListener(callback) {
-	injectFetch();
+		let parentElement;
+		if (options.parentElement) parentElement = options.parentElement;
+		else if (options.nextElement) parentElement = options.nextElement.parentElement;
+		else if (options.previousElement) parentElement = options.previousElement.parentElement;
+		else throw new Error("Not yet supported!");
 
-	window.addEventListener("tt-fetch", callback);
-}
+		if (options.nextElement) parentElement.insertBefore(container, options.nextElement);
+		else if (options.previousElement) parentElement.insertBefore(container, options.previousElement.nextSibling);
+		else parentElement.appendChild(container);
 
-function createContainer(title, options = {}) {
-	options = {
-		id: title.camelCase(true),
-		parentElement: false,
-		nextElement: false,
-		previousElement: false,
-		showHeader: true,
-		collapsible: true,
-		applyRounding: true,
-		spacer: false,
-		contentBackground: true,
-		allowDragging: false,
-		...options,
-	};
+		return { container, content: container.find(".content"), options: container.find(".options") };
 
-	const container = _createContainer(title, options);
+		function _createContainer(title, options = {}) {
+			if (document.find(`#${options.id}`)) document.find(`#${options.id}`).remove();
 
-	let parentElement;
-	if (options.parentElement) parentElement = options.parentElement;
-	else if (options.nextElement) parentElement = options.nextElement.parentElement;
-	else if (options.previousElement) parentElement = options.previousElement.parentElement;
-	else throw new Error("Not yet supported!");
+			let containerClasses = ["tt-container"];
+			if (options.collapsible) containerClasses.push("collapsible");
+			if (options.applyRounding) containerClasses.push("rounding");
+			if (options.spacer) containerClasses.push("spacer");
 
-	if (options.nextElement) parentElement.insertBefore(container, options.nextElement);
-	else if (options.previousElement) parentElement.insertBefore(container, options.previousElement.nextSibling);
-	else parentElement.appendChild(container);
+			const theme = THEMES[settings.themes.containers];
+			containerClasses.push(theme.containerClass);
+			const container = document.newElement({ type: "div", class: containerClasses.join(" "), id: options.id });
 
-	return { container, content: container.find(".content"), options: container.find(".options") };
+			const collapsed = options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false);
 
-	function _createContainer(title, options = {}) {
-		if (document.find(`#${options.id}`)) document.find(`#${options.id}`).remove();
-
-		let containerClasses = ["tt-container"];
-		if (options.collapsible) containerClasses.push("collapsible");
-		if (options.applyRounding) containerClasses.push("rounding");
-		if (options.spacer) containerClasses.push("spacer");
-
-		const theme = THEMES[settings.themes.containers];
-		containerClasses.push(theme.containerClass);
-		const container = document.newElement({ type: "div", class: containerClasses.join(" "), id: options.id });
-
-		const collapsed = options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false);
-
-		let html = "";
-		if (options.showHeader)
-			html += `
+			let html = "";
+			if (options.showHeader)
+				html += `
 				<div class="title ${collapsed ? "collapsed" : ""}">
 					<div class="text">${title}</div>
 					<div class="options"></div>
 					${options.collapsible ? '<i class="icon fas fa-caret-down"/>' : ""}
 				</div>`;
-		html += `<div class="content ${options.contentBackground ? "background" : ""}"></div>`;
-		container.innerHTML = html;
+			html += `<div class="content ${options.contentBackground ? "background" : ""}"></div>`;
+			container.innerHTML = html;
 
-		if (options.collapsible) {
-			container.find(".title").addEventListener("click", async () => {
-				container.find(".title").classList.toggle("collapsed");
+			if (options.collapsible) {
+				container.find(".title").addEventListener("click", async () => {
+					container.find(".title").classList.toggle("collapsed");
 
-				await ttStorage.change({ filters: { containers: { [options.id]: container.find(".title").classList.contains("collapsed") } } });
-			});
+					await ttStorage.change({ filters: { containers: { [options.id]: container.find(".title").classList.contains("collapsed") } } });
+				});
+			}
+			if (options.allowDragging) {
+				let content = container.find(".content");
+				content.addEventListener("dragover", (event) => event.preventDefault());
+				content.addEventListener("drop", (event) => {
+					content.find(".temp.item").classList.remove("temp");
+					container.find(".content").style.maxHeight = container.find(".content").scrollHeight + "px";
+
+					// Firefox opens new tab when dropping item
+					event.preventDefault();
+					event.dataTransfer.clearData();
+				});
+				content.addEventListener("dragenter", () => {
+					if (content.find(".temp.item")) {
+						content.find(".temp.item").style.opacity = "1";
+					}
+				});
+				content.addEventListener("dragleave", () => {
+					if (content.find(".temp.item")) {
+						content.find(".temp.item").style.opacity = "0.2";
+					}
+				});
+			}
+
+			return container;
 		}
-		if (options.allowDragging) {
-			let content = container.find(".content");
-			content.addEventListener("dragover", (event) => event.preventDefault());
-			content.addEventListener("drop", (event) => {
-				content.find(".temp.item").classList.remove("temp");
-				container.find(".content").style.maxHeight = container.find(".content").scrollHeight + "px";
+	},
+	findContainer: (title, options = {}) => {
+		options = {
+			id: title.camelCase(true),
+			selector: false,
+			...options,
+		};
 
-				// Firefox opens new tab when dropping item
-				event.preventDefault();
-				event.dataTransfer.clearData();
-			});
-			content.addEventListener("dragenter", () => {
-				if (content.find(".temp.item")) {
-					content.find(".temp.item").style.opacity = "1";
-				}
-			});
-			content.addEventListener("dragleave", () => {
-				if (content.find(".temp.item")) {
-					content.find(".temp.item").style.opacity = "0.2";
-				}
-			});
-		}
+		if (!options.id) return false;
 
-		return container;
-	}
-}
+		const container = document.find(`#${options.id}`);
+		if (!container) return false;
 
-function findContainer(title, options = {}) {
-	options = {
-		id: title.camelCase(true),
-		selector: false,
-		...options,
-	};
+		if (options.selector) return container.find(options.selector);
+		else return container;
+	},
+	removeContainer: (title, options = {}) => {
+		const container = CONTAINERS.findContainer(title, options);
+		if (!container) return;
 
-	if (!options.id) return false;
-
-	const container = document.find(`#${options.id}`);
-	if (!container) return false;
-
-	if (options.selector) return container.find(options.selector);
-	else return container;
-}
-
-function removeContainer(title, options = {}) {
-	const container = findContainer(title, options);
-	if (!container) return;
-
-	container.remove();
-}
+		container.remove();
+	},
+};
 
 function findItemsInObject(object, attributes = {}, options = {}) {
 	options = {
@@ -1184,13 +1170,10 @@ function findItemsInList(list, attributes = {}, options = {}) {
 	return options.single ? false : items;
 }
 
-function isFlying() {
-	return document.body.dataset.traveling === "true" || document.body.dataset.traveling === true;
-}
-
-function isAbroad() {
-	return document.body.dataset.abroad === "true" || document.body.dataset.abroad === true;
-}
+const USER_INFORMATION = {
+	isFlying: () => document.body.dataset.traveling === "true" || document.body.dataset.traveling === true,
+	isAbroad: () => document.body.dataset.abroad === "true" || document.body.dataset.abroad === true,
+};
 
 function getCookie(cname) {
 	const name = cname + "=";
@@ -1227,7 +1210,7 @@ function addRFC(url) {
 // TODO - Use in ttItems.js
 const ITEM_VALUE_UTILITIES = {
 	showTotal: (list, type) => {
-		if (!hasAPIData() || !settings.apiUsage.user.inventory) return;
+		if (!API_HELPER.hasAPIData() || !settings.apiUsage.user.inventory) return;
 
 		let total;
 		if (type === "All") total = userdata.inventory.map((x) => x.quantity * x.market_price).reduce((a, b) => (a += b), 0);
@@ -1245,7 +1228,7 @@ const ITEM_VALUE_UTILITIES = {
 					children: [
 						document.newElement({
 							type: "li",
-							text: `Total Value: $${formatNumber(total, { decimals: 0 })}`,
+							text: `Total Value: $${FORMATTING.formatNumber(total, { decimals: 0 })}`,
 							class: "tt-item-price",
 						}),
 					],
@@ -1262,14 +1245,14 @@ const ITEM_VALUE_UTILITIES = {
 		const totalPrice = quantity * price;
 		if (totalPrice) {
 			if (quantity > 1) {
-				priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(price)} | ` }));
+				priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(price)} | ` }));
 				priceElement.appendChild(document.newElement({ type: "span", text: `${quantity}x = `, class: "tt-item-quantity" }));
 			}
-			priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(totalPrice)}` }));
+			priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(totalPrice)}` }));
 		} else if (price === 0) {
 			priceElement.innerText = `N/A`;
 		} else {
-			priceElement.innerText = `$${formatNumber(price)}`;
+			priceElement.innerText = `$${FORMATTING.formatNumber(price)}`;
 		}
 	},
 };

@@ -34,7 +34,7 @@ async function loadGlobalEntry() {
 
 	document.documentElement.style.setProperty("--torntools-chat-font-size", `${settings.pages.chat.fontSize || 12}px`);
 
-	if (hasAPIData()) {
+	if (API_HELPER.hasAPIData()) {
 		// Highlight refills.
 		document.documentElement.style.setProperty(
 			"--torntools-highlight-energy",
@@ -46,7 +46,7 @@ async function loadGlobalEntry() {
 		);
 	}
 
-	requireElement("#chatRoot").then((chats) => {
+	REQUIRES.requireElement("#chatRoot").then((chats) => {
 		if (settings.pages.chat.blockZalgo) chats.classList.add("no-zalgo");
 		else chats.classList.remove("no-zalgo");
 	});
@@ -64,7 +64,7 @@ async function loadGlobalEntry() {
 }
 
 async function forceUpdate() {
-	await requireContent();
+	await REQUIRES.requireContent();
 
 	document.find("#sidebarroot ul[class*='status-icons']").setAttribute("updated", Date.now());
 }

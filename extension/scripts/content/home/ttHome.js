@@ -3,7 +3,7 @@
 let networthInterval = false;
 
 (async () => {
-	if (isFlying() || isAbroad()) return;
+	if (USER_INFORMATION.isFlying() || USER_INFORMATION.isAbroad()) return;
 
 	await loadDatabase();
 	console.log("TT: Home - Loading script. ");
@@ -21,7 +21,7 @@ let networthInterval = false;
 })();
 
 function loadHome() {
-	requireContent().then(async () => {
+	REQUIRES.requireContent().then(async () => {
 		await displayNetworth().catch((error) => console.error("Couldn't load the live networth.", error));
 		await displayEffectiveBattleStats().catch((error) => console.error("Couldn't load the effective battle stats.", error));
 	});
@@ -33,8 +33,8 @@ async function displayNetworth() {
 		networthInterval = false;
 	}
 
-	if (settings.apiUsage.user.networth && settings.pages.home.networthDetails && hasAPIData()) {
-		const { content } = createContainer("Live Networth", {
+	if (settings.apiUsage.user.networth && settings.pages.home.networthDetails && API_HELPER.hasAPIData()) {
+		const { content } = CONTAINERS.createContainer("Live Networth", {
 			collapsible: false,
 			showHeader: false,
 			applyRounding: false,
@@ -46,7 +46,7 @@ async function displayNetworth() {
 			return;
 		}
 
-		let networthRow = newRow("(Live) Networth", `$${formatNumber(userdata.networth.total)}`);
+		let networthRow = newRow("(Live) Networth", `$${FORMATTING.formatNumber(userdata.networth.total)}`);
 		networthRow.style.backgroundColor = "#65c90069";
 
 		// Networth last updated info icon
@@ -55,7 +55,7 @@ async function displayNetworth() {
 			class: "networth-info-icon",
 			attributes: {
 				seconds: (Date.now() - userdata.networth.date) / 1000,
-				title: "Last updated " + formatTime({ milliseconds: userdata.networth.date }, { type: "ago" }),
+				title: "Last updated " + FORMATTING.formatTime({ milliseconds: userdata.networth.date }, { type: "ago" }),
 				style: "margin-left: 9px;",
 			},
 		});
@@ -66,7 +66,7 @@ async function displayNetworth() {
 		networthInterval = setInterval(() => {
 			let seconds = parseInt(infoIcon.getAttribute("seconds")) + 1;
 
-			infoIcon.setAttribute("title", `Last updated: ${formatTime({ milliseconds: Date.now() - seconds * 1000 }, { type: "ago" })}`);
+			infoIcon.setAttribute("title", `Last updated: ${FORMATTING.formatTime({ milliseconds: Date.now() - seconds * 1000 }, { type: "ago" })}`);
 			infoIcon.setAttribute("seconds", `${seconds}`);
 		}, 1000);
 
@@ -121,10 +121,10 @@ async function displayNetworth() {
 					type: "tr",
 					children: [
 						document.newElement({ type: "td", text: type }),
-						document.newElement({ type: "td", text: `$${formatNumber(current, { shorten: true })}` }),
+						document.newElement({ type: "td", text: `$${FORMATTING.formatNumber(current, { shorten: true })}` }),
 						document.newElement({
 							type: "td",
-							text: `${isPositive ? "+" : "-"}$${formatNumber(Math.abs(current - previous), { shorten: true })}`,
+							text: `${isPositive ? "+" : "-"}$${FORMATTING.formatNumber(Math.abs(current - previous), { shorten: true })}`,
 							class: isPositive ? "positive" : "negative",
 						}),
 					],
@@ -161,14 +161,14 @@ async function displayNetworth() {
 			});
 		}
 	} else {
-		removeContainer("Live Networth");
+		CONTAINERS.removeContainer("Live Networth");
 	}
 }
 
 async function displayEffectiveBattleStats() {
 	if (settings.pages.home.effectiveStats) {
 		const statsContainer = document.find("h5=Battle Stats").parentElement.nextElementSibling.find("ul.info-cont-wrap");
-		const { content } = createContainer("Effective Battle Stats", { collapsible: false, applyRounding: false, parentElement: statsContainer });
+		const { content } = CONTAINERS.createContainer("Effective Battle Stats", { collapsible: false, applyRounding: false, parentElement: statsContainer });
 
 		let effectiveTotal = 0;
 		const stats = ["Strength", "Defense", "Speed", "Dexterity"];
@@ -180,10 +180,10 @@ async function displayEffectiveBattleStats() {
 			const effective = (base * modifier).dropDecimals();
 
 			effectiveTotal += effective;
-			content.appendChild(await newRow(stats[i], formatNumber(effective)));
+			content.appendChild(await newRow(stats[i], FORMATTING.formatNumber(effective)));
 		}
 
-		content.appendChild(await newRow("Total", formatNumber(effectiveTotal, false)));
+		content.appendChild(await newRow("Total", FORMATTING.formatNumber(effectiveTotal, false)));
 
 		async function newRow(name, value) {
 			return document.newElement({
@@ -204,6 +204,6 @@ async function displayEffectiveBattleStats() {
 			});
 		}
 	} else {
-		removeContainer("Effective Battle Stats");
+		CONTAINERS.removeContainer("Effective Battle Stats");
 	}
 }

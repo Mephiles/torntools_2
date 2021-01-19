@@ -14,7 +14,7 @@
 function loadCompanies() {}
 
 function loadCompaniesOnce() {
-	addXHRListener(async (event) => {
+	INTERCEPT_REQUESTS.addXHRListener(async (event) => {
 		const { page, json } = event.detail;
 
 		if (page === "companies" && json) {
@@ -28,7 +28,7 @@ function loadCompaniesOnce() {
 async function showMuggableCash(json) {
 	if (!settings.pages.companies.specialMugMoney) return;
 
-	const api = hasAPIData() && settings.apiUsage.user.merits;
+	const api = API_HELPER.hasAPIData() && settings.apiUsage.user.merits;
 
 	let percentageMin = 5;
 	let percentageMax = 10;
@@ -60,10 +60,9 @@ async function showMuggableCash(json) {
 	jobInfo.appendChild(
 		document.newElement({
 			type: "li",
-			text: `Potential mug${api ? "" : "*"}: $${formatNumber(cash * (percentageMin / 100), { decimals: 0 })} - $${formatNumber(
-				cash * (percentageMax / 100),
-				{ decimals: 0 }
-			)}`,
+			text: `Potential mug${api ? "" : "*"}: $${FORMATTING.formatNumber(cash * (percentageMin / 100), {
+				decimals: 0,
+			})} - $${FORMATTING.formatNumber(cash * (percentageMax / 100), { decimals: 0 })}`,
 		})
 	);
 	if (!api) jobInfo.appendChild(document.newElement({ type: "li", text: "* Might not be entirely accurate due to missing API information." }));

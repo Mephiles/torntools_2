@@ -14,7 +14,7 @@ let activeTrade = false;
 })();
 
 function loadTrade() {
-	requireElement(".user.left, .user.right, #inventory-stat-container").then(() => {
+	REQUIRES.requireElement(".user.left, .user.right, #inventory-stat-container").then(() => {
 		const step = getHashParameters().get("step");
 
 		switch (step) {
@@ -27,7 +27,7 @@ function loadTrade() {
 }
 
 function loadTradeOnce() {
-	addXHRListener(({ detail: { page, xhr, json } }) => {
+	INTERCEPT_REQUESTS.addXHRListener(({ detail: { page, xhr, json } }) => {
 		if (page === "trade") {
 			loadTrade();
 		} else if (page === "inventory") {
@@ -60,7 +60,7 @@ const ITEM_VALUES = {
 			for (const item of items) {
 				if (parseInt(item.untradable)) continue;
 
-				requireElement(`li[data-reactid*='$${item.armoryID}'] .name-wrap`, { parent: list }).then(async () => {
+				REQUIRES.requireElement(`li[data-reactid*='$${item.armoryID}'] .name-wrap`, { parent: list }).then(async () => {
 					const parent = list.find(`li[data-reactid*='$${item.armoryID}'] .name-wrap`);
 					if (parent.find(".tt-item-price")) {
 						if (type) return;

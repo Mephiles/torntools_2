@@ -14,7 +14,7 @@ let ownFaction = false;
 })();
 
 function loadFactions() {
-	requireContent().then(() => {
+	REQUIRES.requireContent().then(() => {
 		if (getSearchParameters().get("step") === "your") {
 			ownFaction = true;
 
@@ -41,7 +41,7 @@ function loadFactions() {
 					break;
 			}
 		} else {
-			ownFaction = hasAPIData() && userdata.faction ? parseInt(getSearchParameters().get("ID")) === userdata.faction.faction_id : false;
+			ownFaction = API_HELPER.hasAPIData() && userdata.faction ? parseInt(getSearchParameters().get("ID")) === userdata.faction.faction_id : false;
 
 			loadInfo();
 		}
@@ -57,7 +57,7 @@ function loadFactions() {
 
 function loadFactionsOnce() {
 	if (getSearchParameters().get("step") === "your") {
-		requireElement(".factions-tabs").then(() => {
+		REQUIRES.requireElement(".factions-tabs").then(() => {
 			document.find(".factions-tabs li[data-case=main]").addEventListener("click", loadMain);
 			document.find(".factions-tabs li[data-case=info]").addEventListener("click", loadInfo);
 			document.find(".factions-tabs li[data-case=crimes]").addEventListener("click", loadCrimes);
@@ -77,7 +77,7 @@ function loadCrimes() {}
 function loadUpgrades() {}
 
 function loadArmory() {
-	requireElement("#faction-armoury-tabs > ul.tabs > li[aria-selected='true']").then(() => {
+	REQUIRES.requireElement("#faction-armoury-tabs > ul.tabs > li[aria-selected='true']").then(() => {
 		loadArmorySection();
 		new MutationObserver((mutations) => {
 			if (
@@ -124,9 +124,9 @@ async function highlightBloodBags() {
 
 			item.find(".name").classList.add(allowedBlood.includes(itemId) ? "good-blood" : "bad-blood");
 
-			if (hasAPIData()) {
+			if (API_HELPER.hasAPIData()) {
 				item.find(".name").appendChild(
-					document.newElement({ type: "span", class: "tt-item-price", text: `$${formatNumber(torndata.items[itemId].market_value)}` })
+					document.newElement({ type: "span", class: "tt-item-price", text: `$${FORMATTING.formatNumber(torndata.items[itemId].market_value)}` })
 				);
 			}
 		}

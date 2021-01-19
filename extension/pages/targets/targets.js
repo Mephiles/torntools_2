@@ -89,7 +89,9 @@ async function setupAttackHistory() {
 			document.newElement({
 				type: "td",
 				class: "last-attack",
-				text: `${formatDate({ milliseconds: data.lastAttack }, { showYear: true })}, ${formatTime({ milliseconds: data.lastAttack })}`,
+				text: `${FORMATTING.formatDate({ milliseconds: data.lastAttack }, { showYear: true })}, ${FORMATTING.formatTime({
+					milliseconds: data.lastAttack,
+				})}`,
 				attributes: { value: data.lastAttack },
 			})
 		);

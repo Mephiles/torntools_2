@@ -73,7 +73,7 @@ async function setupInitialize() {
 	document.find("#set_api_key").addEventListener("click", () => {
 		const key = document.find("#api_key").value;
 
-		changeAPIKey(key)
+		API_HELPER.changeAPIKey(key)
 			.then(async () => {
 				document.find("#pages").classList.remove("hidden");
 
@@ -179,7 +179,7 @@ async function setupDashboard() {
 
 				const status = userdata.status.state === "abroad" ? "okay" : userdata.status.state.toLowerCase();
 
-				dashboard.find("#status").innerText = capitalizeText(status);
+				dashboard.find("#status").innerText = status.capitalize();
 				dashboard.find("#status").setAttribute("class", status);
 				dashboard.find(".status-wrap").classList.remove("hidden");
 
@@ -246,7 +246,7 @@ async function setupDashboard() {
 			const current = maximum - userdata.travel.time_left;
 
 			dashboard.find("#traveling .progress .value").style.width = `${(current / maximum) * 100}%`;
-			dashboard.find("#traveling .bar-info .bar-label").innerText = formatTime(userdata.travel.timestamp * 1000);
+			dashboard.find("#traveling .bar-info .bar-label").innerText = FORMATTING.formatTime(userdata.travel.timestamp * 1000);
 
 			// noinspection JSValidateTypes
 			dashboard.find("#traveling .bar-info").dataset.tick_at = userdata.travel.timestamp * 1000;
@@ -268,7 +268,7 @@ async function setupDashboard() {
 				dashboard.find(".extra .events .count").innerText = Object.values(userdata.events).filter((event) => !event.seen).length;
 			if (settings.apiUsage.user.messages)
 				dashboard.find(".extra .messages .count").innerText = Object.values(userdata.messages).filter((message) => !message.seen).length;
-			if (settings.apiUsage.user.money) dashboard.find(".extra .wallet .count").innerText = `$${formatNumber(userdata.money_onhand)}`;
+			if (settings.apiUsage.user.money) dashboard.find(".extra .wallet .count").innerText = `$${FORMATTING.formatNumber(userdata.money_onhand)}`;
 		}
 
 		function updateActions() {
@@ -291,9 +291,9 @@ async function setupDashboard() {
 		if (!status.dataset.until) return;
 
 		if (status.classList.contains("jail")) {
-			status.innerText = `Jailed for ${formatTime({ milliseconds: status.dataset.until - current }, { type: "timer" })}`;
+			status.innerText = `Jailed for ${FORMATTING.formatTime({ milliseconds: status.dataset.until - current }, { type: "timer" })}`;
 		} else if (status.classList.contains("hospital")) {
-			status.innerText = `Hospitalized for ${formatTime({ milliseconds: status.dataset.until - current }, { type: "timer" })}`;
+			status.innerText = `Hospitalized for ${FORMATTING.formatTime({ milliseconds: status.dataset.until - current }, { type: "timer" })}`;
 		}
 	}
 
@@ -316,17 +316,17 @@ async function setupDashboard() {
 		let full;
 		if (full_at === "full" || full_at === "over") full = "FULL";
 		else if (name === "chain" || (name === "happy" && full_at === "over"))
-			full = `${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer", hideHours: true })}`;
-		else if (name === "traveling") full = `Landing in ${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer" })}`;
+			full = `${FORMATTING.formatTime({ seconds: FORMATTING.toSeconds(full_at - current) }, { type: "timer", hideHours: true })}`;
+		else if (name === "traveling") full = `Landing in ${FORMATTING.formatTime({ seconds: FORMATTING.toSeconds(full_at - current) }, { type: "timer" })}`;
 		else {
-			full = `Full in ${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer" })}`;
+			full = `Full in ${FORMATTING.formatTime({ seconds: FORMATTING.toSeconds(full_at - current) }, { type: "timer" })}`;
 
-			if (settings.pages.popup.hoverBarTime) full += ` (${formatTime({ milliseconds: full_at }, { type: "normal" })})`;
+			if (settings.pages.popup.hoverBarTime) full += ` (${FORMATTING.formatTime({ milliseconds: full_at }, { type: "normal" })})`;
 		}
 
 		let tick;
-		if (name === "traveling") tick = formatTime({ seconds: toSeconds(tick_at - current) }, { type: "timer" });
-		else tick = formatTime({ seconds: toSeconds(tick_at - current) }, { type: "timer", hideHours: true });
+		if (name === "traveling") tick = FORMATTING.formatTime({ seconds: FORMATTING.toSeconds(tick_at - current) }, { type: "timer" });
+		else tick = FORMATTING.formatTime({ seconds: FORMATTING.toSeconds(tick_at - current) }, { type: "timer", hideHours: true });
 
 		if (name === "happy") {
 			if (full_at === "over") {
@@ -350,9 +350,9 @@ async function setupDashboard() {
 		const completed_at = parseInt(dataset.completed_at) || dataset.completed_at;
 
 		if (completed_at) {
-			cooldown.find(".cooldown-label").innerText = formatTime({ milliseconds: completed_at - current }, { type: "timer" });
+			cooldown.find(".cooldown-label").innerText = FORMATTING.formatTime({ milliseconds: completed_at - current }, { type: "timer" });
 		} else {
-			cooldown.find(".cooldown-label").innerText = formatTime({ milliseconds: 0 }, { type: "timer" });
+			cooldown.find(".cooldown-label").innerText = FORMATTING.formatTime({ milliseconds: 0 }, { type: "timer" });
 		}
 	}
 
@@ -360,7 +360,7 @@ async function setupDashboard() {
 		Date.now();
 		const updatedAt = parseInt(dashboard.find("#last-update").dataset.updated_at);
 
-		dashboard.find("#last-update").innerText = formatTime({ milliseconds: updatedAt }, { type: "ago", agoFilter: TO_MILLIS.SECONDS });
+		dashboard.find("#last-update").innerText = FORMATTING.formatTime({ milliseconds: updatedAt }, { type: "ago", agoFilter: TO_MILLIS.SECONDS });
 	}
 
 	function updateStakeouts() {
@@ -503,7 +503,7 @@ async function setupMarketSearch() {
 				for (let type of Object.keys(result)) {
 					let text;
 					if (type === "itemmarket") text = "Item Market";
-					else text = capitalizeText(type);
+					else text = type.capitalize();
 
 					let wrap = document.newElement({ type: "div" });
 
@@ -517,7 +517,7 @@ async function setupMarketSearch() {
 								document.newElement({
 									type: "div",
 									class: "price",
-									text: `${item.quantity}x | $${formatNumber(item.cost)}`,
+									text: `${item.quantity}x | $${FORMATTING.formatNumber(item.cost)}`,
 								})
 							);
 						}
@@ -546,8 +546,8 @@ async function setupMarketSearch() {
 			});
 
 		const item = torndata.items[id];
-		viewItem.find(".circulation").innerText = formatNumber(item.circulation);
-		viewItem.find(".value").innerText = `$${formatNumber(item.market_value)}`;
+		viewItem.find(".circulation").innerText = FORMATTING.formatNumber(item.circulation);
+		viewItem.find(".value").innerText = `$${FORMATTING.formatNumber(item.market_value)}`;
 		viewItem.find(".name").innerText = item.name;
 		viewItem.find(".name").href = `https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=${item.name}`;
 		viewItem.find(".image").src = item.image;
@@ -592,7 +592,7 @@ async function setupStocksOverview() {
 						document.newElement({
 							type: "span",
 							class: "quantity",
-							text: `(${formatNumber(stock.shares, { shorten: 2 })} share${applyPlural(stock.shares)})`,
+							text: `(${FORMATTING.formatNumber(stock.shares, { shorten: 2 })} share${applyPlural(stock.shares)})`,
 						}),
 					],
 				})
@@ -601,7 +601,7 @@ async function setupStocksOverview() {
 				document.newElement({
 					type: "div",
 					class: `profit ${getProfitClass(profit)}`,
-					text: `${getProfitIndicator(profit)}$${formatNumber(Math.abs(profit))}`,
+					text: `${getProfitIndicator(profit)}$${FORMATTING.formatNumber(Math.abs(profit))}`,
 				})
 			);
 
@@ -612,11 +612,11 @@ async function setupStocksOverview() {
 				children: [
 					document.newElement({
 						type: "span",
-						text: `Current price: $${formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
+						text: `Current price: $${FORMATTING.formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
 					}),
 					document.newElement({
 						type: "span",
-						text: `Bought at: $${formatNumber(stock.bought_price, { decimals: 3 })}`,
+						text: `Bought at: $${FORMATTING.formatNumber(stock.bought_price, { decimals: 3 })}`,
 					}),
 				],
 			});
@@ -637,7 +637,9 @@ async function setupStocksOverview() {
 					children: [
 						document.newElement({
 							type: "span",
-							text: `Required stocks: ${formatNumber(stock.shares)}/${formatNumber(torndata.stocks[id].benefit.requirement)}`,
+							text: `Required stocks: ${FORMATTING.formatNumber(stock.shares)}/${FORMATTING.formatNumber(
+								torndata.stocks[id].benefit.requirement
+							)}`,
 						}),
 						document.newElement("br"),
 						document.newElement({
@@ -691,11 +693,11 @@ async function setupStocksOverview() {
 			children: [
 				document.newElement({
 					type: "span",
-					text: `Current price: $${formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
+					text: `Current price: $${FORMATTING.formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
 				}),
 				document.newElement({
 					type: "span",
-					text: `Available shares: ${formatNumber(torndata.stocks[id].available_shares)}`,
+					text: `Available shares: ${FORMATTING.formatNumber(torndata.stocks[id].available_shares)}`,
 				}),
 			],
 		});
@@ -708,7 +710,7 @@ async function setupStocksOverview() {
 				type: "div",
 				class: "content benefit hidden",
 				children: [
-					document.newElement({ type: "span", text: `Required stocks: ${formatNumber(torndata.stocks[id].benefit.requirement)}` }),
+					document.newElement({ type: "span", text: `Required stocks: ${FORMATTING.formatNumber(torndata.stocks[id].benefit.requirement)}` }),
 					document.newElement("br"),
 					document.newElement({ type: "span", class: `description`, text: `${torndata.stocks[id].benefit.description}.` }),
 				],

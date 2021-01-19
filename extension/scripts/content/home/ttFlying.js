@@ -1,7 +1,7 @@
 "use strict";
 
 (async () => {
-	if (!isFlying() && !isAbroad()) return;
+	if (!USER_INFORMATION.isFlying() && !USER_INFORMATION.isAbroad()) return;
 
 	await loadDatabase();
 	console.log("TT: Flying - Loading script. ");

@@ -502,7 +502,7 @@ async function updateUserdata() {
 				if (oldUserdata[bar].current < userdata[bar].current && userdata[bar].current >= checkpoint && !notifications[bar][checkpoint]) {
 					notifications[bar][checkpoint] = {
 						title: "TornTools - Bars",
-						message: `Your ${capitalizeText(bar)} bar has reached ${userdata[bar].current}/${userdata[bar].maximum}.`,
+						message: `Your ${bar.capitalize()} bar has reached ${userdata[bar].current}/${userdata[bar].maximum}.`,
 						url: LINKS.home,
 						date: now,
 					};
@@ -527,7 +527,7 @@ async function updateUserdata() {
 
 				notifications.chain[key] = {
 					title: "TornTools - Chain",
-					message: `Chain timer will run out in ${formatTime({ milliseconds: timeout }, { type: "wordTimer" })}.`,
+					message: `Chain timer will run out in ${FORMATTING.formatTime({ milliseconds: timeout }, { type: "wordTimer" })}.`,
 					url: LINKS.chain,
 					date: now,
 				};
@@ -571,7 +571,7 @@ async function updateUserdata() {
 
 				notifications.hospital[checkpoint] = {
 					title: "TornTools - Hospital",
-					message: `You will be out of the hospital in ${formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
+					message: `You will be out of the hospital in ${FORMATTING.formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
 					url: LINKS.hospital,
 					date: now,
 				};
@@ -593,7 +593,7 @@ async function updateUserdata() {
 
 				notifications.travel[checkpoint] = {
 					title: "TornTools - Travel",
-					message: `You will be landing in ${formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
+					message: `You will be landing in ${FORMATTING.formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
 					url: LINKS.home,
 					date: now,
 				};
@@ -622,7 +622,7 @@ async function updateUserdata() {
 
 					notifications[cooldown.memory][checkpoint] = {
 						title: `TornTools - ${cooldown.title}`,
-						message: `Your ${cooldown.name} cooldown will end in ${formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
+						message: `Your ${cooldown.name} cooldown will end in ${FORMATTING.formatTime({ milliseconds: timeLeft }, { type: "wordTimer" })}.`,
 						url: LINKS.items,
 						date: now,
 					};
@@ -635,7 +635,7 @@ async function updateUserdata() {
 }
 
 async function showIconBars() {
-	if (!settings.apiUsage.user.bars || !hasAPIData() || !settings || !settings.pages.icon.global) {
+	if (!settings.apiUsage.user.bars || !API_HELPER.hasAPIData() || !settings || !settings.pages.icon.global) {
 		chrome.browserAction.setIcon({ path: "resources/images/icon_128.png" });
 	} else {
 		let barCount = 0;
@@ -825,17 +825,17 @@ async function updateStocks() {
 			if (alerts.priceFalls && oldStocks[id].current_price > alerts.priceFalls && stocks[id].current_price <= alerts.priceFalls) {
 				await notifyUser(
 					"TornTools - Stock Alerts",
-					`(${stocks[id].acronym}) ${stocks[id].name} has fallen to $${formatNumber(stocks[id].current_price)} (alert: $${formatNumber(
-						alerts.priceFalls
-					)})!`,
+					`(${stocks[id].acronym}) ${stocks[id].name} has fallen to $${FORMATTING.formatNumber(
+						stocks[id].current_price
+					)} (alert: $${FORMATTING.formatNumber(alerts.priceFalls)})!`,
 					LINKS.stocks
 				);
 			} else if (alerts.priceReaches && oldStocks[id].current_price < alerts.priceFalls && stocks[id].current_price >= alerts.priceReaches) {
 				await notifyUser(
 					"TornTools - Stock Alerts",
-					`(${stocks[id].acronym}) ${stocks[id].name} has reached $${formatNumber(stocks[id].current_price)} (alert: $${formatNumber(
-						alerts.priceReaches
-					)})!`,
+					`(${stocks[id].acronym}) ${stocks[id].name} has reached $${FORMATTING.formatNumber(
+						stocks[id].current_price
+					)} (alert: $${FORMATTING.formatNumber(alerts.priceReaches)})!`,
 					LINKS.stocks
 				);
 			} else if (alerts.systemDumps && oldStocks[id].total_shares < stocks[id].total_shares) {
@@ -920,7 +920,7 @@ async function notifyUser(title, message, url) {
 	}
 
 	function hasSilentSupport() {
-		return !usingFirefox() && (!navigator.userAgent.includes("Mobile Safari") || usingYandex());
+		return !BROWSER_INFORMATION.isFirefox() && (!navigator.userAgent.includes("Mobile Safari") || BROWSER_INFORMATION.isYandex());
 	}
 
 	async function setupSoundPlayer() {

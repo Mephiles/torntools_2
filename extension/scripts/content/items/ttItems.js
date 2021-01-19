@@ -15,7 +15,7 @@ let pendingActions = {};
 })();
 
 function loadItems() {
-	requireContent().then(() => {
+	REQUIRES.requireContent().then(() => {
 		loadQuickItems().catch((error) => console.error("Couldn't load the quick items.", error));
 	});
 	requireItemsLoaded().then(() => {
@@ -38,13 +38,13 @@ function loadItemsOnce() {
 			else secondsLeft = parseInt(timer.dataset.time);
 			secondsLeft--;
 
-			timer.innerText = formatTime({ seconds: secondsLeft }, { type: "timer" });
+			timer.innerText = FORMATTING.formatTime({ seconds: secondsLeft }, { type: "timer" });
 
 			timer.dataset.secondsLeft = `${secondsLeft}`;
 		}
 	}, 1000);
 
-	addXHRListener((event) => {
+	INTERCEPT_REQUESTS.addXHRListener((event) => {
 		const { page, json, xhr } = event.detail;
 
 		if (page === "item" && json) {
@@ -112,7 +112,7 @@ function loadItemsOnce() {
 }
 
 function requireItemsLoaded() {
-	return requireElement(".items-cont[aria-expanded=true] > li > .title-wrap");
+	return REQUIRES.requireElement(".items-cont[aria-expanded=true] > li > .title-wrap");
 }
 
 function initializeItems() {
@@ -126,7 +126,7 @@ function initializeItems() {
 
 async function loadQuickItems() {
 	if (settings.pages.items.quickItems) {
-		const { content, options } = createContainer("Quick Items", {
+		const { content, options } = CONTAINERS.createContainer("Quick Items", {
 			nextElement: document.find(".equipped-items-wrap"),
 			spacer: true,
 			allowDragging: true,
@@ -167,12 +167,12 @@ async function loadQuickItems() {
 			addQuickItem(id, false);
 		}
 	} else {
-		removeContainer("Quick Items");
+		CONTAINERS.removeContainer("Quick Items");
 	}
 }
 
 function addQuickItem(id, temporary = false) {
-	const content = findContainer("Quick Items", { selector: ".content" });
+	const content = CONTAINERS.findContainer("Quick Items", { selector: ".content" });
 	const innerContent = content.find(".inner-content");
 	const responseWrap = content.find(".response-wrap");
 
@@ -212,7 +212,7 @@ function addQuickItem(id, temporary = false) {
 
 						for (let count of responseWrap.findAll(".counter-wrap")) {
 							count.classList.add("tt-modified");
-							count.innerText = formatTime({ seconds: parseInt(count.dataset.time) }, { type: "timer" });
+							count.innerText = FORMATTING.formatTime({ seconds: parseInt(count.dataset.time) }, { type: "timer" });
 						}
 
 						if (response.items) {
@@ -231,7 +231,7 @@ function addQuickItem(id, temporary = false) {
 		},
 	});
 	itemWrap.appendChild(document.newElement({ type: "div", class: "pic", attributes: { style: `background-image: url(/images/items/${id}/medium.png)` } }));
-	if (hasAPIData()) {
+	if (API_HELPER.hasAPIData()) {
 		itemWrap.appendChild(document.newElement({ type: "div", class: "text", text: torndata.items[id].name }));
 
 		if (settings.apiUsage.user.inventory) {
@@ -265,7 +265,7 @@ function allowQuickItem(category) {
 }
 
 async function saveQuickItems() {
-	const content = findContainer("Quick Items", { selector: ".content" });
+	const content = CONTAINERS.findContainer("Quick Items", { selector: ".content" });
 
 	await ttStorage.change({ quick: { items: [...content.findAll(".item")].map((x) => parseInt(x.getAttribute("item-id"))) } });
 }
@@ -319,7 +319,7 @@ async function onItemClickQuickEdit(event) {
 }
 
 function updateItemAmount(id, change) {
-	const quickQuantity = findContainer("Quick Items", { selector: `.item[item-id="${id}"] .quantity` });
+	const quickQuantity = CONTAINERS.findContainer("Quick Items", { selector: `.item[item-id="${id}"] .quantity` });
 	if (quickQuantity) {
 		let newQuantity = parseInt(quickQuantity.getAttribute("quantity")) + change;
 
@@ -337,16 +337,16 @@ function updateItemAmount(id, change) {
 
 		if (newQuantity === 1) {
 			priceElement.innerHTML = "";
-			priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(price)}` }));
+			priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(price)}` }));
 		} else {
 			quantityElement.innerText = `${newQuantity}x = `;
-			priceElement.find("span:last-child").innerText = `$${formatNumber(price * newQuantity)}`;
+			priceElement.find("span:last-child").innerText = `$${FORMATTING.formatNumber(price * newQuantity)}`;
 		}
 	}
 }
 
 async function showItemValues() {
-	if (settings.pages.items.values && hasAPIData() && settings.apiUsage.user.inventory) {
+	if (settings.pages.items.values && API_HELPER.hasAPIData() && settings.apiUsage.user.inventory) {
 		const list = document.find(".items-cont[aria-expanded=true]");
 		const type = list.getAttribute("data-info");
 
@@ -388,16 +388,16 @@ async function showItemValues() {
 
 			if (totalPrice) {
 				if (quantity === 1) {
-					priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(price)}` }));
+					priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(price)}` }));
 				} else {
-					priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(price)} | ` }));
+					priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(price)} | ` }));
 					priceElement.appendChild(document.newElement({ type: "span", text: `${quantity}x = `, class: "tt-item-quantity" }));
-					priceElement.appendChild(document.newElement({ type: "span", text: `$${formatNumber(totalPrice)}` }));
+					priceElement.appendChild(document.newElement({ type: "span", text: `$${FORMATTING.formatNumber(totalPrice)}` }));
 				}
 			} else if (price === 0) {
 				priceElement.innerText = `N/A`;
 			} else {
-				priceElement.innerText = `$${formatNumber(price)}`;
+				priceElement.innerText = `$${FORMATTING.formatNumber(price)}`;
 			}
 
 			parent.appendChild(priceElement);
@@ -412,7 +412,7 @@ async function showItemValues() {
 				children: [
 					document.newElement({
 						type: "li",
-						text: `Total Value: $${formatNumber(total, { decimals: 0 })}`,
+						text: `Total Value: $${FORMATTING.formatNumber(total, { decimals: 0 })}`,
 						class: "tt-item-price",
 					}),
 				],
@@ -430,7 +430,7 @@ async function showDrugDetails(id) {
 	if (settings.pages.items.drugDetails) {
 		const element = document.find(".show-item-info");
 
-		requireElement(".ajax-placeholder", { invert: true, parent: element }).then(() => {
+		REQUIRES.requireElement(".ajax-placeholder", { invert: true, parent: element }).then(() => {
 			const details = DRUG_INFORMATION[id];
 			if (!details) return;
 
@@ -611,7 +611,7 @@ const MISSING_ITEMS = {
 		if (
 			document.find(`#category-wrap > ${categorySelector}[aria-expanded='true']`) &&
 			settings.pages.items[settingName] &&
-			hasAPIData() &&
+			API_HELPER.hasAPIData() &&
 			settings.apiUsage.user.inventory
 		) {
 			const needed = itemSet.filter((x) => !userdata.inventory.some((y) => x.id === y.ID));
@@ -686,7 +686,7 @@ async function showItemMarketIconsMissingSets() {
 }
 
 async function showItemValuesMissingSets() {
-	if (settings.pages.items.values && hasAPIData()) {
+	if (settings.pages.items.values && API_HELPER.hasAPIData()) {
 		for (const item of document.findAll(".needed-item")) {
 			if (item.find(".tt-item-price")) continue;
 
@@ -695,7 +695,7 @@ async function showItemValuesMissingSets() {
 				document.newElement({
 					type: "span",
 					class: "tt-item-price",
-					text: `$${formatNumber(torndata.items[parseInt(item.dataset.id)].market_value)}`,
+					text: `$${FORMATTING.formatNumber(torndata.items[parseInt(item.dataset.id)].market_value)}`,
 				})
 			);
 		}

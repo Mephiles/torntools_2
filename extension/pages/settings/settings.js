@@ -112,7 +112,7 @@ async function setupChangelog() {
 			const parent = document.newElement({
 				type: "div",
 				class: "parent",
-				children: [document.newElement({ type: "div", class: "heading", text: capitalizeText(title) })],
+				children: [document.newElement({ type: "div", class: "heading", text: title.capitalize() })],
 			});
 
 			for (let log of entry.logs[title]) {
@@ -571,7 +571,7 @@ async function setupPreferences() {
 		let options = [];
 
 		for (const color in CHAT_TITLE_COLORS) {
-			options.push(`<option value="${color}">${capitalizeText(color, { everyWord: true })}</option>`);
+			options.push(`<option value="${color}">${color.capitalize({ everyWord: true })}</option>`);
 		}
 
 		return options.join("");
@@ -652,8 +652,8 @@ async function setupPreferences() {
 
 	function getCustomLinkLocations() {
 		let options = `
-			<option value='above'>Above all the areas</option>
-			<option value='under'>Under all the areas</option>
+			<option value="above">Above all the areas</option>
+			<option value="under">Under all the areas</option>
 		`;
 
 		for (let area of ALL_AREAS) {
@@ -782,7 +782,7 @@ async function setupAPIInfo() {
 		_api.find("#api_key").value = api.torn.key;
 	}
 	document.find("#update_api_key").addEventListener("click", async () => {
-		changeAPIKey(document.find("#api_key").value)
+		API_HELPER.changeAPIKey(document.find("#api_key").value)
 			.then(() => {
 				sendMessage("API Key updated", true);
 				console.log("TT - Updated api key!");
