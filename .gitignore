@@ -3,6 +3,3 @@
 
 # VSCode Settings
 .vscode
-
-# PyTest Cache
-.pytest_cache
