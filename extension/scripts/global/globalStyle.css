@@ -299,7 +299,6 @@
 }
 
 /* Feature Status popup */
-
 #tt-page-status {
 	background-color: white;
 	padding: 7px 14px;
@@ -330,7 +329,6 @@
 #tt-page-status.hidden {
 	display: none;
 }
-
 .tt-page-status-header {
 	border-bottom: 2px solid lightgray;
 	font-weight: 600;
@@ -352,7 +350,11 @@
 .tt-page-status-header span {
 	width: 100%;
 }
-
+.tt-page-status-scope-heading {
+	text-align: center;
+	font-style: italic;
+	margin-bottom: 3px;
+}
 .tt-page-status-feature {
 	padding: 1px 0;
 }

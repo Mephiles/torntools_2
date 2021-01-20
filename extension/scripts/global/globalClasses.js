@@ -107,14 +107,14 @@ class FeatureManager {
 		// Feature is disabled
 		if (!feature.enabled) {
 			console.log("Feature disabled:", feature.name);
-			this.addResult({ enabled: false, name: feature.name });
+			this.addResult({ enabled: false, name: feature.name, scope: feature.scope });
 			if (feature.runWhenDisabled) feature.func();
 			return;
 		}
 
 		// Feature enabled but no func to run
 		if (!feature.func) {
-			this.addResult({ success: true, name: feature.name });
+			this.addResult({ success: true, name: feature.name, scope: feature.scope });
 			return;
 		}
 
@@ -123,12 +123,12 @@ class FeatureManager {
 				.func()
 				.then(() => {
 					console.log("Successfully loaded feature:", feature.name);
-					this.addResult({ success: true, name: feature.name });
+					this.addResult({ success: true, name: feature.name, scope: feature.scope });
 					return resolve();
 				})
 				.catch((error) => {
 					console.error("Feature failed to load:", error);
-					this.addResult({ success: false, name: feature.name });
+					this.addResult({ success: false, name: feature.name, scope: feature.scope });
 					return resolve();
 				});
 		});
@@ -148,24 +148,39 @@ class FeatureManager {
 			return;
 		}
 
-		let newRow;
+		let row;
 		if (document.find(`#tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`)) {
-			newRow = document.find(`#tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`);
+			row = document.find(`#tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`);
 		} else {
-			newRow = document.newElement({
+			row = document.newElement({
 				type: "div",
 				class: "tt-page-status-feature",
 				id: `tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`,
 			});
-			document.find(`.tt-page-status-content`).appendChild(newRow);
+
+			if (!document.find(`.tt-page-status-content #scope-${options.scope}`)) {
+				let scopeElement = document.newElement({
+					type: "div",
+					id: "scope-" + options.scope,
+				});
+				scopeElement.appendChild(
+					document.newElement({
+						type: "div",
+						class: "tt-page-status-scope-heading",
+						text: `— ${options.scope} —`,
+					})
+				);
+				document.find(".tt-page-status-content").appendChild(scopeElement);
+			}
+			document.find(`.tt-page-status-content #scope-${options.scope}`).appendChild(row);
 		}
 
 		if (options.enabled === false)
-			newRow.innerHTML = `<span class="tt-page-status-feature-icon disabled"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+			row.innerHTML = `<span class="tt-page-status-feature-icon disabled"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
 		else if (options.success)
-			newRow.innerHTML = `<span class="tt-page-status-feature-icon success"><i class="fas fa-check"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+			row.innerHTML = `<span class="tt-page-status-feature-icon success"><i class="fas fa-check"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
 		else
-			newRow.innerHTML = `<span class="tt-page-status-feature-icon failed"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
+			row.innerHTML = `<span class="tt-page-status-feature-icon failed"><i class="fas fa-times-circle"></i></span><span class='tt-page-status-feature-text'>${options.name}</span>`;
 	}
 
 	removeResult(name) {
