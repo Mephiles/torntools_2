@@ -329,6 +329,12 @@
 #tt-page-status.hidden {
 	display: none;
 }
+#tt-page-status.only-fails .tt-page-status-feature:not(.failed) {
+	display: none;
+}
+#tt-page-status.hide-disabled .tt-page-status-feature.disabled {
+	display: none;
+}
 .tt-page-status-header {
 	border-bottom: 2px solid lightgray;
 	font-weight: 600;

@@ -380,7 +380,7 @@ async function setupPreferences() {
 	}
 
 	function fillSettings() {
-		for (let setting of ["updateNotice", "featureDisplay"]) {
+		for (let setting of ["updateNotice", "featureDisplay", "featureDisplayOnlyFails", "featureDisplayHideDisabled"]) {
 			const checkbox = _preferences.find(`#${setting}`);
 			if (!checkbox) continue;
 
@@ -673,7 +673,7 @@ async function setupPreferences() {
 	}
 
 	async function saveSettings() {
-		for (let setting of ["updateNotice", "featureDisplay"]) {
+		for (let setting of ["updateNotice", "featureDisplay", "featureDisplayOnlyFails", "featureDisplayHideDisabled"]) {
 			const checkbox = _preferences.find(`#${setting}`);
 			if (!checkbox) continue;
 

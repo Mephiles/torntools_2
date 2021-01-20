@@ -122,6 +122,8 @@ const DEFAULT_STORAGE = {
 		updateNotice: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		featureDisplay: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		featureDisplayPosition: new DefaultSetting({ type: "string", defaultValue: "bottom-left" }),
+		featureDisplayOnlyFailed: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		featureDisplayHideDisabled: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		developer: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		formatting: {
 			date: new DefaultSetting({ type: "string", defaultValue: "eu" }),

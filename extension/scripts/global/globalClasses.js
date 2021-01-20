@@ -26,10 +26,17 @@ class FeatureManager {
 		this.containerID = "tt-page-status";
 	}
 
-	display(show) {
-		try {
-			document.find(`#${this.containerID}`).setAttribute("class", `${show ? "" : "hidden"} ${settings.featureDisplayPosition}`);
-		} catch (err) {}
+	display() {
+		let container = document.find(`#${this.containerID}`);
+		if (!container) return;
+
+		container.setAttribute(
+			"class",
+			`${settings.featureDisplay ? "" : "hidden"}
+			${settings.featureDisplayPosition}
+			${settings.featureDisplayOnlyFails ? "only-fails" : ""}
+			${settings.featureDisplayHideDisabled ? "hide-disabled" : ""}`
+		);
 	}
 
 	async createPopup() {
@@ -107,14 +114,14 @@ class FeatureManager {
 		// Feature is disabled
 		if (!feature.enabled) {
 			console.log("Feature disabled:", feature.name);
-			this.addResult({ enabled: false, name: feature.name, scope: feature.scope });
+			this.addResult({ enabled: false, name: feature.name, scope: feature.scope, status: 'disabled' });
 			if (feature.runWhenDisabled) feature.func();
 			return;
 		}
 
 		// Feature enabled but no func to run
 		if (!feature.func) {
-			this.addResult({ success: true, name: feature.name, scope: feature.scope });
+			this.addResult({ success: true, name: feature.name, scope: feature.scope, status: 'loaded' });
 			return;
 		}
 
@@ -123,12 +130,12 @@ class FeatureManager {
 				.func()
 				.then(() => {
 					console.log("Successfully loaded feature:", feature.name);
-					this.addResult({ success: true, name: feature.name, scope: feature.scope });
+					this.addResult({ success: true, name: feature.name, scope: feature.scope, status: 'loaded' });
 					return resolve();
 				})
 				.catch((error) => {
 					console.error("Feature failed to load:", error);
-					this.addResult({ success: false, name: feature.name, scope: feature.scope });
+					this.addResult({ success: false, name: feature.name, scope: feature.scope, status: 'failed' });
 					return resolve();
 				});
 		});
@@ -154,7 +161,7 @@ class FeatureManager {
 		} else {
 			row = document.newElement({
 				type: "div",
-				class: "tt-page-status-feature",
+				class: `tt-page-status-feature ${options.status}`,
 				id: `tt-page-status-feature-${options.name.toLowerCase().replace(/ /g, "-")}`,
 			});
 
