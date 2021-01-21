@@ -237,6 +237,11 @@ const DEFAULT_STORAGE = {
 				missingFlowers: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				missingPlushies: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
+			city: {
+				enable: new DefaultSetting({ type: 'boolean', defaultValue: true }),
+				closedHighlight: new DefaultSetting({ type: 'boolean', defaultValue: false }),
+				showValue: new DefaultSetting({ type: 'boolean', defaultValue: true })
+			},
 			companies: {
 				specialMugMoney: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},

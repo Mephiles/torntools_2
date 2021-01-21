@@ -1,6 +1,7 @@
 "use strict";
 
 import changelog from "../../changelog.js";
+import { cityOptionsFromHtmlToSettings, cityOptionsFromSettingsToHtml } from './settings.city.js';
 
 let initiatedPages = {};
 
@@ -496,6 +497,8 @@ async function setupPreferences() {
 		for (let link of settings.customLinks) {
 			addCustomLink(link);
 		}
+		
+		cityOptionsFromSettingsToHtml(settings, _preferences);
 	}
 
 	function updateSettings() {
@@ -762,6 +765,8 @@ async function setupPreferences() {
 		settings.notifications.searchOpenTab = _preferences.find("#notification-searchOpenTab").checked;
 		settings.notifications.volume = parseInt(_preferences.find("#notification-volume").value);
 		settings.notifications.sound = _preferences.find(`#notification-sound`).value;
+
+		cityOptionsFromHtmlToSettings(settings, _preferences);
 
 		const newStorage = { settings };
 		await ttStorage.set(newStorage);

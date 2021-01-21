@@ -108,6 +108,18 @@
 		},
 		{
 			"matches": [
+				"https://www.torn.com/city.php*"
+			],
+			"css": [
+				"scripts/content/city/ttCity.css"
+			],
+			"js": [
+				"scripts/content/city/ttCity.js"
+			],
+			"run_at": "document_end"
+		},
+		{
+			"matches": [
 				"https://www.torn.com/companies.php*"
 			],
 			"css": [
