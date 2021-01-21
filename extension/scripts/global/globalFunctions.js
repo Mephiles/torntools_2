@@ -1220,3 +1220,13 @@ function addRFC(url) {
 	url += (url.split("?").length > 1 ? "&" : "?") + "rfcv=" + getRFC();
 	return url;
 }
+
+function newFeature(name, scope, enabled, excecute) {
+	return {
+		name,
+		scope,
+		enabled,
+		func: excecute,
+		runWhenDisabled: true,
+	};
+}
