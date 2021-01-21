@@ -26,7 +26,6 @@ const HOME = {
 		newFeature("Effective Battle Stats", "home", settings.pages.home.effectiveStats, EFFECTIVE_BATTLE_STATS.showStats),
 	],
 	init: function () {
-		// this.getFeatures().forEach(featureManager.new); // doesn't work
 		this.getFeatures().forEach((feature) => featureManager.new(feature)); // does work
 
 		requireContent().then(this.load);
