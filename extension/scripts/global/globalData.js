@@ -238,7 +238,7 @@ const DEFAULT_STORAGE = {
 				missingPlushies: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 			city: {
-				enable: new DefaultSetting({ type: 'boolean', defaultValue: true }),
+				highlight: new DefaultSetting({ type: 'boolean', defaultValue: true }),
 				closedHighlight: new DefaultSetting({ type: 'boolean', defaultValue: false }),
 				showValue: new DefaultSetting({ type: 'boolean', defaultValue: true })
 			},
