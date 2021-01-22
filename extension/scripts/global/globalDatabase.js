@@ -1,6 +1,6 @@
 "use strict";
 
-let settings, filters, version, api, userdata, torndata, stakeouts, attackHistory, notes, factiondata, quick;
+let TT_DATABASE, settings, filters, version, api, userdata, torndata, stakeouts, attackHistory, notes, factiondata, quick;
 let databaseLoaded = false;
 let storageListeners = {
 	settings: [],
@@ -13,9 +13,10 @@ let storageListeners = {
 };
 
 async function loadDatabase() {
-	if (databaseLoaded) return Promise.resolve();
+	if (databaseLoaded) return Promise.resolve(TT_DATABASE);
 
-	const database = await ttStorage.get();
+    TT_DATABASE = await ttStorage.get();
+    const database = TT_DATABASE;
 
 	settings = database.settings;
 	filters = database.filters;
@@ -29,8 +30,9 @@ async function loadDatabase() {
 	factiondata = database.factiondata;
 	quick = database.quick;
 
-	databaseLoaded = true;
-	console.log("TT - Database loaded.", database);
+    databaseLoaded = true;
+    console.log("TT - Database loaded.", TT_DATABASE);
+    return TT_DATABASE;
 }
 
 // noinspection JSDeprecatedSymbols
@@ -71,8 +73,8 @@ chrome.storage.onChanged.addListener((changes, area) => {
 				case "quick":
 					quick = changes.quick.newValue;
 					break;
-			}
-			if (storageListeners[key]) storageListeners[key].forEach((listener) => listener(changes[key].oldValue));
+            }
+			if (storageListeners[key]) storageListeners[key].forEach((listener) => listener(changes[key].oldValue, changes[key].newValue));
 		}
 	}
 });

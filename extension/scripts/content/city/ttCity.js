@@ -1,12 +1,12 @@
 "use strict";
 
 (async () => {
-    await loadDatabase();
-    
-    console.log("TT - City: Starting...");
-    await requireMapLoaded();
-    loadCity();
-    listenToSettings();
+	const { settings } = await loadDatabase();
+
+	console.log("TT - City: Starting...");
+	await requireMapLoaded();
+	loadCity({ ...settings, scoped: true });
+	listenToSettings();
 	console.log("TT - City: Ready");
 })();
 
@@ -14,20 +14,20 @@ function requireMapLoaded() {
 	return requireElement("#map .leaflet-marker-pane .highlightItemMarket");
 }
 
-function loadCity(incomingSettings) {
-    let scopedSettings = incomingSettings || settings;
-    if (!scopedSettings.pages.city.highlight && !scopedSettings.pages.city.showValue) return;
+function loadCity(settings) {
+	console.log("TT - City: Settings", settings.pages.city);
+	if (!settings.pages.city.highlight && !settings.pages.city.showValue) return;
 
-    let container;
-	if (scopedSettings.pages.city.showValue) {
+	let container;
+	if (settings.pages.city.showValue) {
 		container = createItemContainer();
 	}
 
-	if (scopedSettings.pages.city.highlight) {
-		if (scopedSettings.pages.city.closedHighlight) {
-            addHighlightForItems();
+	if (settings.pages.city.highlight) {
+		if (settings.pages.city.closedHighlight) {
+			addHighlightForItems();
 		} else if (container) {
-            if (!isContainerClosed(container)) {
+			if (!isContainerClosed(container)) {
 				addHighlightForItems();
 			}
 			addContainerClosedEventListenerForHighlightOfItems(container);
@@ -36,10 +36,11 @@ function loadCity(incomingSettings) {
 }
 
 function listenToSettings() {
-	storageListeners.settings.push((newSettings) => {
-        reset();
-        loadCity(newSettings);
-    });
+	storageListeners.settings.push((_, newSettings) => {
+		console.log("TT - City: Reloading due to settings change", newSettings.pages.city);
+		reset();
+		loadCity({ ...newSettings, scoped: true });
+	});
 }
 
 function reset() {
