@@ -2,11 +2,10 @@
 
 (async () => {
     await loadDatabase();
-    if (!settings.pages.city.highlight && !settings.pages.city.showValue) return;
     
     console.log("TT - City: Starting...");
     await requireMapLoaded();
-    run();
+    loadCity();
     listenToSettings();
 	console.log("TT - City: Ready");
 })();
@@ -15,14 +14,17 @@ function requireMapLoaded() {
 	return requireElement("#map .leaflet-marker-pane .highlightItemMarket");
 }
 
-function run() {
+function loadCity(incomingSettings) {
+    let scopedSettings = incomingSettings || settings;
+    if (!scopedSettings.pages.city.highlight && !scopedSettings.pages.city.showValue) return;
+
     let container;
-	if (settings.pages.city.showValue) {
+	if (scopedSettings.pages.city.showValue) {
 		container = createItemContainer();
 	}
 
-	if (settings.pages.city.highlight) {
-		if (settings.pages.city.closedHighlight) {
+	if (scopedSettings.pages.city.highlight) {
+		if (scopedSettings.pages.city.closedHighlight) {
             addHighlightForItems();
 		} else if (container) {
             if (!isContainerClosed(container)) {
@@ -34,9 +36,9 @@ function run() {
 }
 
 function listenToSettings() {
-	storageListeners.settings.push((_) => {
+	storageListeners.settings.push((newSettings) => {
         reset();
-        run();
+        loadCity(newSettings);
     });
 }
 
@@ -59,8 +61,6 @@ function createItemContainer() {
 }
 
 function addTotalItemsValueToContainer(contentElement, groupedItems) {
-	if (!settings.pages.city.showValue) return;
-
 	let totalValue = 0;
 	let count = 0;
 	for (const groupedItem of groupedItems) {
