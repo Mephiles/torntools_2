@@ -44,7 +44,10 @@ function listenToSettings() {
 }
 
 function reset() {
-	document.find("#tt-city-items-container")?.remove();
+	const container = document.find("#tt-city-items-container");
+	if (container) {
+		container.remove();
+	}
 	removeHighlightFromItems();
 }
 
