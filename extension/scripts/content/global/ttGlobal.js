@@ -115,6 +115,7 @@ function loadGlobal() {
 
 			await addInformationSection().catch((error) => console.error("Couldn't show the information section.", error));
 
+			addEnergyAndNerveBarLinks();
 			showNotes().catch((error) => console.error("Couldn't show the sidebar notes.", error));
 			showOCTime().catch((error) => console.error("Couldn't show the oc time.", error));
 			showCustomLinks().catch((error) => console.error("Couldn't show the custom links.", error));
@@ -621,4 +622,15 @@ async function showCustomLinks() {
 	} else {
 		// FIXME - Mobile custom links.
 	}
+}
+
+function addEnergyAndNerveBarLinks() {
+	if (mobile) return;
+
+	document.find("#barEnergy").onclick = () => {
+		window.location.href = "https://www.torn.com/gym.php";
+	};
+	document.find("#barNerve").onclick = () => {
+		window.location.href = "https://www.torn.com/crimes.php";
+	};
 }
