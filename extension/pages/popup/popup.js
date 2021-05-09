@@ -572,8 +572,10 @@ async function setupStocksOverview() {
 			const stock = userdata.stocks[buyId];
 			const id = stock.stock_id;
 
-			const lastTransaction = Object.keys(stock.transactions).last();
-			const boughtPrice = stock.transactions[lastTransaction].bought_price;
+			const transactions = Object.entries(stock.transactions).map(([, value]) => value);
+			const totalPrice = transactions.reduce((price, { shares, bought_price }) => price + shares * bought_price, 0);
+
+			const boughtPrice = totalPrice / stock.total_shares;
 			const profit = ((torndata.stocks[id].current_price - boughtPrice) * stock.total_shares).dropDecimals();
 
 			const wrapper = document.newElement({ type: "div", class: "stock-wrap" });
