@@ -828,64 +828,6 @@ async function setupStocksOverview() {
 						}),
 					],
 				}),
-				document.newElement({
-					type: "div",
-					children: [
-						document.newElement({ type: "span", class: "title", text: "Available Shares" }),
-						document.newElement({
-							type: "div",
-							children: [
-								document.newElement({ type: "label", attributes: { for: `stock-${stockId}-alert__available_reaches` }, text: "reaches" }),
-								document.newElement({
-									type: "input",
-									id: `stock-${stockId}-alert__available_reaches`,
-									attributes: { type: "number", min: 0 },
-									value: () => {
-										if (!(id in settings.notifications.types.stocks)) return "";
-
-										return settings.notifications.types.stocks[id].availableReaches || "";
-									},
-									events: {
-										change: async (event) => {
-											await ttStorage.change({
-												settings: {
-													notifications: { types: { stocks: { [id]: { availableReaches: parseFloat(event.target.value) } } } },
-												},
-											});
-										},
-									},
-								}),
-							],
-						}),
-						document.newElement({
-							type: "div",
-							children: [
-								document.newElement({
-									type: "input",
-									id: `stock-${stockId}-alert__dump`,
-									attributes: () => {
-										let attributes = {
-											type: "checkbox",
-										};
-
-										if (id in settings.notifications.types.stocks && settings.notifications.types.stocks[id].systemDumps)
-											attributes.checked = true;
-
-										return attributes;
-									},
-									events: {
-										change: async (event) => {
-											await ttStorage.change({
-												settings: { notifications: { types: { stocks: { [id]: { systemDumps: event.target.checked } } } } },
-											});
-										},
-									},
-								}),
-								document.newElement({ type: "label", attributes: { for: `stock-${stockId}-alert__dump` }, text: "system dump" }),
-							],
-						}),
-					],
-				}),
 			],
 		});
 		const alertHeading = document.newElement({
