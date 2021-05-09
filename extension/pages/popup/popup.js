@@ -699,10 +699,6 @@ async function setupStocksOverview() {
 					type: "span",
 					text: `Current price: $${formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
 				}),
-				document.newElement({
-					type: "span",
-					text: `Available shares: ${formatNumber(torndata.stocks[id].available_shares)}`,
-				}),
 			],
 		});
 
