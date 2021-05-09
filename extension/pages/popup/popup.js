@@ -726,7 +726,7 @@ async function setupStocksOverview() {
 		}
 
 		// Alerts
-		if (id !== "0") addAlertsSection(wrapper, id, id);
+		addAlertsSection(wrapper, id, id);
 
 		allStocks.appendChild(wrapper);
 	}
