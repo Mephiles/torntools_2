@@ -577,8 +577,13 @@ const API_USAGE = {
 		stocks: {
 			"*": {
 				stock_id: true,
-				shares: true,
-				bought_price: true,
+				total_shares: true,
+				transactions: {
+					"*": {
+						shares: true,
+						bought_price: true,
+					},
+				},
 			},
 		},
 		enhancer_perks: true,
@@ -621,13 +626,10 @@ const API_USAGE = {
 				name: true,
 				acronym: true,
 				current_price: true,
-				total_shares: true,
-				available_shares: true,
-				// forecast: true,
-				// demand: true,
 				benefit: {
 					requirement: true,
 					description: true,
+					frequency: true,
 				},
 			},
 		},
