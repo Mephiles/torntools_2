@@ -326,6 +326,7 @@ const DEFAULT_STORAGE = {
 			bazaar: {
 				itemsCost: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				worth: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				redirects: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			trade: {
 				itemValues: new DefaultSetting({ type: "boolean", defaultValue: true }),
