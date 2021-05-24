@@ -15,7 +15,7 @@
 	);
 
 	async function addParams() {
-		const subPage = getSearchParameters().get("p") === "shop" ? "itemView" : "browseView";
+		const subPage = getHashParameters().get("p") === "shop" ? "itemView" : "browseView";
 		if (subPage === "itemView") {
 			await requireElement("ul.guns-list > li:not(.clear)");
 			for (const bazaarLink of document.findAll("ul.guns-list > li:not(.clear)")) {
