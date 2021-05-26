@@ -362,9 +362,9 @@
 			container.remove();
 		}
 
-		// time createSlider
-		// level createSlider
-		// score createSlider
+		// TODO: time createSlider
+		// TODO: level createSlider
+		// TODO: score createSlider
 
 		return {
 			updateFactions,
@@ -412,7 +412,8 @@
 			const config = { childList: true };
 
 			const callback = function () {
-				if (usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder")) {
+				const isInLoadingState = usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder");
+				if (isInLoadingState) {
 					buildUsersInfo();
 				}
 			};
@@ -423,7 +424,7 @@
 			buildUsersInfo();
 		}
 
-		function updateFilters(filters) {
+		function applyFilters(filters) {
 			let shownAmount = 0;
 
 			for (const userInfo of usersInfo) {
@@ -455,7 +456,7 @@
 
 		return {
 			connect,
-			updateFilters,
+			applyFilters,
 			onUsersChanged,
 			dispose,
 		};
@@ -474,15 +475,30 @@
 		jailFiltersContainer = createJailFiltersContainer();
 		inJailFacade = createInJailFacade();
 
-		// Initial filters applying from storage
+		// TODO: Initial filters applying from storage
 		jailFiltersContainer.onFiltersChanged((filters) => {
-			const shownAmount = inJailFacade.updateFilters(filters);
+			const shownAmount = inJailFacade.applyFilters(filters);
 			jailFiltersContainer.updateShownAmount(shownAmount);
-			// Save in storage
+			// TODO: Whats the point of async here? How to handle that?
+			ttStorage.change({
+				filters: {
+					jail: {
+						timeStart: filters.time.from,
+						timeEnd: filters.time.to,
+						levelStart: filters.level.from,
+						levelEnd: filters.level.to,
+						scoreStart: filters.score.from,
+						scoreEnd: filters.score.to,
+						faction: filters.faction,
+						activity: filters.activity,
+					},
+				},
+			});
 		});
 		inJailFacade.onUsersChanged((usersAmount, factions) => {
+			// TODO: Add your faction to the list from API
 			jailFiltersContainer.updateFactions(factions.map((faction) => ({ value: faction, description: faction })));
-			const shownAmount = inJailFacade.updateFilters(jailFiltersContainer.getFilters());
+			const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
 			jailFiltersContainer.updatePageAmount(usersAmount);
 			jailFiltersContainer.updateShownAmount(shownAmount);
 		});
