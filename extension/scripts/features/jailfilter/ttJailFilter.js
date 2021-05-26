@@ -7,14 +7,497 @@
 		"Jail Filter",
 		"jail",
 		() => settings.pages.jail.filter,
-		initialiseFilters,
-		addFilters,
-		removeFilters,
+		// initialiseFilters,
+		() => {},
+		// addFilters,
+		initialize,
+		// removeFilters,
+		teardown,
 		{
 			storage: ["settings.pages.jail.filter"],
 		},
 		null
 	);
+
+	// Activity
+	const online = "online";
+	const idle = "idle";
+	const offline = "offline";
+
+	// Factions
+	const allFactions = "__all";
+	const noFaction = "__none";
+	const unknownFaction = "__unknown";
+
+	function createCheckbox(description, isChecked) {
+		const id = getUUID();
+		const checkbox = document.newElement({
+			type: "input",
+			id,
+			attributes: {
+				type: "checkbox",
+				...(isChecked ? { checked: true } : {}),
+			},
+		});
+		const checkboxWrapper = document.newElement({
+			type: "div",
+			class: "tt-checkbox-wrap",
+			children: [
+				checkbox,
+				document.newElement({
+					type: "label",
+					attributes: {
+						for: id,
+					},
+					text: description,
+				}),
+			],
+		});
+
+		let onChangeCallback;
+
+		function onChangeListener() {
+			onChangeCallback(checkbox.checked);
+		}
+
+		function onChange(callback) {
+			onChangeCallback = callback;
+			checkbox.addEventListener("change", onChangeListener);
+		}
+
+		function dispose() {
+			if (onChangeCallback) {
+				checkbox.removeEventListener("change", onChangeListener);
+				onChangeCallback = undefined;
+			}
+		}
+
+		return {
+			element: checkboxWrapper,
+			onChange,
+			dispose,
+		};
+	}
+
+	function createCheckboxList(items, selectedItemIds) {
+		const selectedIds = selectedItemIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {});
+		const checkboxes = [];
+		let selectionChangeCallback;
+
+		for (const item of items) {
+			const checkbox = createCheckbox(item.description, selectedIds[item.id]);
+			checkbox.onChange((isChecked) => {
+				if (isChecked) {
+					selectedIds[item.id] = true;
+				} else {
+					delete selectedIds[item.id];
+				}
+
+				if (selectionChangeCallback) {
+					selectionChangeCallback(Object.keys(selectedIds));
+				}
+			});
+			checkboxes.push(checkbox);
+		}
+
+		const checkboxWrapper = document.newElement({
+			type: "div",
+			class: "tt-checkbox-list-wrap",
+			children: checkboxes.map((checkbox) => checkbox.element),
+		});
+
+		function onSelectionChange(callback) {
+			selectionChangeCallback = callback;
+		}
+
+		function dispose() {
+			checkboxes.forEach((checkbox) => checkbox.dispose());
+			selectionChangeCallback = undefined;
+		}
+
+		return {
+			element: checkboxWrapper,
+			onSelectionChange,
+			dispose,
+		};
+	}
+
+	function createDropdown(options, selectedOption) {
+		let selectedOptionValue = selectedOption || options[0].value;
+
+		const select = document.newElement({
+			type: "select",
+			children: createOptionsElements(options),
+		});
+
+		let onChangeCallback;
+
+		function createOptionsElements(optionsLst) {
+			return optionsLst.map((option) =>
+				document.newElement({
+					type: "option",
+					attributes: {
+						value: option.value,
+						...(option.value === selectedOptionValue ? { selected: true } : {}),
+						...(option.disabled ? { disabled: true } : {}),
+					},
+					text: option.description,
+				})
+			);
+		}
+
+		function changeSelectedValue(newValue) {
+			selectedOptionValue = newValue;
+
+			if (onChangeCallback) {
+				onChangeCallback(newValue);
+			}
+		}
+
+		function onChangeListener() {
+			changeSelectedValue(select.value);
+		}
+
+		function updateOptionsList(options) {
+			if (options.every((option) => option.value !== selectedOptionValue)) {
+				changeSelectedValue(options[0].value);
+			}
+
+			const newOptions = createOptionsElements(options);
+
+			while (select.firstChild) {
+				select.removeChild(select.firstChild);
+			}
+
+			const documentFragment = document.createDocumentFragment();
+			newOptions.forEach((newOption) => documentFragment.appendChild(newOption));
+			select.appendChild(documentFragment);
+		}
+
+		function onChange(callback) {
+			onChangeCallback = callback;
+			select.addEventListener("change", onChangeListener);
+		}
+
+		function dispose() {
+			if (onChangeCallback) {
+				select.removeEventListener("change", onChangeListener);
+				onChangeCallback = undefined;
+			}
+		}
+
+		return {
+			element: select,
+			updateOptionsList,
+			onChange,
+			dispose,
+		};
+	}
+
+	// TODO: Needs new slider...
+	function createSlider(description, format, from, to) {}
+
+	function createJailFiltersContainer() {
+		const activityOptions = [
+			{ id: online, description: "Online" },
+			{ id: idle, description: "Idle" },
+			{ id: offline, description: "Offline" },
+		];
+		const defaultFactionsItems = [
+			{
+				value: allFactions,
+				description: "All",
+			},
+			{
+				value: noFaction,
+				description: "No faction",
+			},
+			{
+				value: unknownFaction,
+				description: "Unknown faction",
+			},
+			{
+				value: "------",
+				description: "------",
+				disabled: true,
+			},
+		];
+		let filtersModel = {
+			activity: filters.jail.activity,
+			faction: filters.jail.faction || allFactions,
+			time: {
+				from: filters.jail.timeStart,
+				to: filters.jail.timeEnd,
+			},
+			level: {
+				from: filters.jail.levelStart,
+				to: filters.jail.levelEnd,
+			},
+			score: {
+				from: filters.jail.scoreStart,
+				to: filters.jail.scoreEnd,
+			},
+		};
+		let filtersChangedCallback;
+
+		// TODO: Support custom appending instead of auto or as an addition
+		const { container, content } = createContainer("Jail Filter", {
+			nextElement: document.find(".users-list-title"),
+			class: "tt-jail-filters-container",
+		});
+
+		const activityCheckboxList = createCheckboxList(activityOptions, []);
+		activityCheckboxList.onSelectionChange((selectedActivityItems) => {
+			filtersModel = {
+				...filtersModel,
+				activity: selectedActivityItems,
+			};
+
+			if (filtersChangedCallback) {
+				filtersChangedCallback(filtersModel);
+			}
+		});
+
+		const factionsSelect = createDropdown(defaultFactionsItems, allFactions);
+		factionsSelect.onChange((selectedFaction) => {
+			filtersModel = {
+				...filtersModel,
+				faction: selectedFaction,
+			};
+
+			if (filtersChangedCallback) {
+				filtersChangedCallback(filtersModel);
+			}
+		});
+
+		const shownCountElement = document.newElement({
+			type: "span",
+			text: "0",
+		});
+
+		const pageCountElement = document.newElement({
+			type: "span",
+			text: "0",
+		});
+
+		const filtersHeaderDiv = document.newElement({
+			type: "div",
+			class: "tt-jail-filters-header",
+			children: [
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-shown-users",
+					children: [
+						document.newElement({
+							type: "text",
+							text: "Showing ",
+						}),
+						shownCountElement,
+						document.newElement({
+							type: "text",
+							text: " of ",
+						}),
+						pageCountElement,
+						document.newElement({
+							type: "text",
+							text: " users",
+						}),
+					],
+				}),
+			],
+		});
+		const filtersContentDiv = document.newElement({
+			type: "div",
+			class: "tt-jail-filters-content",
+			children: [
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-item",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "tt-jail-filters-item-header",
+							text: "Activity",
+						}),
+						activityCheckboxList.element,
+					],
+				}),
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-item",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "tt-jail-filters-item-header",
+							text: "Faction",
+						}),
+						factionsSelect.element,
+					],
+				}),
+			],
+		});
+		content.appendChild(filtersHeaderDiv);
+		content.appendChild(filtersContentDiv);
+
+		function updateFactions(factions) {
+			factionsSelect.updateOptionsList([...defaultFactionsItems, ...factions]);
+		}
+
+		function updateShownAmount(shownCount) {
+			shownCountElement.innerText = shownCount;
+		}
+
+		function updatePageAmount(pageCount) {
+			pageCountElement.innerText = pageCount;
+		}
+
+		function onFiltersChanged(callback) {
+			filtersChangedCallback = callback;
+		}
+
+		function dispose() {
+			activityCheckboxList.dispose();
+			factionsSelect.dispose();
+			filtersChangedCallback = undefined;
+			container.remove();
+		}
+
+		// time createSlider
+		// level createSlider
+		// score createSlider
+
+		return {
+			updateFactions,
+			updateShownAmount,
+			updatePageAmount,
+			getFilters: () => filtersModel,
+			onFiltersChanged,
+			dispose,
+		};
+	}
+
+	function createInJailFacade() {
+		const usersListContainer = document.find(".users-list");
+		let usersInfo = [];
+		let observer;
+		let usersChangedCallback;
+
+		function buildUsersInfo() {
+			usersInfo = [];
+
+			for (const userElement of usersListContainer.children) {
+				const activityIconId = userElement.querySelector('#iconTray > li[id^="icon"]').id;
+				const activity = activityIconId.startsWith("icon1") ? online : activityIconId.startsWith("icon62") ? idle : offline;
+				const factionElem = userElement.querySelector(".faction > img");
+
+				usersInfo.push({
+					element: userElement,
+					activity,
+					faction: factionElem ? factionElem.title || unknownFaction : noFaction,
+				});
+			}
+
+			if (usersChangedCallback) {
+				const distinctFactions = [
+					...new Set(
+						usersInfo.map((userInfo) => userInfo.faction).filter((faction) => faction && faction !== unknownFaction && faction !== noFaction)
+					),
+				];
+				usersChangedCallback(usersInfo.length, distinctFactions);
+			}
+		}
+
+		function connect() {
+			// const handle = observeChildrenChanges(usersListContainer, () => {});
+			const config = { childList: true };
+
+			const callback = function () {
+				if (usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder")) {
+					buildUsersInfo();
+				}
+			};
+
+			observer = new MutationObserver(callback);
+			observer.observe(usersListContainer, config);
+
+			buildUsersInfo();
+		}
+
+		function updateFilters(filters) {
+			let shownAmount = 0;
+
+			for (const userInfo of usersInfo) {
+				const matchesActivity = !filters.activity.length || filters.activity.includes(userInfo.activity);
+				const matchesFaction = filters.faction === allFactions || filters.faction === userInfo.faction;
+
+				if (matchesActivity && matchesFaction) {
+					userInfo.element.classList.remove("hidden");
+					shownAmount++;
+				} else {
+					userInfo.element.classList.add("hidden");
+				}
+			}
+
+			return shownAmount;
+		}
+
+		function onUsersChanged(callback) {
+			usersChangedCallback = callback;
+		}
+
+		function dispose() {
+			observer.disconnect();
+			for (const userInfo of usersInfo) {
+				userInfo.element.classList.remove("hidden");
+			}
+			usersChangedCallback = undefined;
+		}
+
+		return {
+			connect,
+			updateFilters,
+			onUsersChanged,
+			dispose,
+		};
+	}
+
+	async function jailReady() {
+		await requireElement(".users-list > *:first-child .info-wrap");
+	}
+
+	let jailFiltersContainer;
+	let inJailFacade;
+
+	async function initialize() {
+		await jailReady();
+
+		jailFiltersContainer = createJailFiltersContainer();
+		inJailFacade = createInJailFacade();
+
+		// Initial filters applying from storage
+		jailFiltersContainer.onFiltersChanged((filters) => {
+			const shownAmount = inJailFacade.updateFilters(filters);
+			jailFiltersContainer.updateShownAmount(shownAmount);
+			// Save in storage
+		});
+		inJailFacade.onUsersChanged((usersAmount, factions) => {
+			jailFiltersContainer.updateFactions(factions.map((faction) => ({ value: faction, description: faction })));
+			const shownAmount = inJailFacade.updateFilters(jailFiltersContainer.getFilters());
+			jailFiltersContainer.updatePageAmount(usersAmount);
+			jailFiltersContainer.updateShownAmount(shownAmount);
+		});
+
+		inJailFacade.connect();
+	}
+
+	function teardown() {
+		jailFiltersContainer.dispose();
+		jailFiltersContainer = undefined;
+		inJailFacade.dispose();
+		inJailFacade = undefined;
+	}
+
+	// ------------------------------------
 
 	function initialiseFilters() {
 		CUSTOM_LISTENERS[EVENT_CHANNELS.JAIL_SWITCH_PAGE].push(filtering);
@@ -22,6 +505,9 @@
 
 	async function addFilters() {
 		await requireElement(".users-list > *:first-child .info-wrap");
+
+		// const a = await createJailFiltersContainer();
+		// a.onFiltersChanged(console.log);
 
 		const { content } = createContainer("Jail Filter", {
 			nextElement: document.find(".users-list-title"),

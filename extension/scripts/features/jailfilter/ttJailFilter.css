@@ -9,3 +9,37 @@
 	padding-top: 10px;
 	margin: auto;
 }
+
+/* ----- */
+
+.tt-jail-filters-container > main {
+	padding: 4px;
+}
+
+.tt-jail-filters-header {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 10px;
+}
+
+.tt-jail-filters-shown-users > span {
+	font-weight: bold;
+}
+
+.tt-jail-filters-content {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
+.tt-jail-filters-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 5px;
+}
+
+.tt-jail-filters-item-header {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
