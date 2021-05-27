@@ -260,6 +260,16 @@
 				disabled: true,
 			},
 		];
+		const quickModesOptions = [
+			{
+				id: "bust",
+				description: "Quick bust",
+			},
+			{
+				id: "bail",
+				description: "Quick bail",
+			},
+		];
 		let filtersModel = {
 			activity: filters.jail.activity,
 			faction: filters.jail.faction || allFactions,
@@ -277,6 +287,7 @@
 			},
 		};
 		let filtersChangedCallback;
+		let quickModesChangedCallback;
 
 		// TODO: Support custom appending instead of auto or as an addition
 		const { container, content } = createContainer("Jail Filter", {
@@ -320,13 +331,23 @@
 			text: "0",
 		});
 
-		// const quickBustCheckbox = createCheckbox("Quick bust", false);
-		// const quickModeCheckboxList = createCheckboxKist([{value: 'bust', description: 'Quick bust'}], [])
+		const quickModeCheckboxList = createCheckboxList(quickModesOptions);
+		// TODO: quickModeCheckboxList.setSelections(filtersModel.quickModes);
+		quickModeCheckboxList.onSelectionChange((quickModes) => {
+			if (quickModesChangedCallback) {
+				quickModesChangedCallback(quickModes);
+			}
+		});
 
 		const filtersHeaderDiv = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-header",
 			children: [
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-quick",
+					children: [quickModeCheckboxList.element],
+				}),
 				document.newElement({
 					type: "div",
 					class: "tt-jail-filters-shown-users",
@@ -347,11 +368,6 @@
 						}),
 					],
 				}),
-				// document.newElement({
-				// 	type: "div",
-				// 	class: "tt-jail-filters-quick",
-				// 	children: [createCheckbox("Quick bust", false).element],
-				// }),
 			],
 		});
 		const filtersContentDiv = document.newElement({
@@ -403,10 +419,18 @@
 			filtersChangedCallback = callback;
 		}
 
+		function onQuickModesChanged(callback) {
+			quickModesChangedCallback = callback;
+		}
+
 		function dispose() {
 			activityCheckboxList.dispose();
 			factionsSelect.dispose();
+			quickModeCheckboxList.dispose();
+
 			filtersChangedCallback = undefined;
+			quickModesChangedCallback = undefined;
+
 			container.remove();
 		}
 
@@ -418,8 +442,11 @@
 			updateFactions,
 			updateShownAmount,
 			updatePageAmount,
+			// TODO: Maybe use getters to build it instead of more state?
 			getFilters: () => filtersModel,
+			getQuickModes: () => quickModeCheckboxList.getSelections(),
 			onFiltersChanged,
+			onQuickModesChanged,
 			dispose,
 		};
 	}
@@ -432,11 +459,11 @@
 		const faction = factionElem ? factionElem.title || unknownFaction : noFaction;
 
 		const bustElem = userElement.querySelector(".bust");
-		const bustIcon = bustElem.querySelector("bust-icon");
+		const bustIcon = bustElem.querySelector(".bust-icon");
 		let isInQuickBustMode = false;
 
 		const bailElem = userElement.querySelector(".bye");
-		const bailIcon = bustElem.querySelector("bye-icon");
+		const bailIcon = bailElem.querySelector(".bye-icon");
 		let isInQuickBailMode = false;
 
 		function applyQuickMode(flag, elem, iconElem) {
@@ -462,6 +489,24 @@
 			elem.href = elem.href.slice(0, -1);
 		}
 
+		function applyQuickModes(quickModes) {
+			if (quickModes.includes("bust")) {
+				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
+				isInQuickBustMode = true;
+			} else {
+				removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
+				isInQuickBustMode = false;
+			}
+
+			if (quickModes.includes("bail")) {
+				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
+				isInQuickBailMode = true;
+			} else {
+				removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
+				isInQuickBailMode = false;
+			}
+		}
+
 		function hide() {
 			userElement.classList.add("hidden");
 		}
@@ -472,34 +517,16 @@
 
 		function dispose() {
 			show();
-			removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
-			removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
-			isInQuickBustMode = false;
-			isInQuickBailMode = false;
+			applyQuickModes([]);
 		}
 
 		return {
 			element: userElement,
 			activity,
 			faction,
+			applyQuickModes,
 			isInQuickBustMode: () => isInQuickBustMode,
 			isInQuickBailMode: () => isInQuickBailMode,
-			applyQuickBust: () => {
-				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
-				isInQuickBustMode = true;
-			},
-			removeQuickBust: () => {
-				removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
-				isInQuickBustMode = false;
-			},
-			applyQuickBail: () => {
-				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
-				isInQuickBailMode = true;
-			},
-			removeQuickBail: () => {
-				removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
-				isInQuickBailMode = false;
-			},
 			hide,
 			show,
 			isShown: () => userElement.classList.contains("hidden"),
@@ -584,30 +611,6 @@
 			return distinctFactions;
 		}
 
-		function applyQuickBust() {
-			for (const userInfo of usersInfo) {
-				userInfo.applyQuickBust();
-			}
-		}
-
-		function applyQuickBail() {
-			for (const userInfo of usersInfo) {
-				userInfo.applyQuickBail();
-			}
-		}
-
-		function removeQuickBust() {
-			for (const userInfo of usersInfo) {
-				userInfo.removeQuickBust();
-			}
-		}
-
-		function removeQuickBail() {
-			for (const userInfo of usersInfo) {
-				userInfo.removeQuickBail();
-			}
-		}
-
 		function onUsersChanged(callback) {
 			usersChangedCallback = callback;
 		}
@@ -625,10 +628,7 @@
 			applyFilters,
 			getFactionOptions,
 			getUsersAmount: () => usersInfo.length,
-			applyQuickBust,
-			removeQuickBust,
-			applyQuickBail,
-			removeQuickBail,
+			applyQuickModes: (quickModes) => usersInfo.forEach((userInfo) => userInfo.applyQuickModes(quickModes)),
 			onUsersChanged,
 			dispose,
 		};
@@ -662,6 +662,7 @@
 		jailFiltersContainer.onFiltersChanged((filters) => {
 			const shownAmount = inJailFacade.applyFilters(filters);
 			jailFiltersContainer.updateShownAmount(shownAmount);
+
 			// TODO: Whats the point of async here? How to handle that?
 			ttStorage.change({
 				filters: {
@@ -679,12 +680,18 @@
 				},
 			});
 		});
+		jailFiltersContainer.onQuickModesChanged((quickModes) => {
+			inJailFacade.applyQuickModes(quickModes);
+
+			// TODO: Set in storage
+		});
 		inJailFacade.onUsersChanged((usersAmount, factions) => {
 			// TODO: Add your faction to the list from API
 			jailFiltersContainer.updateFactions(factions.map((faction) => ({ value: faction, description: faction })));
 			const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
 			jailFiltersContainer.updatePageAmount(usersAmount);
 			jailFiltersContainer.updateShownAmount(shownAmount);
+			inJailFacade.applyQuickModes(jailFiltersContainer.getQuickModes());
 		});
 	}
 
