@@ -1,17 +1,3 @@
-#jailFilter {
-	margin-top: 10px;
-}
-
-#jailFilter .time-filter-info-wrap,
-#jailFilter .level-filter-info-wrap,
-#jailFilter .score-filter-info-wrap {
-	text-align: center;
-	padding-top: 10px;
-	margin: auto;
-}
-
-/* ----- */
-
 .tt-jail-filters-container > main {
 	padding: 4px;
 }
