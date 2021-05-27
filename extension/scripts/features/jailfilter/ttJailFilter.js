@@ -19,6 +19,8 @@
 		null
 	);
 
+	const storageFilters = filters;
+
 	// Activity
 	const online = "online";
 	const idle = "idle";
@@ -29,14 +31,14 @@
 	const noFaction = "__none";
 	const unknownFaction = "__unknown";
 
-	function createCheckbox(description, isChecked) {
+	// TODO: Fix styles
+	function createCheckbox(description) {
 		const id = getUUID();
 		const checkbox = document.newElement({
 			type: "input",
 			id,
 			attributes: {
 				type: "checkbox",
-				...(isChecked ? { checked: true } : {}),
 			},
 		});
 		const checkboxWrapper = document.newElement({
@@ -60,6 +62,10 @@
 			onChangeCallback(checkbox.checked);
 		}
 
+		function setChecked(isChecked) {
+			checkbox.checked = isChecked;
+		}
+
 		function onChange(callback) {
 			onChangeCallback = callback;
 			checkbox.addEventListener("change", onChangeListener);
@@ -74,18 +80,21 @@
 
 		return {
 			element: checkboxWrapper,
+			setChecked,
+			isChecked: () => checkbox.checked,
 			onChange,
 			dispose,
 		};
 	}
 
-	function createCheckboxList(items, selectedItemIds) {
-		const selectedIds = selectedItemIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {});
-		const checkboxes = [];
+	// TODO: Orientation
+	function createCheckboxList(items) {
+		let selectedIds = {};
+		const checkboxes = {};
 		let selectionChangeCallback;
 
 		for (const item of items) {
-			const checkbox = createCheckbox(item.description, selectedIds[item.id]);
+			const checkbox = createCheckbox(item.description);
 			checkbox.onChange((isChecked) => {
 				if (isChecked) {
 					selectedIds[item.id] = true;
@@ -97,40 +106,50 @@
 					selectionChangeCallback(Object.keys(selectedIds));
 				}
 			});
-			checkboxes.push(checkbox);
+			checkboxes[item.id] = checkbox;
 		}
 
 		const checkboxWrapper = document.newElement({
 			type: "div",
 			class: "tt-checkbox-list-wrap",
-			children: checkboxes.map((checkbox) => checkbox.element),
+			children: Object.values(checkboxes).map((checkbox) => checkbox.element),
 		});
+
+		function setSelections(selectedItemIds) {
+			selectedIds = selectedItemIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {});
+
+			for (const id in checkboxes) {
+				checkboxes[id].setChecked(selectedIds[id] || false);
+			}
+		}
 
 		function onSelectionChange(callback) {
 			selectionChangeCallback = callback;
 		}
 
 		function dispose() {
-			checkboxes.forEach((checkbox) => checkbox.dispose());
+			Object.values(checkboxes).forEach((checkbox) => checkbox.dispose());
 			selectionChangeCallback = undefined;
 		}
 
 		return {
 			element: checkboxWrapper,
+			setSelections,
+			getSelections: () => Object.keys(selectedIds),
 			onSelectionChange,
 			dispose,
 		};
 	}
 
-	function createDropdown(options, selectedOption) {
-		let selectedOptionValue = selectedOption || options[0].value;
+	function createDropdown(options) {
+		let selectedOptionValue = options[0].value;
+		let shownOptions = options;
+		let onChangeCallback;
 
 		const select = document.newElement({
 			type: "select",
-			children: createOptionsElements(options),
+			children: createOptionsElements(shownOptions),
 		});
-
-		let onChangeCallback;
 
 		function createOptionsElements(optionsLst) {
 			return optionsLst.map((option) =>
@@ -146,23 +165,15 @@
 			);
 		}
 
-		function changeSelectedValue(newValue) {
-			selectedOptionValue = newValue;
+		function onChangeListener() {
+			selectedOptionValue = select.value;
 
 			if (onChangeCallback) {
-				onChangeCallback(newValue);
+				onChangeCallback(selectedOptionValue);
 			}
-		}
-
-		function onChangeListener() {
-			changeSelectedValue(select.value);
 		}
 
 		function updateOptionsList(options) {
-			if (options.every((option) => option.value !== selectedOptionValue)) {
-				changeSelectedValue(options[0].value);
-			}
-
 			const newOptions = createOptionsElements(options);
 
 			while (select.firstChild) {
@@ -172,6 +183,31 @@
 			const documentFragment = document.createDocumentFragment();
 			newOptions.forEach((newOption) => documentFragment.appendChild(newOption));
 			select.appendChild(documentFragment);
+
+			if (options.every((option) => option.value !== selectedOptionValue)) {
+				setSelected(options[0].value);
+
+				if (onChangeCallback) {
+					onChangeCallback(selectedOptionValue);
+				}
+			}
+
+			shownOptions = options;
+		}
+
+		function setSelected(optionValue) {
+			const index = shownOptions.findIndex((option) => option.value === optionValue);
+
+			if (index === -1) {
+				return false;
+			}
+
+			if (shownOptions[index].disabled) {
+				return false;
+			}
+
+			selectedOptionValue = optionValue;
+			select.selectedIndex = index;
 		}
 
 		function onChange(callback) {
@@ -189,6 +225,8 @@
 		return {
 			element: select,
 			updateOptionsList,
+			setSelected,
+			getSelected: select.value,
 			onChange,
 			dispose,
 		};
@@ -197,7 +235,7 @@
 	// TODO: Needs new slider...
 	function createSlider(description, format, from, to) {}
 
-	function createJailFiltersContainer() {
+	function createJailFiltersContainer(factions, filters) {
 		const activityOptions = [
 			{ id: online, description: "Online" },
 			{ id: idle, description: "Idle" },
@@ -246,7 +284,8 @@
 			class: "tt-jail-filters-container",
 		});
 
-		const activityCheckboxList = createCheckboxList(activityOptions, []);
+		const activityCheckboxList = createCheckboxList(activityOptions);
+		activityCheckboxList.setSelections(filtersModel.activity);
 		activityCheckboxList.onSelectionChange((selectedActivityItems) => {
 			filtersModel = {
 				...filtersModel,
@@ -258,7 +297,8 @@
 			}
 		});
 
-		const factionsSelect = createDropdown(defaultFactionsItems, allFactions);
+		const factionsSelect = createDropdown([...defaultFactionsItems, ...factions]);
+		factionsSelect.setSelected(filtersModel.faction);
 		factionsSelect.onChange((selectedFaction) => {
 			filtersModel = {
 				...filtersModel,
@@ -279,6 +319,9 @@
 			type: "span",
 			text: "0",
 		});
+
+		// const quickBustCheckbox = createCheckbox("Quick bust", false);
+		// const quickModeCheckboxList = createCheckboxKist([{value: 'bust', description: 'Quick bust'}], [])
 
 		const filtersHeaderDiv = document.newElement({
 			type: "div",
@@ -304,6 +347,11 @@
 						}),
 					],
 				}),
+				// document.newElement({
+				// 	type: "div",
+				// 	class: "tt-jail-filters-quick",
+				// 	children: [createCheckbox("Quick bust", false).element],
+				// }),
 			],
 		});
 		const filtersContentDiv = document.newElement({
@@ -376,6 +424,89 @@
 		};
 	}
 
+	function createJailUserFacade(userElement) {
+		const activityIconId = userElement.querySelector('#iconTray > li[id^="icon"]').id;
+		const activity = activityIconId.startsWith("icon1") ? online : activityIconId.startsWith("icon62") ? idle : offline;
+
+		const factionElem = userElement.querySelector(".faction > img");
+		const faction = factionElem ? factionElem.title || unknownFaction : noFaction;
+
+		const bustElem = userElement.querySelector(".bust");
+		const bustIcon = bustElem.querySelector("bust-icon");
+		let isInQuickBustMode = false;
+
+		const bailElem = userElement.querySelector(".bye");
+		const bailIcon = bustElem.querySelector("bye-icon");
+		let isInQuickBailMode = false;
+
+		function applyQuickMode(flag, elem, iconElem) {
+			if (flag) {
+				return;
+			}
+
+			elem.href = elem.href + "1";
+			const quickMark = document.newElement({
+				type: "span",
+				class: "tt-jail-filters-quick-mark",
+				text: "Q",
+			});
+			iconElem.appendChild(quickMark);
+		}
+
+		function removeQuickMode(flag, elem, iconElem) {
+			if (!flag) {
+				return;
+			}
+
+			iconElem.firstChild.remove();
+			elem.href = elem.href.slice(0, -1);
+		}
+
+		function hide() {
+			userElement.classList.add("hidden");
+		}
+
+		function show() {
+			userElement.classList.remove("hidden");
+		}
+
+		function dispose() {
+			show();
+			removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
+			removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
+			isInQuickBustMode = false;
+			isInQuickBailMode = false;
+		}
+
+		return {
+			element: userElement,
+			activity,
+			faction,
+			isInQuickBustMode: () => isInQuickBustMode,
+			isInQuickBailMode: () => isInQuickBailMode,
+			applyQuickBust: () => {
+				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
+				isInQuickBustMode = true;
+			},
+			removeQuickBust: () => {
+				removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
+				isInQuickBustMode = false;
+			},
+			applyQuickBail: () => {
+				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
+				isInQuickBailMode = true;
+			},
+			removeQuickBail: () => {
+				removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
+				isInQuickBailMode = false;
+			},
+			hide,
+			show,
+			isShown: () => userElement.classList.contains("hidden"),
+			dispose,
+		};
+	}
+
 	function createInJailFacade() {
 		const usersListContainer = document.find(".users-list");
 		let usersInfo = [];
@@ -386,29 +517,32 @@
 			usersInfo = [];
 
 			for (const userElement of usersListContainer.children) {
-				const activityIconId = userElement.querySelector('#iconTray > li[id^="icon"]').id;
-				const activity = activityIconId.startsWith("icon1") ? online : activityIconId.startsWith("icon62") ? idle : offline;
-				const factionElem = userElement.querySelector(".faction > img");
-
-				usersInfo.push({
-					element: userElement,
-					activity,
-					faction: factionElem ? factionElem.title || unknownFaction : noFaction,
-				});
+				usersInfo.push(createJailUserFacade(userElement));
 			}
 
 			if (usersChangedCallback) {
-				const distinctFactions = [
-					...new Set(
-						usersInfo.map((userInfo) => userInfo.faction).filter((faction) => faction && faction !== unknownFaction && faction !== noFaction)
-					),
-				];
-				usersChangedCallback(usersInfo.length, distinctFactions);
+				usersChangedCallback(usersInfo.length, getFactionOptions());
 			}
 		}
 
+		// function updateRefreshButtons() {
+		// 	const allHidden = usersInfo.every(userInfo => !userInfo.isShown());
+
+		// 	if (allHidden) {
+		// 		if (usersInfo[0].isInQuickBustMode()) {
+		// 			// Add bust refresh button
+		// 		}
+
+		// 		if (usersInfo[0].isInQuickBailMode()) {
+		// 			// Add bail refresh button
+		// 		}
+		// 	} else {
+		// 		// Add main refresh button
+		// 	}
+		// }
+
 		function connect() {
-			// const handle = observeChildrenChanges(usersListContainer, () => {});
+			// TODO: const handle = observeChildrenChanges(usersListContainer, () => {});
 			const config = { childList: true };
 
 			const callback = function () {
@@ -432,14 +566,46 @@
 				const matchesFaction = filters.faction === allFactions || filters.faction === userInfo.faction;
 
 				if (matchesActivity && matchesFaction) {
-					userInfo.element.classList.remove("hidden");
+					userInfo.show();
 					shownAmount++;
 				} else {
-					userInfo.element.classList.add("hidden");
+					userInfo.hide();
 				}
 			}
 
 			return shownAmount;
+		}
+
+		function getFactionOptions() {
+			const distinctFactions = [
+				...new Set(usersInfo.map((userInfo) => userInfo.faction).filter((faction) => faction && faction !== unknownFaction && faction !== noFaction)),
+			];
+
+			return distinctFactions;
+		}
+
+		function applyQuickBust() {
+			for (const userInfo of usersInfo) {
+				userInfo.applyQuickBust();
+			}
+		}
+
+		function applyQuickBail() {
+			for (const userInfo of usersInfo) {
+				userInfo.applyQuickBail();
+			}
+		}
+
+		function removeQuickBust() {
+			for (const userInfo of usersInfo) {
+				userInfo.removeQuickBust();
+			}
+		}
+
+		function removeQuickBail() {
+			for (const userInfo of usersInfo) {
+				userInfo.removeQuickBail();
+			}
 		}
 
 		function onUsersChanged(callback) {
@@ -449,7 +615,7 @@
 		function dispose() {
 			observer.disconnect();
 			for (const userInfo of usersInfo) {
-				userInfo.element.classList.remove("hidden");
+				userInfo.dispose();
 			}
 			usersChangedCallback = undefined;
 		}
@@ -457,6 +623,12 @@
 		return {
 			connect,
 			applyFilters,
+			getFactionOptions,
+			getUsersAmount: () => usersInfo.length,
+			applyQuickBust,
+			removeQuickBust,
+			applyQuickBail,
+			removeQuickBail,
 			onUsersChanged,
 			dispose,
 		};
@@ -472,10 +644,21 @@
 	async function initialize() {
 		await jailReady();
 
-		jailFiltersContainer = createJailFiltersContainer();
 		inJailFacade = createInJailFacade();
+		inJailFacade.connect();
 
-		// TODO: Initial filters applying from storage
+		const factionOptions = inJailFacade.getFactionOptions();
+
+		jailFiltersContainer = createJailFiltersContainer(
+			factionOptions.map((faction) => ({ value: faction, description: faction })),
+			storageFilters
+		);
+
+		const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
+
+		jailFiltersContainer.updatePageAmount(inJailFacade.getUsersAmount());
+		jailFiltersContainer.updateShownAmount(shownAmount);
+
 		jailFiltersContainer.onFiltersChanged((filters) => {
 			const shownAmount = inJailFacade.applyFilters(filters);
 			jailFiltersContainer.updateShownAmount(shownAmount);
@@ -483,6 +666,7 @@
 			ttStorage.change({
 				filters: {
 					jail: {
+						// TODO: Change format?
 						timeStart: filters.time.from,
 						timeEnd: filters.time.to,
 						levelStart: filters.level.from,
@@ -502,8 +686,6 @@
 			jailFiltersContainer.updatePageAmount(usersAmount);
 			jailFiltersContainer.updateShownAmount(shownAmount);
 		});
-
-		inJailFacade.connect();
 	}
 
 	function teardown() {
