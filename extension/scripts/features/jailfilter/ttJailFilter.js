@@ -1,5 +1,3 @@
-// noinspection DuplicatedCode
-
 "use strict";
 
 (async () => {
@@ -7,11 +5,8 @@
 		"Jail Filter",
 		"jail",
 		() => settings.pages.jail.filter,
-		// initialiseFilters,
 		() => {},
-		// addFilters,
 		initialize,
-		// removeFilters,
 		teardown,
 		{
 			storage: ["settings.pages.jail.filter"],
@@ -30,6 +25,10 @@
 	const allFactions = "__all";
 	const noFaction = "__none";
 	const unknownFaction = "__unknown";
+
+	// Quick modes
+	const bust = "bust";
+	const bail = "bail";
 
 	// TODO: Fix styles
 	function createCheckbox(description) {
@@ -59,7 +58,7 @@
 		let onChangeCallback;
 
 		function onChangeListener() {
-			onChangeCallback(checkbox.checked);
+			onChangeCallback();
 		}
 
 		function setChecked(isChecked) {
@@ -95,15 +94,15 @@
 
 		for (const item of items) {
 			const checkbox = createCheckbox(item.description);
-			checkbox.onChange((isChecked) => {
-				if (isChecked) {
+			checkbox.onChange(() => {
+				if (checkbox.isChecked()) {
 					selectedIds[item.id] = true;
 				} else {
 					delete selectedIds[item.id];
 				}
 
 				if (selectionChangeCallback) {
-					selectionChangeCallback(Object.keys(selectedIds));
+					selectionChangeCallback();
 				}
 			});
 			checkboxes[item.id] = checkbox;
@@ -169,7 +168,7 @@
 			selectedOptionValue = select.value;
 
 			if (onChangeCallback) {
-				onChangeCallback(selectedOptionValue);
+				onChangeCallback();
 			}
 		}
 
@@ -188,7 +187,7 @@
 				setSelected(options[0].value);
 
 				if (onChangeCallback) {
-					onChangeCallback(selectedOptionValue);
+					onChangeCallback();
 				}
 			}
 
@@ -226,13 +225,13 @@
 			element: select,
 			updateOptionsList,
 			setSelected,
-			getSelected: select.value,
+			getSelected: () => select.value,
 			onChange,
 			dispose,
 		};
 	}
 
-	// TODO: Needs new slider...
+	// TODO: Needs new slider or wrapper on current...
 	function createSlider(description, format, from, to) {}
 
 	function createJailFiltersContainer(factions, filters) {
@@ -262,30 +261,14 @@
 		];
 		const quickModesOptions = [
 			{
-				id: "bust",
+				id: bust,
 				description: "Quick bust",
 			},
 			{
-				id: "bail",
+				id: bail,
 				description: "Quick bail",
 			},
 		];
-		let filtersModel = {
-			activity: filters.jail.activity,
-			faction: filters.jail.faction || allFactions,
-			time: {
-				from: filters.jail.timeStart,
-				to: filters.jail.timeEnd,
-			},
-			level: {
-				from: filters.jail.levelStart,
-				to: filters.jail.levelEnd,
-			},
-			score: {
-				from: filters.jail.scoreStart,
-				to: filters.jail.scoreEnd,
-			},
-		};
 		let filtersChangedCallback;
 		let quickModesChangedCallback;
 
@@ -296,28 +279,18 @@
 		});
 
 		const activityCheckboxList = createCheckboxList(activityOptions);
-		activityCheckboxList.setSelections(filtersModel.activity);
-		activityCheckboxList.onSelectionChange((selectedActivityItems) => {
-			filtersModel = {
-				...filtersModel,
-				activity: selectedActivityItems,
-			};
-
+		activityCheckboxList.setSelections(filters.jail.activity);
+		activityCheckboxList.onSelectionChange(() => {
 			if (filtersChangedCallback) {
-				filtersChangedCallback(filtersModel);
+				filtersChangedCallback();
 			}
 		});
 
 		const factionsSelect = createDropdown([...defaultFactionsItems, ...factions]);
-		factionsSelect.setSelected(filtersModel.faction);
-		factionsSelect.onChange((selectedFaction) => {
-			filtersModel = {
-				...filtersModel,
-				faction: selectedFaction,
-			};
-
+		factionsSelect.setSelected(filters.jail.faction || allFactions);
+		factionsSelect.onChange(() => {
 			if (filtersChangedCallback) {
-				filtersChangedCallback(filtersModel);
+				filtersChangedCallback();
 			}
 		});
 
@@ -332,10 +305,10 @@
 		});
 
 		const quickModeCheckboxList = createCheckboxList(quickModesOptions);
-		// TODO: quickModeCheckboxList.setSelections(filtersModel.quickModes);
-		quickModeCheckboxList.onSelectionChange((quickModes) => {
+		// TODO: quickModeCheckboxList.setSelections(somewhere from storage...);
+		quickModeCheckboxList.onSelectionChange(() => {
 			if (quickModesChangedCallback) {
-				quickModesChangedCallback(quickModes);
+				quickModesChangedCallback();
 			}
 		});
 
@@ -345,7 +318,6 @@
 			children: [
 				document.newElement({
 					type: "div",
-					class: "tt-jail-filters-quick",
 					children: [quickModeCheckboxList.element],
 				}),
 				document.newElement({
@@ -415,6 +387,13 @@
 			pageCountElement.innerText = pageCount;
 		}
 
+		function getFilters() {
+			return {
+				activity: activityCheckboxList.getSelections(),
+				faction: factionsSelect.getSelected(),
+			};
+		}
+
 		function onFiltersChanged(callback) {
 			filtersChangedCallback = callback;
 		}
@@ -442,8 +421,7 @@
 			updateFactions,
 			updateShownAmount,
 			updatePageAmount,
-			// TODO: Maybe use getters to build it instead of more state?
-			getFilters: () => filtersModel,
+			getFilters,
 			getQuickModes: () => quickModeCheckboxList.getSelections(),
 			onFiltersChanged,
 			onQuickModesChanged,
@@ -490,7 +468,7 @@
 		}
 
 		function applyQuickModes(quickModes) {
-			if (quickModes.includes("bust")) {
+			if (quickModes.includes(bust)) {
 				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
 				isInQuickBustMode = true;
 			} else {
@@ -498,7 +476,7 @@
 				isInQuickBustMode = false;
 			}
 
-			if (quickModes.includes("bail")) {
+			if (quickModes.includes(bail)) {
 				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
 				isInQuickBailMode = true;
 			} else {
@@ -548,10 +526,11 @@
 			}
 
 			if (usersChangedCallback) {
-				usersChangedCallback(usersInfo.length, getFactionOptions());
+				usersChangedCallback();
 			}
 		}
 
+		// TODO: Refresh button
 		// function updateRefreshButtons() {
 		// 	const allHidden = usersInfo.every(userInfo => !userInfo.isShown());
 
@@ -659,7 +638,8 @@
 		jailFiltersContainer.updatePageAmount(inJailFacade.getUsersAmount());
 		jailFiltersContainer.updateShownAmount(shownAmount);
 
-		jailFiltersContainer.onFiltersChanged((filters) => {
+		jailFiltersContainer.onFiltersChanged(() => {
+			const filters = jailFiltersContainer.getFilters();
 			const shownAmount = inJailFacade.applyFilters(filters);
 			jailFiltersContainer.updateShownAmount(shownAmount);
 
@@ -680,16 +660,17 @@
 				},
 			});
 		});
-		jailFiltersContainer.onQuickModesChanged((quickModes) => {
-			inJailFacade.applyQuickModes(quickModes);
+		jailFiltersContainer.onQuickModesChanged(() => {
+			inJailFacade.applyQuickModes(jailFiltersContainer.getQuickModes());
 
 			// TODO: Set in storage
 		});
-		inJailFacade.onUsersChanged((usersAmount, factions) => {
+		inJailFacade.onUsersChanged(() => {
 			// TODO: Add your faction to the list from API
-			jailFiltersContainer.updateFactions(factions.map((faction) => ({ value: faction, description: faction })));
+			const factionItems = inJailFacade.getFactionOptions().map((faction) => ({ value: faction, description: faction }));
+			jailFiltersContainer.updateFactions(factionItems);
 			const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
-			jailFiltersContainer.updatePageAmount(usersAmount);
+			jailFiltersContainer.updatePageAmount(inJailFacade.getUsersAmount());
 			jailFiltersContainer.updateShownAmount(shownAmount);
 			inJailFacade.applyQuickModes(jailFiltersContainer.getQuickModes());
 		});

@@ -18,7 +18,7 @@
 
 .tt-jail-filters-header {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	margin-bottom: 10px;
 }
 
@@ -42,10 +42,6 @@
 .tt-jail-filters-item-header {
 	font-weight: bold;
 	margin-bottom: 5px;
-}
-
-.tt-jail-filters-quick {
-	margin-right: 50px;
 }
 
 .tt-jail-filters-quick-mark {
