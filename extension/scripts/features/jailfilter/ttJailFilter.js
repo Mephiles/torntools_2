@@ -219,7 +219,7 @@
 	}
 
 	// TODO: Needs new slider or wrapper on current...
-	function createSlider(description, format, from, to) {}
+	function createSlider(min, max) {}
 
 	function createJailFiltersContainer(factions, filters, quickModes) {
 		const activityOptions = [
@@ -260,6 +260,8 @@
 		let quickModesChangedCallback;
 
 		// TODO: Support custom appending instead of auto or as an addition
+		// const container = createContainer("Jail Filter", contentElement);
+		// .appendChild(container.element)
 		const { container, content } = createContainer("Jail Filter", {
 			nextElement: document.find(".users-list-title"),
 			class: "tt-jail-filters-container",
