@@ -397,6 +397,7 @@ const DEFAULT_STORAGE = {
 	},
 	quick: {
 		items: new DefaultSetting({ type: "array", defaultValue: [] }),
+		jail: new DefaultSetting({ type: "array", defaultValue: [] }),
 	},
 };
 
@@ -454,6 +455,11 @@ const CONTRIBUTORS = {
 		id: 2639608,
 		name: "Tesa",
 		color: "brown",
+	},
+	AllMight: {
+		id: 1878147,
+		name: "AllMight",
+		color: "#ff3333",
 	},
 };
 

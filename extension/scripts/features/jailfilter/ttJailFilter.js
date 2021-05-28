@@ -15,6 +15,7 @@
 	);
 
 	const storageFilters = filters;
+	const storageQuick = quick;
 
 	// Activity
 	const online = "online";
@@ -42,7 +43,7 @@
 		});
 		const checkboxWrapper = document.newElement({
 			type: "div",
-			class: "tt-checkbox-wrap",
+			class: "tt-checkbox-wrapper",
 			children: [
 				checkbox,
 				document.newElement({
@@ -110,7 +111,7 @@
 
 		const checkboxWrapper = document.newElement({
 			type: "div",
-			class: "tt-checkbox-list-wrap",
+			class: "tt-checkbox-list-wrapper",
 			children: Object.values(checkboxes).map((checkbox) => checkbox.element),
 		});
 
@@ -234,7 +235,7 @@
 	// TODO: Needs new slider or wrapper on current...
 	function createSlider(description, format, from, to) {}
 
-	function createJailFiltersContainer(factions, filters) {
+	function createJailFiltersContainer(factions, filters, quickModes) {
 		const activityOptions = [
 			{ id: online, description: "Online" },
 			{ id: idle, description: "Idle" },
@@ -279,7 +280,7 @@
 		});
 
 		const activityCheckboxList = createCheckboxList(activityOptions);
-		activityCheckboxList.setSelections(filters.jail.activity);
+		activityCheckboxList.setSelections(filters.activity);
 		activityCheckboxList.onSelectionChange(() => {
 			if (filtersChangedCallback) {
 				filtersChangedCallback();
@@ -287,7 +288,7 @@
 		});
 
 		const factionsSelect = createDropdown([...defaultFactionsItems, ...factions]);
-		factionsSelect.setSelected(filters.jail.faction || allFactions);
+		factionsSelect.setSelected(filters.faction || allFactions);
 		factionsSelect.onChange(() => {
 			if (filtersChangedCallback) {
 				filtersChangedCallback();
@@ -305,7 +306,7 @@
 		});
 
 		const quickModeCheckboxList = createCheckboxList(quickModesOptions);
-		// TODO: quickModeCheckboxList.setSelections(somewhere from storage...);
+		quickModeCheckboxList.setSelections(quickModes);
 		quickModeCheckboxList.onSelectionChange(() => {
 			if (quickModesChangedCallback) {
 				quickModesChangedCallback();
@@ -531,15 +532,15 @@
 		}
 
 		// TODO: Refresh button
-		// function updateRefreshButtons() {
+		// function updateRefreshButtons(quickModes) {
 		// 	const allHidden = usersInfo.every(userInfo => !userInfo.isShown());
 
 		// 	if (allHidden) {
-		// 		if (usersInfo[0].isInQuickBustMode()) {
+		// 		if (quickModes.includes(bust)) {
 		// 			// Add bust refresh button
 		// 		}
 
-		// 		if (usersInfo[0].isInQuickBailMode()) {
+		// 		if (quickModes.includes(bail)) {
 		// 			// Add bail refresh button
 		// 		}
 		// 	} else {
@@ -624,36 +625,37 @@
 		await jailReady();
 
 		inJailFacade = createInJailFacade();
+		// TODO: Connect really needed?
 		inJailFacade.connect();
 
 		const factionOptions = inJailFacade.getFactionOptions();
 
 		jailFiltersContainer = createJailFiltersContainer(
 			factionOptions.map((faction) => ({ value: faction, description: faction })),
-			storageFilters
+			storageFilters.jail,
+			storageQuick.jail
 		);
 
 		const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
-
 		jailFiltersContainer.updatePageAmount(inJailFacade.getUsersAmount());
 		jailFiltersContainer.updateShownAmount(shownAmount);
+		inJailFacade.applyQuickModes(jailFiltersContainer.getQuickModes());
 
 		jailFiltersContainer.onFiltersChanged(() => {
 			const filters = jailFiltersContainer.getFilters();
 			const shownAmount = inJailFacade.applyFilters(filters);
 			jailFiltersContainer.updateShownAmount(shownAmount);
 
-			// TODO: Whats the point of async here? How to handle that?
 			ttStorage.change({
 				filters: {
 					jail: {
 						// TODO: Change format?
-						timeStart: filters.time.from,
-						timeEnd: filters.time.to,
-						levelStart: filters.level.from,
-						levelEnd: filters.level.to,
-						scoreStart: filters.score.from,
-						scoreEnd: filters.score.to,
+						// timeStart: filters.time.from,
+						// timeEnd: filters.time.to,
+						// levelStart: filters.level.from,
+						// levelEnd: filters.level.to,
+						// scoreStart: filters.score.from,
+						// scoreEnd: filters.score.to,
 						faction: filters.faction,
 						activity: filters.activity,
 					},
@@ -661,9 +663,14 @@
 			});
 		});
 		jailFiltersContainer.onQuickModesChanged(() => {
-			inJailFacade.applyQuickModes(jailFiltersContainer.getQuickModes());
+			const quickModes = jailFiltersContainer.getQuickModes();
+			inJailFacade.applyQuickModes(quickModes);
 
-			// TODO: Set in storage
+			ttStorage.change({
+				quick: {
+					jail: quickModes,
+				},
+			});
 		});
 		inJailFacade.onUsersChanged(() => {
 			// TODO: Add your faction to the list from API
