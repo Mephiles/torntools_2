@@ -142,7 +142,13 @@
 		},
 		{
 			"matches": ["https://www.torn.com/api.html*"],
-			"js": ["scripts/features/apidemo/ttAPIDemo.js", "scripts/features/autoapifill/ttAutoAPIFill.js", "scripts/features/autopretty/ttAutoPretty.js"],
+			"css": ["scripts/features/apiselections/ttAPISelections.css"],
+			"js": [
+				"scripts/features/apidemo/ttAPIDemo.js",
+				"scripts/features/autoapifill/ttAutoAPIFill.js",
+				"scripts/features/autopretty/ttAutoPretty.js",
+				"scripts/features/apiselections/ttAPISelections.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -150,12 +156,14 @@
 			"css": [
 				"scripts/features/drugdetails/ttDrugDetails.css",
 				"scripts/features/itemvalues/ttItemValues.css",
-				"scripts/features/totalitemcost/ttTotalItemCost.css"
+				"scripts/features/totalitemcost/ttTotalItemCost.css",
+				"scripts/features/bazaarworth/ttBazaarWorth.css"
 			],
 			"js": [
 				"scripts/features/drugdetails/ttDrugDetails.js",
 				"scripts/features/itemvalues/ttItemValues.js",
-				"scripts/features/totalitemcost/ttTotalItemCost.js"
+				"scripts/features/totalitemcost/ttTotalItemCost.js",
+				"scripts/features/bazaarworth/ttBazaarWorth.js"
 			],
 			"run_at": "document_end"
 		},
@@ -280,13 +288,15 @@
 			"css": [
 				"scripts/features/profilenotes/ttProfileNotes.css",
 				"scripts/features/statusindicator/ttStatusIndicator.css",
-				"scripts/features/friendlyfire/ttFriendlyFire.css"
+				"scripts/features/friendlyfire/ttFriendlyFire.css",
+				"scripts/features/agetowords/ttAgeToWords.css"
 			],
 			"js": [
 				"scripts/features/profileid/ttProfileID.js",
 				"scripts/features/profilenotes/ttProfileNotes.js",
 				"scripts/features/statusindicator/ttStatusIndicator.js",
-				"scripts/features/friendlyfire/ttFriendlyFire.js"
+				"scripts/features/friendlyfire/ttFriendlyFire.js",
+				"scripts/features/agetowords/ttAgeToWords.js"
 			],
 			"run_at": "document_end"
 		},
@@ -298,8 +308,16 @@
 		},
 		{
 			"matches": ["https://www.torn.com/trade.php*"],
-			"css": ["scripts/features/itemvalues/ttItemValues.css"],
-			"js": ["scripts/features/itemvalues/ttItemValues.js"],
+			"css": [
+				"scripts/features/itemvalues/ttItemValues.css",
+				"scripts/features/tradevalues/ttTradeValues.css",
+				"scripts/features/tradeopenchat/ttTradeOpenChat.css"
+			],
+			"js": [
+				"scripts/features/itemvalues/ttItemValues.js",
+				"scripts/features/tradevalues/ttTradeValues.js",
+				"scripts/features/tradeopenchat/ttTradeOpenChat.js"
+			],
 			"run_at": "document_end"
 		},
 		{

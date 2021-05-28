@@ -251,6 +251,7 @@ const DEFAULT_STORAGE = {
 				idBesideProfileName: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				notes: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				showAllyWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				ageToWords: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			chat: {
 				fontSize: new DefaultSetting({ type: "number", defaultValue: 12 }),
@@ -332,12 +333,18 @@ const DEFAULT_STORAGE = {
 				autoFillKey: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				autoDemo: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				autoPretty: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				clickableSelections: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			forums: {
 				warning: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			bazaar: {
 				itemsCost: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				worth: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			trade: {
+				itemValues: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				openChat: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
@@ -394,6 +401,9 @@ const DEFAULT_STORAGE = {
 				infaction: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				isdonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
+		},
+		trade: {
+			hideValues: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
