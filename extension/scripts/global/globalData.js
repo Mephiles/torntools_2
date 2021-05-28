@@ -134,6 +134,20 @@ const ttStorage = new (class {
 	}
 })();
 
+const JAIL_CONSTANTS = {
+	// Activity
+	online: "online",
+	idle: "idle",
+	offline: "offline",
+	// Factions
+	allFactions: "__all__",
+	noFaction: "__none__",
+	unknownFactions: "__unknown__",
+	// Quick modes
+	bust: "bust",
+	bail: "bail",
+};
+
 const DEFAULT_STORAGE = {
 	version: {
 		oldVersion: new DefaultSetting({ type: "string" }),
@@ -345,13 +359,19 @@ const DEFAULT_STORAGE = {
 			revivesOn: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 		jail: {
-			timeStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			timeEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
-			levelStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
-			scoreStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			scoreEnd: new DefaultSetting({ type: "number", defaultValue: 5000 }),
-			faction: new DefaultSetting({ type: "string", defaultValue: "" }),
+			time: {
+				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
+				to: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			},
+			level: {
+				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
+				to: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			},
+			score: {
+				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
+				to: new DefaultSetting({ type: "number", defaultValue: 5000 }),
+			},
+			faction: new DefaultSetting({ type: "string", defaultValue: JAIL_CONSTANTS.allFactions }),
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
 		containers: new DefaultSetting({ type: "object", defaultValue: {} }),

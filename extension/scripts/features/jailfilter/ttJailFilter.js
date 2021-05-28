@@ -17,20 +17,6 @@
 	const storageFilters = filters;
 	const storageQuick = quick;
 
-	// Activity
-	const online = "online";
-	const idle = "idle";
-	const offline = "offline";
-
-	// Factions
-	const allFactions = "__all";
-	const noFaction = "__none";
-	const unknownFaction = "__unknown";
-
-	// Quick modes
-	const bust = "bust";
-	const bail = "bail";
-
 	// TODO: Fix styles
 	function createCheckbox(description) {
 		const id = getUUID();
@@ -237,21 +223,21 @@
 
 	function createJailFiltersContainer(factions, filters, quickModes) {
 		const activityOptions = [
-			{ id: online, description: "Online" },
-			{ id: idle, description: "Idle" },
-			{ id: offline, description: "Offline" },
+			{ id: JAIL_CONSTANTS.online, description: "Online" },
+			{ id: JAIL_CONSTANTS.idle, description: "Idle" },
+			{ id: JAIL_CONSTANTS.offline, description: "Offline" },
 		];
 		const defaultFactionsItems = [
 			{
-				value: allFactions,
+				value: JAIL_CONSTANTS.allFactions,
 				description: "All",
 			},
 			{
-				value: noFaction,
+				value: JAIL_CONSTANTS.noFaction,
 				description: "No faction",
 			},
 			{
-				value: unknownFaction,
+				value: JAIL_CONSTANTS.unknownFactions,
 				description: "Unknown faction",
 			},
 			{
@@ -262,11 +248,11 @@
 		];
 		const quickModesOptions = [
 			{
-				id: bust,
+				id: JAIL_CONSTANTS.bust,
 				description: "Quick bust",
 			},
 			{
-				id: bail,
+				id: JAIL_CONSTANTS.bail,
 				description: "Quick bail",
 			},
 		];
@@ -288,7 +274,7 @@
 		});
 
 		const factionsSelect = createDropdown([...defaultFactionsItems, ...factions]);
-		factionsSelect.setSelected(filters.faction || allFactions);
+		factionsSelect.setSelected(filters.faction);
 		factionsSelect.onChange(() => {
 			if (filtersChangedCallback) {
 				filtersChangedCallback();
@@ -414,9 +400,9 @@
 			container.remove();
 		}
 
-		// TODO: time createSlider
-		// TODO: level createSlider
-		// TODO: score createSlider
+		// TODO: time createSlider (filters.time)
+		// TODO: level createSlider (filters.level)
+		// TODO: score createSlider (filters.score)
 
 		return {
 			updateFactions,
@@ -432,10 +418,14 @@
 
 	function createJailUserFacade(userElement) {
 		const activityIconId = userElement.querySelector('#iconTray > li[id^="icon"]').id;
-		const activity = activityIconId.startsWith("icon1") ? online : activityIconId.startsWith("icon62") ? idle : offline;
+		const activity = activityIconId.startsWith("icon1")
+			? JAIL_CONSTANTS.online
+			: activityIconId.startsWith("icon62")
+			? JAIL_CONSTANTS.idle
+			: JAIL_CONSTANTS.offline;
 
 		const factionElem = userElement.querySelector(".faction > img");
-		const faction = factionElem ? factionElem.title || unknownFaction : noFaction;
+		const faction = factionElem ? factionElem.title || JAIL_CONSTANTS.unknownFactions : JAIL_CONSTANTS.noFaction;
 
 		const bustElem = userElement.querySelector(".bust");
 		const bustIcon = bustElem.querySelector(".bust-icon");
@@ -469,7 +459,7 @@
 		}
 
 		function applyQuickModes(quickModes) {
-			if (quickModes.includes(bust)) {
+			if (quickModes.includes(JAIL_CONSTANTS.bust)) {
 				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
 				isInQuickBustMode = true;
 			} else {
@@ -477,7 +467,7 @@
 				isInQuickBustMode = false;
 			}
 
-			if (quickModes.includes(bail)) {
+			if (quickModes.includes(JAIL_CONSTANTS.bail)) {
 				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
 				isInQuickBailMode = true;
 			} else {
@@ -536,11 +526,11 @@
 		// 	const allHidden = usersInfo.every(userInfo => !userInfo.isShown());
 
 		// 	if (allHidden) {
-		// 		if (quickModes.includes(bust)) {
+		// 		if (quickModes.includes(JAIL_CONSTANTS.bust)) {
 		// 			// Add bust refresh button
 		// 		}
 
-		// 		if (quickModes.includes(bail)) {
+		// 		if (quickModes.includes(JAIL_CONSTANTS.bail)) {
 		// 			// Add bail refresh button
 		// 		}
 		// 	} else {
@@ -570,7 +560,7 @@
 
 			for (const userInfo of usersInfo) {
 				const matchesActivity = !filters.activity.length || filters.activity.includes(userInfo.activity);
-				const matchesFaction = filters.faction === allFactions || filters.faction === userInfo.faction;
+				const matchesFaction = filters.faction === JAIL_CONSTANTS.allFactions || filters.faction === userInfo.faction;
 
 				if (matchesActivity && matchesFaction) {
 					userInfo.show();
@@ -585,7 +575,11 @@
 
 		function getFactionOptions() {
 			const distinctFactions = [
-				...new Set(usersInfo.map((userInfo) => userInfo.faction).filter((faction) => faction && faction !== unknownFaction && faction !== noFaction)),
+				...new Set(
+					usersInfo
+						.map((userInfo) => userInfo.faction)
+						.filter((faction) => faction && faction !== JAIL_CONSTANTS.unknownFactions && faction !== JAIL_CONSTANTS.noFaction)
+				),
 			];
 
 			return distinctFactions;
@@ -648,17 +642,7 @@
 
 			ttStorage.change({
 				filters: {
-					jail: {
-						// TODO: Change format?
-						// timeStart: filters.time.from,
-						// timeEnd: filters.time.to,
-						// levelStart: filters.level.from,
-						// levelEnd: filters.level.to,
-						// scoreStart: filters.score.from,
-						// scoreEnd: filters.score.to,
-						faction: filters.faction,
-						activity: filters.activity,
-					},
+					jail: filters,
 				},
 			});
 		});
