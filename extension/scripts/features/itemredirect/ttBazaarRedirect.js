@@ -40,7 +40,11 @@
 					document.newElement({
 						type: "div",
 						class: "tt-bazaar-redirect",
-						text: `Could not find ${itemName}. Please try using the Search function. `,
+						children: [
+							"Could not find ",
+							document.newElement({ type: "span", text: itemName, class: "bold" }),
+							". Please try using the Search function.",
+						],
 					})
 				);
 			}
