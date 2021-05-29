@@ -73,8 +73,7 @@
 		};
 	}
 
-	// TODO: Orientation
-	function createCheckboxList(items) {
+	function createCheckboxList(items, orientation) {
 		let selectedIds = {};
 		const checkboxes = {};
 		let selectionChangeCallback;
@@ -97,7 +96,7 @@
 
 		const checkboxWrapper = document.newElement({
 			type: "div",
-			class: "tt-checkbox-list-wrapper",
+			class: ["tt-checkbox-list-wrapper", orientation === "row" ? "tt-checkbox-list-row" : "tt-checkbox-list-column"].join(" "),
 			children: Object.values(checkboxes).map((checkbox) => checkbox.element),
 		});
 
@@ -218,8 +217,91 @@
 		};
 	}
 
-	// TODO: Needs new slider or wrapper on current...
-	function createSlider(min, max) {}
+	function createSlider(min, max, step, formatFn) {
+		formatFn = formatFn || ((value) => value);
+
+		let sliderChangesObserver;
+		const config = { attributes: true, attributeFilter: ["data-low", "data-high"] };
+
+		const slider = new DualRangeSlider({ min, max, step, valueLow: min, valueHigh: max });
+		const from = document.newElement({
+			type: "span",
+			text: formatFn(min),
+		});
+		const to = document.newElement({
+			type: "span",
+			text: formatFn(max),
+		});
+		const sliderWrapper = document.newElement({
+			type: "div",
+			class: "tt-slider-wrapper",
+			children: [
+				slider.slider,
+				document.newElement({
+					type: "span",
+					class: "tt-slider-label",
+					children: [
+						from,
+						document.newElement({
+							type: "span",
+							text: " - ",
+						}),
+						to,
+					],
+				}),
+			],
+		});
+
+		function updateLabels() {
+			from.innerText = formatFn(parseInt(slider.slider.dataset.low));
+			to.innerText = formatFn(parseInt(slider.slider.dataset.high));
+		}
+
+		function setRange(range) {
+			// TODO: Validate against min and max?
+			if (sliderChangesObserver) {
+				sliderChangesObserver.disconnect();
+			}
+
+			slider.updateValue(slider.handles[0], range.from);
+			slider.updateValue(slider.handles[1], range.to);
+			updateLabels();
+
+			if (sliderChangesObserver) {
+				sliderChangesObserver.observe(slider.slider, config);
+			}
+		}
+
+		function getRange() {
+			return {
+				from: parseInt(slider.slider.dataset.low),
+				to: parseInt(slider.slider.dataset.high),
+			};
+		}
+
+		function onRangeChanged(callback) {
+			sliderChangesObserver = new MutationObserver(() => {
+				updateLabels();
+				callback();
+			});
+			sliderChangesObserver.observe(slider.slider, config);
+		}
+
+		function dispose() {
+			if (sliderChangesObserver) {
+				sliderChangesObserver.disconnect();
+				sliderChangesObserver = undefined;
+			}
+		}
+
+		return {
+			element: sliderWrapper,
+			setRange,
+			getRange,
+			onRangeChanged,
+			dispose,
+		};
+	}
 
 	function createJailFiltersContainer(factions, filters, quickModes) {
 		const activityOptions = [
@@ -267,7 +349,7 @@
 			class: "tt-jail-filters-container",
 		});
 
-		const activityCheckboxList = createCheckboxList(activityOptions);
+		const activityCheckboxList = createCheckboxList(activityOptions, "column");
 		activityCheckboxList.setSelections(filters.activity);
 		activityCheckboxList.onSelectionChange(() => {
 			if (filtersChangedCallback) {
@@ -283,6 +365,30 @@
 			}
 		});
 
+		const timeFilter = createSlider(JAIL_CONSTANTS.timeMin, JAIL_CONSTANTS.timeMax, JAIL_CONSTANTS.timeStep, (num) => `${num}h`);
+		timeFilter.setRange(filters.time);
+		timeFilter.onRangeChanged(() => {
+			if (filtersChangedCallback) {
+				filtersChangedCallback();
+			}
+		});
+
+		const levelFilter = createSlider(JAIL_CONSTANTS.levelMin, JAIL_CONSTANTS.levelMax, JAIL_CONSTANTS.levelStep);
+		levelFilter.setRange(filters.level);
+		levelFilter.onRangeChanged(() => {
+			if (filtersChangedCallback) {
+				filtersChangedCallback();
+			}
+		});
+
+		const scoreFilter = createSlider(JAIL_CONSTANTS.scoreMin, JAIL_CONSTANTS.scoreMax, JAIL_CONSTANTS.scoreStep);
+		scoreFilter.setRange(filters.score);
+		scoreFilter.onRangeChanged(() => {
+			if (filtersChangedCallback) {
+				filtersChangedCallback();
+			}
+		});
+
 		const shownCountElement = document.newElement({
 			type: "span",
 			text: "0",
@@ -293,7 +399,7 @@
 			text: "0",
 		});
 
-		const quickModeCheckboxList = createCheckboxList(quickModesOptions);
+		const quickModeCheckboxList = createCheckboxList(quickModesOptions, "row");
 		quickModeCheckboxList.setSelections(quickModes);
 		quickModeCheckboxList.onSelectionChange(() => {
 			if (quickModesChangedCallback) {
@@ -359,6 +465,42 @@
 						factionsSelect.element,
 					],
 				}),
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-item",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "tt-jail-filters-item-header",
+							text: "Time",
+						}),
+						timeFilter.element,
+					],
+				}),
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-item",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "tt-jail-filters-item-header",
+							text: "Level",
+						}),
+						levelFilter.element,
+					],
+				}),
+				document.newElement({
+					type: "div",
+					class: "tt-jail-filters-item",
+					children: [
+						document.newElement({
+							type: "div",
+							class: "tt-jail-filters-item-header",
+							text: "Score",
+						}),
+						scoreFilter.element,
+					],
+				}),
 			],
 		});
 		content.appendChild(filtersHeaderDiv);
@@ -380,6 +522,9 @@
 			return {
 				activity: activityCheckboxList.getSelections(),
 				faction: factionsSelect.getSelected(),
+				time: timeFilter.getRange(),
+				level: levelFilter.getRange(),
+				score: scoreFilter.getRange(),
 			};
 		}
 
@@ -394,6 +539,9 @@
 		function dispose() {
 			activityCheckboxList.dispose();
 			factionsSelect.dispose();
+			timeFilter.dispose();
+			levelFilter.dispose();
+			scoreFilter.dispose();
 			quickModeCheckboxList.dispose();
 
 			filtersChangedCallback = undefined;
@@ -401,10 +549,6 @@
 
 			container.remove();
 		}
-
-		// TODO: time createSlider (filters.time)
-		// TODO: level createSlider (filters.level)
-		// TODO: score createSlider (filters.score)
 
 		return {
 			updateFactions,
@@ -429,6 +573,10 @@
 		const factionElem = userElement.querySelector(".faction > img");
 		const faction = factionElem ? factionElem.title || JAIL_CONSTANTS.unknownFactions : JAIL_CONSTANTS.noFaction;
 
+		const time = getTimeFromText(userElement.querySelector(".time").lastChild.textContent.trim());
+		const level = parseInt(userElement.querySelector(".level").lastChild.textContent.trim());
+		const score = level * (time + 3);
+
 		const bustElem = userElement.querySelector(".bust");
 		const bustIcon = bustElem.querySelector(".bust-icon");
 		let isInQuickBustMode = false;
@@ -436,6 +584,17 @@
 		const bailElem = userElement.querySelector(".bye");
 		const bailIcon = bailElem.querySelector(".bye-icon");
 		let isInQuickBailMode = false;
+
+		function getTimeFromText(text) {
+			const hourAnMinRegex = /^(?<hour>\d\d?)h \d\d?m$/;
+			const match = text.match(hourAnMinRegex);
+
+			if (match) {
+				return parseInt(match.groups.hour);
+			}
+
+			return 0;
+		}
 
 		function applyQuickMode(flag, elem, iconElem) {
 			if (flag) {
@@ -495,6 +654,9 @@
 			element: userElement,
 			activity,
 			faction,
+			time,
+			level,
+			score,
 			applyQuickModes,
 			isInQuickBustMode: () => isInQuickBustMode,
 			isInQuickBailMode: () => isInQuickBailMode,
@@ -563,8 +725,11 @@
 			for (const userInfo of usersInfo) {
 				const matchesActivity = !filters.activity.length || filters.activity.includes(userInfo.activity);
 				const matchesFaction = filters.faction === JAIL_CONSTANTS.allFactions || filters.faction === userInfo.faction;
+				const matchesTime = userInfo.time >= filters.time.from && userInfo.time <= filters.time.to;
+				const matchesLevel = userInfo.level >= filters.level.from && userInfo.level <= filters.level.to;
+				const matchesScore = userInfo.score >= filters.score.from && userInfo.score <= filters.score.to;
 
-				if (matchesActivity && matchesFaction) {
+				if (matchesActivity && matchesFaction && matchesTime && matchesLevel && matchesScore) {
 					userInfo.show();
 					shownAmount++;
 				} else {

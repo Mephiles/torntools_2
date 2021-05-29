@@ -146,6 +146,18 @@ const JAIL_CONSTANTS = {
 	// Quick modes
 	bust: "bust",
 	bail: "bail",
+	// Time
+	timeMin: 0,
+	timeMax: 100,
+	timeStep: 1,
+	// Level
+	levelMin: 0,
+	levelMax: 100,
+	levelStep: 1,
+	// Score
+	scoreMin: 0,
+	scoreMax: 5000,
+	scoreStep: 25,
 };
 
 const DEFAULT_STORAGE = {
@@ -367,16 +379,16 @@ const DEFAULT_STORAGE = {
 		},
 		jail: {
 			time: {
-				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
-				to: new DefaultSetting({ type: "number", defaultValue: 100 }),
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMax }),
 			},
 			level: {
-				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
-				to: new DefaultSetting({ type: "number", defaultValue: 100 }),
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMax }),
 			},
 			score: {
-				from: new DefaultSetting({ type: "number", defaultValue: 0 }),
-				to: new DefaultSetting({ type: "number", defaultValue: 5000 }),
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMax }),
 			},
 			faction: new DefaultSetting({ type: "string", defaultValue: JAIL_CONSTANTS.allFactions }),
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),

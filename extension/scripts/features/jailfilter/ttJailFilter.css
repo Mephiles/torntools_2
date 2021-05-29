@@ -1,5 +1,9 @@
+.tt-jail-filters-container {
+	margin-top: 10px;
+}
+
 .tt-jail-filters-container > main {
-	padding: 4px;
+	padding: 8px 15px 8px 4px;
 }
 
 .tt-jail-filters-header {
@@ -15,7 +19,7 @@
 .tt-jail-filters-content {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-evenly;
+	justify-content: space-between;
 }
 
 .tt-jail-filters-item {
@@ -37,4 +41,42 @@
 	bottom: -8px;
 	color: rgb(133, 173, 13);
 	font-weight: 600;
+}
+
+/* Checkbox */
+.tt-checkbox-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.tt-checkbox-wrapper > label {
+	margin-left: 2px;
+}
+
+/* Checkbox List */
+.tt-checkbox-list-wrapper {
+	display: flex;
+}
+
+.tt-checkbox-list-wrapper.tt-checkbox-list-column {
+	flex-direction: column;
+}
+
+.tt-checkbox-list-wrapper.tt-checkbox-list-row {
+	flex-direction: row;
+}
+
+.tt-checkbox-list-wrapper.tt-checkbox-list-row > .tt-checkbox-wrapper:not(:first-child) {
+	margin-left: 10px;
+}
+
+/* Slider */
+.tt-slider-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.tt-slider-label {
+	margin-top: 10px;
 }
