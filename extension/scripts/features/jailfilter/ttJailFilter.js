@@ -17,7 +17,6 @@
 	const storageFilters = filters;
 	const storageQuick = quick;
 
-	// TODO: Fix styles
 	function createCheckbox(description) {
 		const id = getUUID();
 		const checkbox = document.newElement({
@@ -258,7 +257,6 @@
 		}
 
 		function setRange(range) {
-			// TODO: Validate against min and max?
 			if (sliderChangesObserver) {
 				sliderChangesObserver.disconnect();
 			}
@@ -670,8 +668,21 @@
 	function createInJailFacade() {
 		const usersListContainer = document.find(".users-list");
 		let usersInfo = [];
-		let observer;
 		let usersChangedCallback;
+
+		const config = { childList: true };
+
+		const callback = function () {
+			const isInLoadingState = usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder");
+			if (isInLoadingState) {
+				buildUsersInfo();
+			}
+		};
+
+		const observer = new MutationObserver(callback);
+		observer.observe(usersListContainer, config);
+
+		buildUsersInfo();
 
 		function buildUsersInfo() {
 			usersInfo = [];
@@ -701,23 +712,6 @@
 		// 		// Add main refresh button
 		// 	}
 		// }
-
-		function connect() {
-			// TODO: const handle = observeChildrenChanges(usersListContainer, () => {});
-			const config = { childList: true };
-
-			const callback = function () {
-				const isInLoadingState = usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder");
-				if (isInLoadingState) {
-					buildUsersInfo();
-				}
-			};
-
-			observer = new MutationObserver(callback);
-			observer.observe(usersListContainer, config);
-
-			buildUsersInfo();
-		}
 
 		function applyFilters(filters) {
 			let shownAmount = 0;
@@ -765,7 +759,6 @@
 		}
 
 		return {
-			connect,
 			applyFilters,
 			getFactionOptions,
 			getUsersAmount: () => usersInfo.length,
@@ -786,8 +779,6 @@
 		await jailReady();
 
 		inJailFacade = createInJailFacade();
-		// TODO: Connect really needed?
-		inJailFacade.connect();
 
 		const factionOptions = inJailFacade.getFactionOptions();
 
