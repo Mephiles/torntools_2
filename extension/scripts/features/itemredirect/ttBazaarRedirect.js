@@ -39,15 +39,8 @@
 				document.find(".info-msg-cont .msg").appendChild(
 					document.newElement({
 						type: "div",
-						class: "tt-bazaar-redirect bold",
-						text: `[${itemName}] `,
-						children: [
-							document.newElement({
-								type: "span",
-								class: "no-bold",
-								text: "Could not find item. Please try using the Search function.",
-							}),
-						],
+						class: "tt-bazaar-redirect",
+						text: `Could not find ${itemName}. Please try using the Search function. `,
 					})
 				);
 			}

@@ -17,10 +17,5 @@
 }
 
 .tt-bazaar-redirect {
-	font-weight: 700;
-	color: var(--tt-color-light-green);
-}
-
-.tt-bazaar-redirect .no-bold {
-	font-weight: 400;
+	color: var(--tt-color-item-text);
 }
