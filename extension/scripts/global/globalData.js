@@ -334,6 +334,10 @@ const DEFAULT_STORAGE = {
 				itemValues: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				openChat: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			shops: {
+				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				maxBuyIgnoreCash: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
 		},
 		external: {
 			tornstats: new DefaultSetting({ type: "boolean", defaultValue: false }),
