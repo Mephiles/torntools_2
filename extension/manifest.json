@@ -157,13 +157,15 @@
 				"scripts/features/drugdetails/ttDrugDetails.css",
 				"scripts/features/itemvalues/ttItemValues.css",
 				"scripts/features/totalitemcost/ttTotalItemCost.css",
-				"scripts/features/bazaarworth/ttBazaarWorth.css"
+				"scripts/features/bazaarworth/ttBazaarWorth.css",
+				"scripts/features/bazaarfillmax/ttBazaarFillMax.css"
 			],
 			"js": [
 				"scripts/features/drugdetails/ttDrugDetails.js",
 				"scripts/features/itemvalues/ttItemValues.js",
 				"scripts/features/totalitemcost/ttTotalItemCost.js",
-				"scripts/features/bazaarworth/ttBazaarWorth.js"
+				"scripts/features/bazaarworth/ttBazaarWorth.js",
+				"scripts/features/bazaarfillmax/ttBazaarFillMax.js"
 			],
 			"run_at": "document_end"
 		},
