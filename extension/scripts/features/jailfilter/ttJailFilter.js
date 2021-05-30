@@ -242,6 +242,10 @@
 			};
 		}
 
+		function getQuickModes() {
+			return quickModeCheckboxList.getSelections();
+		}
+
 		function onFiltersChanged(callback) {
 			filtersChangedCallback = callback;
 		}
@@ -269,7 +273,7 @@
 			updateShownAmount,
 			updatePageAmount,
 			getFilters,
-			getQuickModes: () => quickModeCheckboxList.getSelections(),
+			getQuickModes,
 			onFiltersChanged,
 			onQuickModesChanged,
 			dispose,
