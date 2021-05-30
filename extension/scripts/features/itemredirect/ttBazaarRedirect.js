@@ -47,6 +47,17 @@
 						],
 					})
 				);
+				const script = document.newElement({
+					type: "script",
+					attributes: { type: "text/javascript" },
+					html: `const bazaarSearch = document.querySelector("div[class*='item__'] input");
+							bazaarSearch.value = "${itemName}";
+							bazaarSearch._valueTracker.setValue("");
+							bazaarSearch.dispatchEvent(new Event('input', {bubbles: true, simulated: true}));`,
+				});
+
+				document.find("head").appendChild(script);
+				setTimeout(() => script.remove(), 100);
 			}
 		}
 	}
