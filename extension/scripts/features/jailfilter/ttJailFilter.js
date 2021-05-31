@@ -125,6 +125,7 @@
 			type: "div",
 			class: "tt-jail-filters-header",
 			children: [
+				// TODO: Move to container header like old tt
 				document.newElement({
 					type: "div",
 					children: [quickModeCheckboxList.element],
@@ -151,10 +152,32 @@
 				}),
 			],
 		});
+		const filtersInfo = [
+			{
+				title: "Activity",
+				element: activityCheckboxList.element,
+			},
+			{
+				title: "Faction",
+				element: factionsSelect.element,
+			},
+			{
+				title: "Time",
+				element: timeFilter.element,
+			},
+			{
+				title: "Level",
+				element: levelFilter.element,
+			},
+			{
+				title: "Score",
+				element: scoreFilter.element,
+			},
+		];
 		const filtersContentDiv = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-content",
-			children: [
+			children: filtersInfo.map((filterInfo) =>
 				document.newElement({
 					type: "div",
 					class: "tt-jail-filters-item",
@@ -162,60 +185,12 @@
 						document.newElement({
 							type: "div",
 							class: "tt-jail-filters-item-header",
-							text: "Activity",
+							text: filterInfo.title,
 						}),
-						activityCheckboxList.element,
+						filterInfo.element,
 					],
-				}),
-				document.newElement({
-					type: "div",
-					class: "tt-jail-filters-item",
-					children: [
-						document.newElement({
-							type: "div",
-							class: "tt-jail-filters-item-header",
-							text: "Faction",
-						}),
-						factionsSelect.element,
-					],
-				}),
-				document.newElement({
-					type: "div",
-					class: "tt-jail-filters-item",
-					children: [
-						document.newElement({
-							type: "div",
-							class: "tt-jail-filters-item-header",
-							text: "Time",
-						}),
-						timeFilter.element,
-					],
-				}),
-				document.newElement({
-					type: "div",
-					class: "tt-jail-filters-item",
-					children: [
-						document.newElement({
-							type: "div",
-							class: "tt-jail-filters-item-header",
-							text: "Level",
-						}),
-						levelFilter.element,
-					],
-				}),
-				document.newElement({
-					type: "div",
-					class: "tt-jail-filters-item",
-					children: [
-						document.newElement({
-							type: "div",
-							class: "tt-jail-filters-item-header",
-							text: "Score",
-						}),
-						scoreFilter.element,
-					],
-				}),
-			],
+				})
+			),
 		});
 		content.appendChild(filtersHeaderDiv);
 		content.appendChild(filtersContentDiv);
@@ -291,21 +266,50 @@
 		const factionElem = userElement.querySelector(".faction > img");
 		const faction = factionElem ? factionElem.title || JAIL_CONSTANTS.unknownFactions : JAIL_CONSTANTS.noFaction;
 
-		const time = getTimeFromText(userElement.querySelector(".time").lastChild.textContent.trim());
+		const time = _getTimeFromText(userElement.querySelector(".time").lastChild.textContent.trim());
 		const level = parseInt(userElement.querySelector(".level").lastChild.textContent.trim());
 		const score = level * (time + 3);
 
 		const bustElem = userElement.querySelector(".bust");
 		const bustIcon = bustElem.querySelector(".bust-icon");
-		let isInQuickBustMode = false;
 
 		const bailElem = userElement.querySelector(".bye");
 		const bailIcon = bailElem.querySelector(".bye-icon");
-		let isInQuickBailMode = false;
 
-		function getTimeFromText(text) {
-			const hourAnMinRegex = /^(?<hour>\d\d?)h \d\d?m$/;
-			const match = text.match(hourAnMinRegex);
+		function applyQuickModes(quickModes) {
+			if (quickModes.includes(JAIL_CONSTANTS.bust)) {
+				_applyQuickMode(bustElem, bustIcon);
+			} else {
+				_removeQuickMode(bustElem, bustIcon);
+			}
+
+			if (quickModes.includes(JAIL_CONSTANTS.bail)) {
+				_applyQuickMode(bailElem, bailIcon);
+			} else {
+				_removeQuickMode(bailElem, bailIcon);
+			}
+		}
+
+		function hide() {
+			userElement.classList.add("hidden");
+		}
+
+		function show() {
+			userElement.classList.remove("hidden");
+		}
+
+		function isShown() {
+			return !userElement.classList.contains("hidden");
+		}
+
+		function dispose() {
+			show();
+			applyQuickModes([]);
+		}
+
+		function _getTimeFromText(text) {
+			const hourAndMinRegex = /^(?<hour>\d\d?)h \d\d?m$/;
+			const match = text.match(hourAndMinRegex);
 
 			if (match) {
 				return parseInt(match.groups.hour);
@@ -314,8 +318,8 @@
 			return 0;
 		}
 
-		function applyQuickMode(flag, elem, iconElem) {
-			if (flag) {
+		function _applyQuickMode(elem, iconElem) {
+			if (iconElem.firstChild) {
 				return;
 			}
 
@@ -328,8 +332,8 @@
 			iconElem.appendChild(quickMark);
 		}
 
-		function removeQuickMode(flag, elem, iconElem) {
-			if (!flag) {
+		function _removeQuickMode(elem, iconElem) {
+			if (!iconElem.firstChild) {
 				return;
 			}
 
@@ -337,116 +341,55 @@
 			elem.href = elem.href.slice(0, -1);
 		}
 
-		function applyQuickModes(quickModes) {
-			if (quickModes.includes(JAIL_CONSTANTS.bust)) {
-				applyQuickMode(isInQuickBustMode, bustElem, bustIcon);
-				isInQuickBustMode = true;
-			} else {
-				removeQuickMode(isInQuickBustMode, bustElem, bustIcon);
-				isInQuickBustMode = false;
-			}
-
-			if (quickModes.includes(JAIL_CONSTANTS.bail)) {
-				applyQuickMode(isInQuickBailMode, bailElem, bailIcon);
-				isInQuickBailMode = true;
-			} else {
-				removeQuickMode(isInQuickBailMode, bailElem, bailIcon);
-				isInQuickBailMode = false;
-			}
-		}
-
-		function hide() {
-			userElement.classList.add("hidden");
-		}
-
-		function show() {
-			userElement.classList.remove("hidden");
-		}
-
-		function dispose() {
-			show();
-			applyQuickModes([]);
-		}
-
 		return {
-			element: userElement,
 			activity,
 			faction,
 			time,
 			level,
 			score,
 			applyQuickModes,
-			isInQuickBustMode: () => isInQuickBustMode,
-			isInQuickBailMode: () => isInQuickBailMode,
 			hide,
 			show,
-			isShown: () => !userElement.classList.contains("hidden"),
+			isShown,
 			dispose,
 		};
 	}
 
 	function createInJailFacade() {
-		const usersListContainer = document.find(".users-list");
-		const usersListTitleContainer = document.find(".users-list-title");
 		let usersInfo = [];
 		let usersChangedCallback;
+		const usersListContainer = document.find(".users-list");
+		const usersListTitleContainer = document.find(".users-list-title");
 
 		const config = { childList: true };
 
 		const callback = function () {
 			const isNotInLoadingState = usersListContainer.children.length !== 1 || !usersListContainer.children[0].find(".ajax-placeholder");
 			if (isNotInLoadingState) {
-				buildUsersInfo();
+				_buildUsersInfo();
 			}
 		};
 
 		const observer = new MutationObserver(callback);
 		observer.observe(usersListContainer, config);
 
-		buildUsersInfo();
+		_buildUsersInfo();
 
 		const mainRefresh = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-main-refresh-wrapper hidden",
-			children: [createRefreshButton("white")],
+			children: [_createRefreshButton("white")],
 		});
 		usersListTitleContainer.appendChild(mainRefresh);
 
-		const bailRefreshButton = createRefreshButton("black", "tt-jail-filters-bail-refresh");
-		const bustRefreshButton = createRefreshButton("black", "tt-jail-filters-bust-refresh");
+		const bailRefreshButton = _createRefreshButton("black", "tt-jail-filters-bail-refresh");
+		const bustRefreshButton = _createRefreshButton("black", "tt-jail-filters-bust-refresh");
 		const innerRefreshWrapper = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-inner-refresh-wrapper hidden",
 			children: [bailRefreshButton, bustRefreshButton],
 		});
 		usersListContainer.parentNode.insertBefore(innerRefreshWrapper, usersListContainer.nextSibling);
-
-		function createRefreshButton(mode, classes) {
-			const refreshButton = document.newElement({
-				type: "img",
-				attributes: {
-					src: chrome.runtime.getURL(`resources/images/svg-icons/refresh-icon${mode === "white" ? "-white" : ""}.svg`),
-					...(classes ? { class: classes } : {}),
-				},
-				events: {
-					click: () => location.reload(),
-				},
-			});
-
-			return refreshButton;
-		}
-
-		function buildUsersInfo() {
-			usersInfo = [];
-
-			for (const userElement of usersListContainer.children) {
-				usersInfo.push(createJailUserFacade(userElement));
-			}
-
-			if (usersChangedCallback) {
-				usersChangedCallback();
-			}
-		}
 
 		function updateRefreshButtons(quickModes) {
 			const showBusts = quickModes.includes(JAIL_CONSTANTS.bust);
@@ -518,6 +461,10 @@
 			return distinctFactions;
 		}
 
+		function getUsersAmount() {
+			return usersInfo.length;
+		}
+
 		function onUsersChanged(callback) {
 			usersChangedCallback = callback;
 		}
@@ -529,6 +476,34 @@
 			}
 			usersChangedCallback = undefined;
 			mainRefresh.remove();
+			innerRefreshWrapper.remove();
+		}
+
+		function _createRefreshButton(mode, classes) {
+			const refreshButton = document.newElement({
+				type: "img",
+				attributes: {
+					src: chrome.runtime.getURL(`resources/images/svg-icons/refresh-icon${mode === "white" ? "-white" : ""}.svg`),
+					...(classes ? { class: classes } : {}),
+				},
+				events: {
+					click: () => location.reload(),
+				},
+			});
+
+			return refreshButton;
+		}
+
+		function _buildUsersInfo() {
+			usersInfo = [];
+
+			for (const userElement of usersListContainer.children) {
+				usersInfo.push(createJailUserFacade(userElement));
+			}
+
+			if (usersChangedCallback) {
+				usersChangedCallback();
+			}
 		}
 
 		return {
@@ -536,7 +511,7 @@
 			applyFilters,
 			applyQuickModes,
 			getFactionOptions,
-			getUsersAmount: () => usersInfo.length,
+			getUsersAmount,
 			onUsersChanged,
 			dispose,
 		};
