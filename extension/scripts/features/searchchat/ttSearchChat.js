@@ -31,6 +31,8 @@
 
 			const inputValue = input.value;
 			if (inputValue) searchChat(message, inputValue);
+			const nottModifiedInputs = document.findAll("#chatRoot [class*='chat-box-input_']:not(.tt-modified) .tt-chat-filter");
+			if (nottModifiedInputs.length) nottModifiedInputs.forEach(x => x.parentElement.classList.add("tt-modified"));
 		});
 	}
 
