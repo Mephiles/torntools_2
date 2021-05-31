@@ -14,19 +14,6 @@
 		null
 	);
 
-	async function initialiseListeners() {
-		if (!(await checkMobile())) return;
-		addFetchListener((event) => {
-			if (!feature.enabled) return;
-
-			const { page, json, fetch } = event.detail;
-			if (page !== "bazaar") return;
-			if (new URL(fetch.url).searchParams.get("step") !== "getBazaarItems") return;
-
-			maxBuyListener({}, true);
-		});
-	}
-
 	async function addFillMax() {
 		await requireElement(".item-desc");
 		document.findAll(".item-desc").forEach((item) => {
