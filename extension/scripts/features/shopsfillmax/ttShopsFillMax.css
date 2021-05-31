@@ -9,6 +9,7 @@
 .tt-max-buy {
 	color: var(--tt-color-item-text);
 	font-size: 9px;
+	cursor: pointer;
 }
 
 .tt-mobile .tt-max-buy {
