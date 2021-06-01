@@ -31,8 +31,12 @@
 
 			const inputValue = input.value;
 			if (inputValue) searchChat(message, inputValue);
-			const nottModifiedInputs = document.findAll("#chatRoot [class*='chat-box-input_']:not(.tt-modified) .tt-chat-filter");
-			if (nottModifiedInputs.length) nottModifiedInputs.forEach(x => x.parentElement.classList.add("tt-modified"));
+		});
+		CUSTOM_LISTENERS[EVENT_CHANNELS.CHAT_ERROR].push(({ message }) => {
+			if (!feature.enabled()) return;
+
+			const nottModifiedInput = document.find("#chatRoot [class*='chat-box-input_']:not(.tt-modified) .tt-chat-filter");
+			if (nottModifiedInput) nottModifiedInput.parentElement.classList.add("tt-modified");
 		});
 	}
 
