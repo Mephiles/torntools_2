@@ -280,10 +280,10 @@ function hasDarkMode() {
 	return document.body.classList.contains("dark-mode");
 }
 
-function newTornInfoBox(html, class = "") {
+function newTornInfoBox(html, additionalClass = "") {
 	return document.newElement({
 		type: "div",
-		class: "info-msg-cont border-round m-top10 ${class}",
+		class: `info-msg-cont border-round m-top10 ${additionalClass}`,
 		html: `
 			<div class="info-msg border-round">
 				<i class="info-icon"></i>
@@ -294,7 +294,7 @@ function newTornInfoBox(html, class = "") {
 				</div>
 			</div>
 		`,
-	})
+	});
 }
 
 const REACT_UPDATE_VERSIONS = {

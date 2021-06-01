@@ -5,21 +5,28 @@
 		"Display Case Worth",
 		"display case",
 		() => settings.pages.displayCase.worth,
-		null,
+		xhrListener,
 		addWorth,
 		removeWorth,
 		{
 			storage: ["settings.pages.displayCase.worth"],
 		},
 		() => {
-			if (!hasAPIData()) return "No API access.";
+			if (!hasAPIData() || !settings.apiUsage.user.displaycase) return "No API access.";
 		}
 	);
 
+	function xhrListener() {
+		addXHRListener(({ detail: { page, xhr, json } }) => {
+			if (page === "displaycase" && (xhr.requestBody === "step=display" || xhr.requestBody.startsWith("userID="))) addWorth();
+		});
+	}
+
 	async function addWorth() {
-		if (window.location.href.split("/").last()) {
+		const displayCaseUserId = window.location.href.split("/").last();
+		if (displayCaseUserId && !isNaN(displayCaseUserId) && parseInt(displayCaseUserId) !== userdata.player_id) {
 			await requireElement(".info-msg-cont .msg");
-			fetchApi("torn", { section: "user", id: window.location.href.split("/").last(), selections: ["display"] })
+			fetchApi("torn", { section: "user", id: displayCaseUserId, selections: ["display"] })
 			.then((result) => {
 				let total = 0;
 
@@ -52,8 +59,7 @@
 				console.log("TT - Display Cabinet Worth API Error:", error);
 			});
 		} else {
-			await requireElement(".info-msg-cont .msg");
-			fetchApi("torn", { section: "user", id: window.location.href.split("/").last(), selections: ["display"] })
+			fetchApi("torn", { section: "user", id: userdata.player_id, selections: ["display"] })
 			.then((result) => {
 				let total = 0;
 
@@ -61,10 +67,25 @@
 					total += item.market_price * item.quantity;
 				}
 
-				document.find(".display-cabinet").insertAdjacentElement("beforebegin", newTornInfoBox(`This display cabinet is worth ${formatNumber(total, { currency: true })}.`, "tt-display-worth"));
+				document.find(".display-cabinet").insertAdjacentElement(
+					"beforebegin",
+					newTornInfoBox(`
+						This display cabinet is worth 
+							<span>${formatNumber(total, { currency: true })}</span>.`,
+						"tt-display-worth"
+					)
+				);
 			})
 			.catch((error) => {
-				document.find(".display-cabinet").insertAdjacentElement("beforebegin", newTornInfoBox(`TORN API returned error: ${error.toString()}.`, "tt-display-worth"));
+				document.find(".display-cabinet").insertAdjacentElement(
+					"beforebegin",
+					newTornInfoBox(`
+						TORN API returned error: 
+							${error.toString()}
+						.`,
+						"tt-display-worth"
+					)
+				);
 				console.log("TT - Display Cabinet Worth API Error:", error);
 			});
 		}
