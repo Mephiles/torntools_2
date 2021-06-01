@@ -1,20 +1,39 @@
 "use strict";
 
-// noinspection JSUnresolvedVariable
 chrome = typeof browser !== "undefined" ? browser : chrome;
 
 const FORUM_POST = "https://www.torn.com/forums.php#/p=threads&f=67&t=16170566&b=0&a=0";
 
 const ttStorage = new (class {
 	get(key) {
-		return new Promise((resolve) => {
+		return new Promise(async (resolve) => {
 			if (Array.isArray(key)) {
-				chrome.storage.local.get(key, (data) => resolve(key.map((i) => data[i])));
+				const data = await this._get(key);
+
+				resolve(key.map((i) => data[i]));
 			} else if (key) {
-				chrome.storage.local.get([key], (data) => resolve(data[key]));
+				const data = await this._get([key]);
+
+				resolve(data[key]);
 			} else {
-				chrome.storage.local.get(null, (data) => resolve(data));
+				const data = await this._get(null);
+
+				resolve(data);
 			}
+		});
+	}
+
+	_get(key) {
+		return new Promise(async (resolve) => {
+			let data;
+			let count = 0;
+			do {
+				data = await new Promise((resolve) => chrome.storage.local.get(key, (data) => resolve(data)));
+
+				count++;
+			} while (data && !Object.keys(data).length && count < 3);
+
+			resolve(data);
 		});
 	}
 
@@ -138,6 +157,9 @@ const DEFAULT_STORAGE = {
 			date: new DefaultSetting({ type: "string", defaultValue: "eu" }),
 			time: new DefaultSetting({ type: "string", defaultValue: "eu" }),
 		},
+		sorting: {
+			abroad: new DefaultSetting({ type: "object", defaultValue: {} }),
+		},
 		notifications: {
 			sound: new DefaultSetting({ type: "string", defaultValue: "default" }),
 			soundCustom: new DefaultSetting({ type: "string", defaultValue: "" }),
@@ -199,6 +221,7 @@ const DEFAULT_STORAGE = {
 		hideAreas: new DefaultSetting({ type: "array", defaultValue: [] }),
 		hideIcons: new DefaultSetting({ type: "array", defaultValue: [] }),
 		hideCasinoGames: new DefaultSetting({ type: "array", defaultValue: [] }),
+		allyFactionsIDs: new DefaultSetting({ type: "array", defaultValue: [] }),
 		customLinks: new DefaultSetting({ type: "array", defaultValue: [] }),
 		pages: {
 			global: {
@@ -213,6 +236,8 @@ const DEFAULT_STORAGE = {
 				statusIndicator: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				idBesideProfileName: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				notes: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				showAllyWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				ageToWords: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			chat: {
 				fontSize: new DefaultSetting({ type: "number", defaultValue: 12 }),
@@ -275,6 +300,11 @@ const DEFAULT_STORAGE = {
 			travel: {
 				computer: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				table: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				cleanFlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				travelProfits: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				sortable: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				peopleFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				acronyms: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -287,9 +317,20 @@ const DEFAULT_STORAGE = {
 			},
 			api: {
 				autoFillKey: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				autoDemo: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				autoPretty: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				clickableSelections: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			forums: {
 				warning: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			bazaar: {
+				itemsCost: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				worth: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			trade: {
+				itemValues: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				openChat: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
@@ -327,6 +368,22 @@ const DEFAULT_STORAGE = {
 			categories: new DefaultSetting({ type: "array", defaultValue: [] }),
 			countries: new DefaultSetting({ type: "array", defaultValue: [] }),
 			hideOutOfStock: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		},
+		abroad: {
+			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
+			status: new DefaultSetting({ type: "array", defaultValue: [] }),
+			levelStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			faction: new DefaultSetting({ type: "string", defaultValue: "" }),
+			special: {
+				newplayer: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				incompany: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				infaction: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				isdonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
+			},
+		},
+		trade: {
+			hideValues: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
@@ -424,7 +481,6 @@ const CUSTOM_LINKS_PRESET = {
 
 const HIGHLIGHT_PLACEHOLDERS = [{ name: "$player", value: () => userdata.name || "", description: "Your player name." }];
 
-// noinspection SpellCheckingInspection
 const API_USAGE = {
 	user: {
 		name: true,
@@ -590,6 +646,10 @@ const API_USAGE = {
 		// job_perks: true,
 		faction_perks: true,
 		// book_perk: true,
+		faction: {
+			faction_id: true,
+			faction_tag: true,
+		},
 	},
 	properties: {},
 	faction: {

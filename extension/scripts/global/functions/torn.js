@@ -1,6 +1,6 @@
 "use strict";
 
-const ALL_ICONS = Array.from({ length: 81 }, (x, i) => `icon${i + 1}`);
+const ALL_ICONS = Array.from({ length: 84 }, (x, i) => `icon${i + 1}`);
 
 const ALL_AREAS = [
 	{ class: "home", text: "Home" },
@@ -162,6 +162,16 @@ const SETS = {
 	],
 };
 
+const SPECIAL_FILTER_ICONS = {
+	isfedded: ["icon70_"],
+	traveling: ["icon71_"],
+	newplayer: ["icon72_"],
+	onwall: ["icon75_", "icon76_"],
+	incompany: ["icon21_", "icon22_", "icon23_", "icon24_", "icon25_", "icon26_", "icon27_", "icon73_", "icon83_"],
+	infaction: ["icon9_", "icon74_", "icon81_"],
+	isdonator: ["icon3_", "icon4_"],
+};
+
 const CHAIN_BONUSES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
 
 const LINKS = {
@@ -170,10 +180,13 @@ const LINKS = {
 	stocks: "https://www.torn.com/stockexchange.php?step=portfolio",
 	home: "https://www.torn.com/index.php",
 	items: "https://www.torn.com/item.php",
+	items_candy: "https://www.torn.com/item.php#candy-items",
+	items_medical: "https://www.torn.com/item.php#medical-items",
 	education: "https://www.torn.com/education.php#/step=main",
 	chain: "https://www.torn.com/factions.php?step=your#/war/chain",
 	hospital: "https://www.torn.com/hospitalview.php",
 	organizedCrimes: "https://www.torn.com/factions.php?step=your#/tab=crimes",
+	gym: "https://www.torn.com/gym.php",
 };
 
 function isSameStockTick(date1, date2) {
@@ -223,7 +236,7 @@ function isFlying() {
 }
 
 function isAbroad() {
-	return document.body.dataset.abroad === "true" || document.body.dataset.abroad === true;
+	return (!isFlying() && document.body.dataset.abroad === "true") || document.body.dataset.abroad === true;
 }
 
 function getRFC() {
@@ -265,4 +278,46 @@ function isCaptcha() {
 
 function hasDarkMode() {
 	return document.body.classList.contains("dark-mode");
+}
+
+const REACT_UPDATE_VERSIONS = {
+	DEFAULT: "default",
+	NATIVE_SETTER: "nativeSetter",
+};
+
+function updateReactInput(input, value, options = {}) {
+	options = {
+		version: REACT_UPDATE_VERSIONS.DEFAULT,
+		...options,
+	};
+
+	switch (options.version) {
+		case "complex-please-never-be-needed":
+			const lastValue = input.value;
+			input.value = value;
+			const event = new Event("input", { bubbles: true, simulated: true });
+			// Probably needs to be moved to a script tag.
+			const tracker = input._valueTracker;
+			// Another try can be made by setting the value tracker to null.
+			if (tracker) {
+				tracker.setValue(lastValue);
+			}
+			console.log("TT DEBUG - Updating react input.", { input, value, lastValue, tracker });
+			input.dispatchEvent(event);
+			break;
+		case REACT_UPDATE_VERSIONS.NATIVE_SETTER:
+			const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+			nativeSetter.call(input, value);
+
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+			break;
+		case REACT_UPDATE_VERSIONS.DEFAULT:
+		default:
+			input.value = value;
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+			break;
+	}
+
+	// const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+	// nativeSetter.call(input, value);
 }

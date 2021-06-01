@@ -2,7 +2,10 @@
 
 const CUSTOM_API_ERROR = {
 	NO_NETWORK: "tt-no_network",
+	CANCELLED: "tt-cancelled",
 };
+
+const FETCH_TIMEOUT = 10 * TO_MILLIS.SECONDS;
 
 async function fetchApi(location, options = {}) {
 	options = {
@@ -80,7 +83,10 @@ async function fetchApi(location, options = {}) {
 			};
 		}
 
-		fetch(fullUrl, parameters)
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+		fetch(fullUrl, { ...parameters, signal: controller.signal })
 			.then(async (response) => {
 				let result = {};
 
@@ -102,7 +108,7 @@ async function fetchApi(location, options = {}) {
 				if (result.error) {
 					await handleError(result);
 				} else {
-					if (location === "torn" && !options.silent) {
+					if (location === "torn" && !options.silent && SCRIPT_TYPE === "BACKGROUND") {
 						await getBadgeText()
 							.then(async (value) => {
 								if (value === "error") await setBadge("default");
@@ -115,7 +121,8 @@ async function fetchApi(location, options = {}) {
 					resolve(result);
 				}
 			})
-			.catch((error) => handleError(error));
+			.catch((error) => handleError(error))
+			.then(() => clearTimeout(timeoutId));
 
 		return fullUrl;
 
@@ -125,7 +132,17 @@ async function fetchApi(location, options = {}) {
 				return;
 			}
 
-			if (result.constructor.name === "TypeError") {
+			if (result instanceof DOMException) {
+				const error = "Request cancelled because it took too long.";
+				const isLocal = false;
+				const code = CUSTOM_API_ERROR.CANCELLED;
+
+				if (location === "torn" && !options.silent && SCRIPT_TYPE === "BACKGROUND") {
+					await ttStorage.change({ api: { torn: { online: false, error } } });
+					await setBadge("error");
+				}
+				reject({ error, isLocal, code });
+			} else if (result.constructor.name === "TypeError") {
 				let error = result.message;
 				let isLocal = false;
 				let code;
@@ -136,7 +153,7 @@ async function fetchApi(location, options = {}) {
 					code = CUSTOM_API_ERROR.NO_NETWORK;
 				}
 
-				if (location === "torn" && !options.silent) {
+				if (location === "torn" && !options.silent && SCRIPT_TYPE === "BACKGROUND") {
 					await ttStorage.change({ api: { torn: { online: false, error } } });
 					await setBadge("error");
 				}
@@ -152,7 +169,7 @@ async function fetchApi(location, options = {}) {
 					online = result.error.code !== 9 && !(result instanceof HTTPException);
 				}
 
-				if (!options.silent) {
+				if (!options.silent && SCRIPT_TYPE === "BACKGROUND") {
 					await ttStorage.change({ api: { torn: { online, error } } });
 					await setBadge("error");
 				}

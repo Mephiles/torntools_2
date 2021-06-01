@@ -16,7 +16,7 @@ const storageListeners = {
 
 async function loadDatabase() {
 	if (databaseLoaded) return Promise.resolve();
-	if (databaseLoading) {
+	else if ((databaseLoaded && !settings) || databaseLoading) {
 		await sleep(75);
 		return await loadDatabase();
 	}
@@ -42,7 +42,6 @@ async function loadDatabase() {
 	console.log("TT - Database loaded.", database);
 }
 
-// noinspection JSDeprecatedSymbols
 chrome.storage.onChanged.addListener((changes, area) => {
 	if (area === "local") {
 		for (const key in changes) {

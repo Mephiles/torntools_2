@@ -30,7 +30,7 @@
 		document.findAll("[data-category='Candy']").forEach((candy) => {
 			if (candy.find(".tt-candy-gains")) return;
 
-			// noinspection JSCheckFunctionSignatures
+			// noinspection JSCheckFunctionSignatures,DuplicatedCode
 			const baseHappy = parseInt(
 				torndata.items[candy.dataset.item].effect
 					.split(" ")
@@ -41,7 +41,7 @@
 			if (!isNaN(factionPerk)) totalHappy += (factionPerk / 100) * baseHappy;
 			if (!isNaN(companyPerk)) totalHappy += (companyPerk / 100) * baseHappy;
 			const rawHTML = `<span class="tt-candy-gains">${totalHappy}H</span>`;
-			candy.find(".name-wrap .qty.bold.t-hide").insertAdjacentHTML("beforeend", rawHTML);
+			candy.find(".name-wrap").insertAdjacentHTML("beforeend", rawHTML);
 		});
 	}
 

@@ -18,7 +18,6 @@
 		"scripts": [
 			"scripts/global/globalClasses.js",
 			"scripts/global/globalData.js",
-			"scripts/global/functions/api.js",
 			"scripts/global/functions/browser.js",
 			"scripts/global/functions/database.js",
 			"scripts/global/functions/dom.js",
@@ -26,6 +25,7 @@
 			"scripts/global/functions/formatting.js",
 			"scripts/global/functions/torn.js",
 			"scripts/global/functions/utilities.js",
+			"scripts/global/functions/api.js",
 			"scripts/background.js"
 		]
 	},
@@ -46,6 +46,7 @@
 			"matches": ["https://www.torn.com/*"],
 			"exclude_matches": ["https://www.torn.com/api.html*"],
 			"css": [
+				"scripts/global/globalVariables.css",
 				"scripts/global/globalStyle.css",
 				"scripts/global/functions/dom.css",
 				"scripts/features/alignleft/ttAlignLeft.css",
@@ -63,7 +64,6 @@
 				"vendor/fontawesome/fontawesome.js",
 				"scripts/global/globalClasses.js",
 				"scripts/global/globalData.js",
-				"scripts/global/functions/api.js",
 				"scripts/global/functions/browser.js",
 				"scripts/global/functions/containers.js",
 				"scripts/global/functions/dom.js",
@@ -74,6 +74,7 @@
 				"scripts/global/functions/requires.js",
 				"scripts/global/functions/torn.js",
 				"scripts/global/functions/utilities.js",
+				"scripts/global/functions/api.js",
 				"scripts/global/featureManager.js",
 				"scripts/content/global/ttGlobal.entry.js",
 				"scripts/features/alignleft/ttAlignLeft.entry.js",
@@ -134,14 +135,36 @@
 				"scripts/global/functions/dom.js",
 				"scripts/global/functions/database.js",
 				"scripts/global/functions/requires.js",
-				"scripts/features/autoapifill/ttAutoAPIFill.js"
+				"scripts/global/functions/utilities.js",
+				"scripts/global/functions/api.js"
 			],
 			"run_at": "document_start"
 		},
 		{
+			"matches": ["https://www.torn.com/api.html*"],
+			"css": ["scripts/features/apiselections/ttAPISelections.css"],
+			"js": [
+				"scripts/features/apidemo/ttAPIDemo.js",
+				"scripts/features/autoapifill/ttAutoAPIFill.js",
+				"scripts/features/autopretty/ttAutoPretty.js",
+				"scripts/features/apiselections/ttAPISelections.js"
+			],
+			"run_at": "document_end"
+		},
+		{
 			"matches": ["https://www.torn.com/bazaar.php*"],
-			"css": ["scripts/features/drugdetails/ttDrugDetails.css", "scripts/features/itemvalues/ttItemValues.css"],
-			"js": ["scripts/features/drugdetails/ttDrugDetails.js", "scripts/features/itemvalues/ttItemValues.js"],
+			"css": [
+				"scripts/features/drugdetails/ttDrugDetails.css",
+				"scripts/features/itemvalues/ttItemValues.css",
+				"scripts/features/totalitemcost/ttTotalItemCost.css",
+				"scripts/features/bazaarworth/ttBazaarWorth.css"
+			],
+			"js": [
+				"scripts/features/drugdetails/ttDrugDetails.js",
+				"scripts/features/itemvalues/ttItemValues.js",
+				"scripts/features/totalitemcost/ttTotalItemCost.js",
+				"scripts/features/bazaarworth/ttBazaarWorth.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -195,14 +218,27 @@
 				"scripts/features/effectivestats/ttEffectiveStats.css",
 				"scripts/features/livenetworth/ttLiveNetworth.css",
 				"scripts/features/drugdetails/ttDrugDetails.css",
-				"scripts/features/traveltable/ttTravelTable.css"
+				"scripts/features/traveltable/ttTravelTable.css",
+				"scripts/features/travelitemprofits/ttTravelItemProfits.css",
+				"scripts/features/travelfillmax/ttTravelFillMax.css",
+				"scripts/features/sorttravelmarket/ttSortTravelMarket.css"
 			],
 			"js": [
 				"scripts/features/effectivestats/ttEffectiveStats.js",
 				"scripts/features/livenetworth/ttLiveNetworth.js",
 				"scripts/features/drugdetails/ttDrugDetails.js",
-				"scripts/features/traveltable/ttTravelTable.js"
+				"scripts/features/traveltable/ttTravelTable.js",
+				"scripts/features/cleanflight/ttCleanFlight.js",
+				"scripts/features/travelitemprofits/ttTravelItemProfits.js",
+				"scripts/features/travelfillmax/ttTravelFillMax.js",
+				"scripts/features/sorttravelmarket/ttSortTravelMarket.js"
 			],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/index.php?page=people*"],
+			"css": ["scripts/global/functions/slider.css", "scripts/global/functions/filters.css", "scripts/features/abroadpeoplefilter/ttPeopleFilter.css"],
+			"js": ["scripts/global/functions/slider.js", "scripts/features/abroadpeoplefilter/ttPeopleFilter.js"],
 			"run_at": "document_end"
 		},
 		{
@@ -249,11 +285,18 @@
 		},
 		{
 			"matches": ["https://www.torn.com/profiles.php*"],
-			"css": ["scripts/features/profilenotes/ttProfileNotes.css", "scripts/features/statusindicator/ttStatusIndicator.css"],
+			"css": [
+				"scripts/features/profilenotes/ttProfileNotes.css",
+				"scripts/features/statusindicator/ttStatusIndicator.css",
+				"scripts/features/friendlyfire/ttFriendlyFire.css",
+				"scripts/features/agetowords/ttAgeToWords.css"
+			],
 			"js": [
 				"scripts/features/profileid/ttProfileID.js",
 				"scripts/features/profilenotes/ttProfileNotes.js",
-				"scripts/features/statusindicator/ttStatusIndicator.js"
+				"scripts/features/statusindicator/ttStatusIndicator.js",
+				"scripts/features/friendlyfire/ttFriendlyFire.js",
+				"scripts/features/agetowords/ttAgeToWords.js"
 			],
 			"run_at": "document_end"
 		},
@@ -265,8 +308,16 @@
 		},
 		{
 			"matches": ["https://www.torn.com/trade.php*"],
-			"css": ["scripts/features/itemvalues/ttItemValues.css"],
-			"js": ["scripts/features/itemvalues/ttItemValues.js"],
+			"css": [
+				"scripts/features/itemvalues/ttItemValues.css",
+				"scripts/features/tradevalues/ttTradeValues.css",
+				"scripts/features/tradeopenchat/ttTradeOpenChat.css"
+			],
+			"js": [
+				"scripts/features/itemvalues/ttItemValues.js",
+				"scripts/features/tradevalues/ttTradeValues.js",
+				"scripts/features/tradeopenchat/ttTradeOpenChat.js"
+			],
 			"run_at": "document_end"
 		},
 		{

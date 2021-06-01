@@ -6,9 +6,11 @@
 		<title>TornTools 2 - Settings</title>
 		<link rel="icon" type="image/png" href="../../resources/images/icon_128.png" />
 
+		<link rel="stylesheet" href="../../scripts/global/globalVariables.css" />
 		<link rel="stylesheet" href="../../scripts/global/globalStyle.css" />
 		<link rel="stylesheet" href="../../scripts/global/functions/pages.css" />
 		<link rel="stylesheet" href="../../scripts/global/functions/dom.css" />
+		<link rel="stylesheet" href="../../scripts/global/scrollbar.css" />
 		<link rel="stylesheet" href="settings.css" />
 		<link rel="stylesheet" href="changelog.css" />
 		<link rel="stylesheet" href="preferences.css" />
@@ -17,6 +19,16 @@
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="tt-black-overlay" class="hidden"></div>
+		<div id="tt-search-overlay" class="hidden">
+			<div>
+				<div id="content-div">
+					<i class="circle far fa-times-circle"></i>
+					<input type="text" id="tt-search-input" />
+					<i class="fas fa-search fa-3x" id="tt-search-button"></i>
+				</div>
+				<div id="tt-search-list"></div>
+			</div>
+		</div>
 		<div id="tt-confirmation-popup" class="hidden">
 			<h1 class="title"></h1>
 			<div class="message"></div>
@@ -55,6 +67,12 @@
 					&nbsp;-&nbsp;
 					<i id="preferences-show_advanced" class="tooltip fas"><span class="tooltip-text"></span></i>
 				</span>
+				<div id="preferences-search">
+					<div>
+						<span>Search</span>
+						<i class="fas fa-search"></i>
+					</div>
+				</div>
 			</h2>
 			<section>
 				<nav>
@@ -76,6 +94,7 @@
 						<!-- <li>City</li> -->
 						<!-- <li>Job</li> -->
 						<li name="companies">Companies</li>
+						<li name="bazaar">Bazaar</li>
 						<!-- <li>Gym</li> -->
 						<!-- <li>Properties</li> -->
 						<!-- <li>Education</li> -->
@@ -93,7 +112,7 @@
 						<li name="profile">Profile</li>
 						<li name="stock-exchange">Stock Exchange</li>
 						<li name="travel">Travel</li>
-						<!-- <li>Trade</li> -->
+						<li name="trade">Trade</li>
 						<!-- <li>Raceway</li> -->
 						<!-- <li>Stores</li> -->
 						<!-- <li>Item Market</li> -->
@@ -109,7 +128,7 @@
 				<div class="sections advanced-hidden">
 					<section class="active" name="general">
 						<div class="header">General</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="updateNotice" type="checkbox" />
 							<label for="updateNotice">Show update notice.</label>
 						</div>
@@ -350,15 +369,15 @@
 					</section>
 					<section name="sidebar">
 						<div class="header">Sidebar</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-notes" type="checkbox" />
 							<label for="sidebar-notes">Show a notes panel.</label>
 						</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-collapseAreas" type="checkbox" />
 							<label for="sidebar-collapseAreas">Collapse areas section.</label>
 						</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-ocTimer" type="checkbox" />
 							<label for="sidebar-ocTimer">Show OC ready time in sidebar.</label>
 							<br />
@@ -368,7 +387,7 @@
 							<input id="sidebar-hideGymHighlight" type="checkbox" />
 							<label for="sidebar-hideGymHighlight">Hide gym highlighting.</label>
 						</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<label for="sidebar-upkeepPropHighlight">Highlight properties link when upkeep is greater than</label>
 							<input id="sidebar-upkeepPropHighlight" type="number" />
 						</div>
@@ -640,6 +659,10 @@
 							<input id="items-quickItems" type="checkbox" />
 							<label for="items-quickItems">Show the quick items container.</label>
 						</div>
+						<div class="option no-mobile">
+							<input id="items-marketLinks" type="checkbox" />
+							<label for="items-marketLinks">Add link icons to the item market.</label>
+						</div>
 						<div class="option">
 							<input id="items-values" type="checkbox" />
 							<label for="items-values">Display item values.</label>
@@ -653,14 +676,6 @@
 							<label for="items-drugDetails">Show details about drugs.</label>
 							<br />
 							<label for="items-drugDetails" class="tabbed note">Also affects other places where you can view the item details.</label>
-						</div>
-						<div class="option">
-							<input id="items-missingFlowers" type="checkbox" />
-							<label for="items-missingFlowers">Display missing flowers for a complete set.</label>
-						</div>
-						<div class="option">
-							<input id="items-missingPlushies" type="checkbox" />
-							<label for="items-missingPlushies">Display missing plushies for a complete set.</label>
 						</div>
 						<div class="option">
 							<label for="items-highlightBloodBags">Highlight blood bags for:</label>
@@ -678,21 +693,33 @@
 							<br />
 							<label for="items-highlightBloodBags" class="tabbed note">Also affects the faction armory.</label>
 						</div>
+
+						<div class="header">Museum Sets</div>
 						<div class="option">
-							<input id="items-marketLinks" type="checkbox" />
-							<label for="items-marketLinks">Add link icons to the item market.</label>
+							<input id="items-missingFlowers" type="checkbox" />
+							<label for="items-missingFlowers">Display missing flowers for a complete set.</label>
 						</div>
 						<div class="option">
+							<input id="items-missingPlushies" type="checkbox" />
+							<label for="items-missingPlushies">Display missing plushies for a complete set.</label>
+						</div>
+
+						<div class="header">Item Effect</div>
+						<div class="option">
 							<input id="items-bookEffects" type="checkbox" />
-							<label for="items-bookEffects">Show Book Effects beside their names.</label>
+							<label for="items-bookEffects">Show book effects.</label>
 						</div>
 						<div class="option">
 							<input id="items-canGains" type="checkbox" />
-							<label for="items-canGains">Show Energy Can gains beside their names.</label>
+							<label for="items-canGains">Show energy drink gains.</label>
 						</div>
 						<div class="option">
 							<input id="items-candyHappyGains" type="checkbox" />
-							<label for="items-candyHappyGains">Show Happy Gains beside Candy.</label>
+							<label for="items-candyHappyGains">Show candy happy gains.</label>
+						</div>
+						<div class="option">
+							<input id="items-nerveGains" type="checkbox" />
+							<label for="items-nerveGains">Show alcohol nerve gains.</label>
 						</div>
 					</section>
 					<section name="companies">
@@ -714,6 +741,17 @@
 							</label>
 						</div>
 					</section>
+					<section name="bazaar">
+						<div class="header">Bazaar</div>
+						<div class="option">
+							<input id="bazaar-itemsCost" type="checkbox" />
+							<label for="bazaar-itemsCost">Show the total cost of buying an item.</label>
+						</div>
+						<div class="option">
+							<input id="bazaar-worth" type="checkbox" />
+							<label for="bazaar-worth">Show the worth of the visited bazaar.</label>
+						</div>
+					</section>
 					<section name="jail">
 						<div class="header">Jail</div>
 						<div class="option">
@@ -723,6 +761,17 @@
 								Uses the new score formula from
 								<a href="https://www.torn.com/forums.php#/p=threads&amp;f=61&amp;t=16192039"> this forum post.</a>
 							</div>
+						</div>
+					</section>
+					<section name="trade">
+						<div class="header">Trade</div>
+						<div class="option">
+							<input id="trade-itemValues" type="checkbox" />
+							<label for="trade-itemValues">Show value of items in trade.</label>
+						</div>
+						<div class="option">
+							<input id="trade-openChat" type="checkbox" />
+							<label for="trade-openChat">Show button to open chat.</label>
 						</div>
 					</section>
 					<section name="profile">
@@ -737,8 +786,26 @@
 						</div>
 						<div class="option">
 							<input id="profile-notes" type="checkbox" />
-							<label for="profile-notes">Show Profile Notes.</label>
+							<label for="profile-notes">Show profile notes.</label>
 						</div>
+						<div class="option">
+							<input id="profile-ageToWords" type="checkbox" />
+							<label for="profile-ageToWords">Show age of profile in words.</label>
+						</div>
+						<div class="header">Friendly Fire</div>
+						<div class="option">
+							<input id="profile-showAllyWarning" type="checkbox" />
+							<label for="profile-showAllyWarning">Show ally warning on profiles.</label>
+						</div>
+						<ul id="allyFactions" class="list-table">
+							<li class="input">
+								<!--suppress HtmlFormInputWithoutLabel -->
+								<input class="faction" placeholder="Ally faction name or ID..." />
+								<button class="add-icon-wrap" id="addAllyFaction">
+									<i class="add-icon fas fa-plus"></i>
+								</button>
+							</li>
+						</ul>
 					</section>
 					<section name="stock-exchange">
 						<div class="header">Stock Exchange</div>
@@ -766,6 +833,26 @@
 							<label for="travel-computer">Show a computer link while flying or abroad.</label>
 						</div>
 						<div class="option">
+							<input id="travel-cleanFlight" type="checkbox" />
+							<label for="travel-cleanFlight">Hide plane & funfact box on Flying page.</label>
+						</div>
+						<div class="option">
+							<input id="travel-travelProfits" type="checkbox" />
+							<label for="travel-travelProfits">Show profits of items in market.</label>
+						</div>
+						<div class="option">
+							<input id="travel-fillMax" type="checkbox" />
+							<label for="travel-fillMax">Show fill max button.</label>
+						</div>
+						<div class="option">
+							<input id="travel-peopleFilter" type="checkbox" />
+							<label for="travel-peopleFilter">Show filter for people.</label>
+						</div>
+						<div class="option">
+							<input id="travel-sortable" type="checkbox" />
+							<label for="travel-sortable">Make market table sortable.</label>
+						</div>
+						<div class="option">
 							<input id="travel-table" type="checkbox" />
 							<label for="travel-table">Show a table of all countries with their item and their stocks.</label>
 							<br />
@@ -775,8 +862,20 @@
 					<section name="api">
 						<div class="header">API</div>
 						<div class="option">
+							<input id="api-autoDemo" type="checkbox" />
+							<label for="api-autoDemo">Automatically show demo content.</label>
+						</div>
+						<div class="option">
 							<input id="api-autoFillKey" type="checkbox" />
-							<label for="api-autoFillKey">Auto fill API key.</label>
+							<label for="api-autoFillKey">Automatically fill your API key.</label>
+						</div>
+						<div class="option">
+							<input id="api-autoPretty" type="checkbox" />
+							<label for="api-autoPretty">Automatically select pretty outputs.</label>
+						</div>
+						<div class="option">
+							<input id="api-clickableSelections" type="checkbox" />
+							<label for="api-clickableSelections">Make API selections clickable.</label>
 						</div>
 					</section>
 				</div>
@@ -809,8 +908,8 @@
 								User's information, status, cooldown, money, events, messages and refills. (every 30 seconds (configurable))
 								<ul>
 									<li>
-										User's personal stats, stock inventory, educations and merit allocation. (every 2 minutes (configurable), when active on
-										Torn)
+										User's personal stats, networth, stock inventory, educations and merit allocation. (every 2 minutes (configurable), when
+										active on Torn)
 									</li>
 									<li>User's attack history. (whenever an attack or defend is detected)</li>
 								</ul>
@@ -823,15 +922,11 @@
 					</li>
 					<li>
 						Individually
-						<ul>
-							<li>Live Networth - 1 request</li>
-						</ul>
+						<ul></ul>
 					</li>
 					<li>
 						<strong>Cache</strong>
-						<ul>
-							<li>Live Networth - 5 minutes</li>
-						</ul>
+						<ul></ul>
 					</li>
 				</ul>
 			</section>
@@ -853,13 +948,13 @@
 		<script src="../../vendor/sortable/sortable.js"></script>
 		<script src="../../scripts/global/globalClasses.js"></script>
 		<script src="../../scripts/global/globalData.js"></script>
-		<script src="../../scripts/global/functions/api.js"></script>
 		<script src="../../scripts/global/functions/database.js"></script>
 		<script src="../../scripts/global/functions/dom.js"></script>
 		<script src="../../scripts/global/functions/extension.js"></script>
 		<script src="../../scripts/global/functions/formatting.js"></script>
 		<script src="../../scripts/global/functions/torn.js"></script>
 		<script src="../../scripts/global/functions/utilities.js"></script>
+		<script src="../../scripts/global/functions/api.js"></script>
 		<script src="../../scripts/global/functions/pages.js"></script>
 		<script type="module" src="settings.js"></script>
 	</body>

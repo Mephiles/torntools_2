@@ -396,13 +396,13 @@
 							${formatNumber(value, { shorten: true, currency: true })}
 						</div>
 						<div class="profit-item advanced ${getValueClass(profitItem)}" value="${typeof profitItem !== "number" ? 0 : profitItem}">
-							${formatNumber(profitItem, { shorten: true, currency: true })}
+							${formatNumber(profitItem, { shorten: true, currency: true, forceOperation: true })}
 						</div>
 						<div class="profit-minute ${getValueClass(profitMinute)}" value="${typeof profitMinute !== "number" ? 0 : profitMinute}">
-							${formatNumber(profitMinute, { shorten: true, currency: true })}
+							${formatNumber(profitMinute, { shorten: true, currency: true, forceOperation: true })}
 						</div>
 						<div class="profit advanced ${getValueClass(profit)}" value="${typeof profit !== "number" ? 0 : profit}">
-							${formatNumber(profit, { shorten: true, currency: true })}
+							${formatNumber(profit, { shorten: true, currency: true, forceOperation: true })}
 						</div>
 						<div class="money advanced" value="${totalCost}">
 							${formatNumber(totalCost, { shorten: true, currency: true })}
@@ -547,12 +547,23 @@
 		if (page === "travelagency") {
 			const element = document.find("#tab-menu4 > ul > li[aria-selected='true'] .travel-name");
 
-			// CHECK - Add travel type count.
-			if (!element) return "private";
+			if (!element) return hasAPIData() ? getAPIType() : "standard";
 			else return element.innerText.toLowerCase();
 		} else if (page === "home") {
-			// CHECK - Add travel type count.
-			return "private";
+			return hasAPIData() ? getAPIType() : "standard";
+		}
+
+		function getAPIType() {
+			if (!hasAPIData() || !settings.apiUsage.user.travel) return "standard";
+
+			switch (userdata.travel.method.toLowerCase()) {
+				case "airstrip":
+					return "private";
+				default:
+					console.log("TT - Detected unknown travel type.", userdata.travel.method);
+					// FIXME - Add travel type count.
+					return "standard";
+			}
 		}
 	}
 

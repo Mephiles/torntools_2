@@ -3,6 +3,9 @@
 Number.prototype.dropDecimals = function () {
 	return parseInt(this.toString());
 };
+Number.prototype.roundNearest = function (multiple) {
+	return Math.round(this / multiple) * multiple;
+};
 
 String.prototype.camelCase = function (lowerCamelCase) {
 	return (this.trim().charAt(0)[lowerCamelCase ? "toLowerCase" : "toUpperCase"]() + this.slice(1)).trim().replaceAll(" ", "");
@@ -257,12 +260,6 @@ function formatNumber(number, options = {}) {
 	}
 
 	if (!text) text = abstract.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-	// if (options.currency) {
-	// 	return `${number >= 0 ? (options.forceOperation ? "+" : "") : "-"}$${Math.abs(number)
-	// 		.toString()
-	// 		.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-	// }
 
 	return `${operation}${options.currency ? "$" : ""}${text}`;
 }

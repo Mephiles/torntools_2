@@ -1,8 +1,5 @@
 "use strict";
 
-// noinspection JSUnresolvedVariable,JSUnresolvedFunction
-const changelog = await (await fetch(chrome.runtime.getURL("changelog.json"))).json();
-
 const initiatedPages = {};
 
 (async () => {
@@ -21,7 +18,6 @@ const initiatedPages = {};
 
 // noinspection DuplicatedCode
 async function showPage(name) {
-	// noinspection DuplicatedCode
 	window.history.replaceState("", "Title", "?page=" + name);
 
 	for (const active of document.findAll("header nav.on-page > ul > li.active")) active.classList.remove("active");
@@ -49,6 +45,7 @@ async function showPage(name) {
 }
 
 async function setupChangelog() {
+	const changelog = await (await fetch(chrome.runtime.getURL("changelog.json"))).json();
 	const content = document.find("#changelog > section");
 
 	changelog.forEach((entry, index, allEntries) => {
@@ -334,6 +331,14 @@ async function setupPreferences() {
 		inputRow.find(".href").classList.remove("hidden");
 	});
 
+	_preferences.find("#addAllyFaction").addEventListener("click", () => {
+		const inputRow = document.find("#allyFactions .input");
+
+		addAllyFaction(inputRow.find(".faction").value);
+	});
+
+	settings.allyFactionsIDs.forEach((ally) => addAllyFaction(ally));
+
 	const chatSection = _preferences.find(".sections section[name='chat']");
 	for (const placeholder of HIGHLIGHT_PLACEHOLDERS) {
 		chatSection.insertBefore(
@@ -385,6 +390,7 @@ async function setupPreferences() {
 	});
 
 	fillSettings();
+	searchPreferences();
 	storageListeners.settings.push(updateSettings);
 
 	function showAdvanced(advanced) {
@@ -501,12 +507,10 @@ async function setupPreferences() {
 		_preferences.find("#notification-requireInteraction").checked = settings.notifications.requireInteraction;
 		_preferences.find("#notification-searchOpenTab").checked = settings.notifications.searchOpenTab;
 		_preferences.find("#notification-volume").value = settings.notifications.volume;
-		// noinspection JSIncompatibleTypesComparison
 		if (settings.notifications.sound === "custom") {
 			_preferences.find("#notification-sound-upload").classList.remove("hidden");
 			_preferences.find("#notification-sound-upload + br").classList.remove("hidden");
 		} else {
-			// noinspection JSIncompatibleTypesComparison
 			if (settings.notifications.sound === "mute" || settings.notifications.sound === "default") {
 				_preferences.find("#notification-volume").classList.add("hidden");
 				_preferences.find("#notification-sound-play").classList.add("hidden");
@@ -677,6 +681,23 @@ async function setupPreferences() {
 		_preferences.find("#customLinks").insertBefore(newRow, _preferences.find("#customLinks .input"));
 	}
 
+	function addAllyFaction(ally) {
+		const deleteIcon = document.newElement({
+			type: "button",
+			class: "remove-icon-wrap",
+			children: [document.newElement({ type: "i", class: "remove-icon fas fa-trash-alt" })],
+		});
+		const newRow = document.newElement({
+			type: "li",
+			children: [document.newElement({ type: "input", class: "faction", value: ally }), deleteIcon],
+		});
+
+		deleteIcon.addEventListener("click", () => newRow.remove());
+
+		_preferences.find("#allyFactions li:last-child").insertAdjacentElement("beforebegin", newRow);
+		_preferences.find("#allyFactions li:last-child input").value = "";
+	}
+
 	function getCustomLinkOptions() {
 		let options = "<option value='custom'>Custom..</option>";
 		for (const name in CUSTOM_LINKS_PRESET) options += `<option value="${name}">${name}</option>`;
@@ -767,6 +788,15 @@ async function setupPreferences() {
 				color: highlight.find(".color").value,
 			};
 		});
+		settings.allyFactionsIDs = [..._preferences.findAll("#allyFactions input")]
+			.map((input) => {
+				if (isNaN(input.value)) return input.value.trim();
+				else return parseInt(input.value.trim());
+			})
+			.filter((x) => {
+				if (typeof x === "string") return x.trim() !== "";
+				else return x;
+			});
 
 		settings.hideAreas = [..._preferences.findAll("#hide-areas span.disabled")].map((area) => area.getAttribute("name"));
 		settings.hideIcons = [..._preferences.findAll("#hide-icons .icon.disabled > div")].map((icon) => icon.getAttribute("class"));
@@ -807,7 +837,6 @@ async function setupPreferences() {
 		await ttStorage.set(newStorage);
 		console.log("Settings updated!", newStorage);
 
-		// noinspection BadExpressionStatementJS
 		["dark", "light"].forEach((theme) => document.body.classList.remove(theme));
 		document.body.classList.add(getPageTheme());
 
@@ -823,6 +852,110 @@ async function setupPreferences() {
 				event.target.checked = false;
 			}
 		});
+	}
+
+	function searchPreferences() {
+		const searchOverlay = document.find("#tt-search-overlay");
+		document.find("#preferences-search").addEventListener("click", () => searchOverlay.classList.remove("hidden"));
+
+		searchOverlay.find(".circle").addEventListener("click", () => {
+			searchOverlay.find("#tt-search-list").innerHTML = "";
+			searchOverlay.classList.add("hidden");
+		});
+		searchOverlay.find("#tt-search-button").addEventListener("click", search);
+		searchOverlay.find("input").addEventListener("keydown", (event) => {
+			if (event.keyCode === 13) search();
+		});
+
+		function search() {
+			const searchFor = searchOverlay.find("input").value.toLowerCase().trim();
+			if (!searchFor) return;
+			document.findAll(".searched").forEach((option) => option.classList.remove("searched"));
+			let searchResults = document.evaluate(
+				`//main[@id='preferences']
+					//section
+						//div[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'sections')]
+							//section
+								//label[not(contains(@class, 'note'))][contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '${searchFor}')]
+				| 
+				//main[@id='preferences']
+					//section
+						//div[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'sections')]
+							//section
+								//div[contains(@class, 'header')][contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '${searchFor}')]`,
+				document,
+				null,
+				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+				null
+			);
+			const searchList = searchOverlay.find("#tt-search-list");
+			searchList.innerHTML = "";
+			// Sorry but there is no forEach method available. Had to use traditional loops.
+			if (searchResults.snapshotLength > 0) {
+				const hideAdvanced = !!document.find(".advanced-hidden");
+
+				for (let i = 0; i < searchResults.snapshotLength; i++) {
+					const option = searchResults.snapshotItem(i);
+					const name = option.innerText.replace("New!", "").replace("\n", "").trim();
+
+					let keyword, section;
+					if (option.getAttribute("for")) {
+						const isAdvanced = option.parentElement.classList.contains("advanced");
+						if (isAdvanced && hideAdvanced) continue;
+
+						keyword = "for";
+						section = option.getAttribute("for");
+					} else if (option.classList.contains("header")) {
+						const isAdvanced = option.classList.contains("advanced");
+						if (isAdvanced && hideAdvanced) continue;
+
+						keyword = "name";
+						section = option.parentElement.getAttribute("name");
+					}
+
+					searchList.appendChild(
+						document.newElement({
+							type: "div",
+							text: name,
+							attributes: { [keyword]: section },
+							children: [document.newElement("br")],
+						})
+					);
+					searchList.appendChild(document.newElement("hr"));
+				}
+			} else {
+				searchList.appendChild(
+					document.newElement({
+						type: "span",
+						id: "no-result",
+						text: "No Results",
+					})
+				);
+			}
+			searchList.addEventListener("click", (event) => {
+				event.stopPropagation();
+				searchOverlay.classList.add("hidden");
+				if (event.target.innerText.trim() !== "No Results") {
+					const nameAttr = event.target.getAttribute("name");
+					const forAttr = event.target.getAttribute("for");
+					if (forAttr) {
+						const optionFound = document.find(`#preferences [for="${forAttr}"]`);
+						document.find(`#preferences nav [name="${optionFound.closest("section").getAttribute("name")}"]`).click();
+						optionFound.parentElement.classList.add("searched");
+					} else if (nameAttr) {
+						for (const x of [...document.findAll(`#preferences [name="${nameAttr}"] .header`)]) {
+							if (x.innerText.trim() === event.target.innerText.trim()) {
+								x.classList.add("searched");
+								document.find(`#preferences nav [name="${x.closest("section").getAttribute("name")}"]`).click();
+								break;
+							}
+						}
+					}
+				}
+				searchList.innerHTML = "";
+			});
+			searchResults = null;
+		}
 	}
 }
 

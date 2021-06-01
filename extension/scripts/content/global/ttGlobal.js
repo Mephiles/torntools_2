@@ -35,14 +35,12 @@
 			const seconds = parseInt(countdown.dataset.seconds) - 1;
 
 			if (seconds <= 0) {
-				countdown.removeAttribute("seconds-down");
 				countdown.innerText = countdown.dataset.doneText || "Ready";
 				delete countdown.dataset.seconds;
 				continue;
 			}
 
 			countdown.innerText = formatTime({ seconds }, JSON.parse(countdown.dataset.timeSettings));
-			// noinspection JSValidateTypes
 			countdown.dataset.seconds = seconds;
 		}
 	}, 1000);

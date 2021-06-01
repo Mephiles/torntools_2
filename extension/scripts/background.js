@@ -166,7 +166,6 @@ function timedUpdates() {
 				.catch((error) => logError("updating torndata", error));
 		}
 
-		// noinspection JSCheckFunctionSignatures
 		if (!torndata || !torndata.stocks || !isSameStockTick(new Date(torndata.stocks.date), new Date())) {
 			updateStocks()
 				.then(() => console.log("Updated stocks."))
@@ -211,7 +210,7 @@ async function updateUserdata() {
 		updatedTypes.push("essential");
 	}
 	if (updateBasic) {
-		for (const selection of ["personalstats", "stocks", "inventory", "merits", "perks"]) {
+		for (const selection of ["personalstats", "stocks", "inventory", "merits", "perks", "networth"]) {
 			if (!settings.apiUsage.user[selection]) continue;
 
 			selections.push(selection);
@@ -498,10 +497,25 @@ async function updateUserdata() {
 
 			for (const checkpoint of checkpoints) {
 				if (oldUserdata[bar].current < userdata[bar].current && userdata[bar].current >= checkpoint && !notifications[bar][checkpoint]) {
+					const url = (() => {
+						switch (bar) {
+							case "energy":
+								return LINKS.gym;
+							case "happy":
+								return LINKS.items_candy;
+							case "nerve":
+								return LINKS.crimes;
+							case "life":
+								return LINKS.items_medical;
+							default:
+								return LINKS.home;
+						}
+					})();
+
 					notifications[bar][checkpoint] = newNotification(
 						`Bars`,
 						`Your ${capitalizeText(bar)} bar has reached ${userdata[bar].current}/${userdata[bar].maximum}.`,
-						LINKS.home
+						url
 					);
 					break;
 				} else if (userdata[bar].current < checkpoint && notifications[bar][checkpoint]) {
@@ -776,6 +790,11 @@ async function updateStakeouts() {
 				current: data.life.current,
 				maximum: data.life.maximum,
 			},
+			status: {
+				state: data.status.state,
+				color: data.status.color,
+				until: data.status.until * 1000,
+			},
 		};
 	}
 	stakeouts.date = now;
@@ -810,33 +829,22 @@ async function updateStocks() {
 			if (alerts.priceFalls && oldStocks[id].current_price > alerts.priceFalls && stocks[id].current_price <= alerts.priceFalls) {
 				await notifyUser(
 					"TornTools - Stock Alerts",
-					`(${stocks[id].acronym}) ${stocks[id].name} has fallen to $${formatNumber(stocks[id].current_price)} (alert: $${formatNumber(
-						alerts.priceFalls
-					)})!`,
+					`(${stocks[id].acronym}) ${stocks[id].name} has fallen to ${formatNumber(stocks[id].current_price, {
+						currency: true,
+					})} (alert: ${formatNumber(alerts.priceFalls, { currency: true })})!`,
 					LINKS.stocks
 				);
 			} else if (alerts.priceReaches && oldStocks[id].current_price < alerts.priceFalls && stocks[id].current_price >= alerts.priceReaches) {
 				await notifyUser(
 					"TornTools - Stock Alerts",
-					`(${stocks[id].acronym}) ${stocks[id].name} has reached $${formatNumber(stocks[id].current_price)} (alert: $${formatNumber(
-						alerts.priceReaches
-					)})!`,
+					`(${stocks[id].acronym}) ${stocks[id].name} has reached ${formatNumber(stocks[id].current_price, {
+						currency: true,
+					})} (alert: ${formatNumber(alerts.priceReaches, { currency: true })})!`,
 					LINKS.stocks
 				);
 			}
 		}
 	}
-}
-
-async function updateNetworth() {
-	if (!settings.apiUsage.user.networth) return;
-
-	let networth = (await fetchApi("torn", { section: "user", selections: ["networth"] })).networth;
-	if (!networth) throw new Error("Aborted updating due to an expected response.");
-	networth.date = Date.now();
-
-	await ttStorage.change({ userdata: { networth } });
-	console.log("Updated networth data.");
 }
 
 async function updateFactiondata() {
@@ -922,7 +930,6 @@ async function notifyUser(title, message, url) {
 			let sound = await getNotificationSound(settings.notifications.sound);
 
 			if (sound && sound !== "mute") {
-				// noinspection JSValidateTypes
 				notificationPlayer.src = sound;
 			}
 
@@ -932,7 +939,6 @@ async function notifyUser(title, message, url) {
 	}
 }
 
-// noinspection JSDeprecatedSymbols
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	switch (message.action) {
 		case "initialize":
@@ -945,7 +951,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 				if (!sound) return;
 
 				notificationTestPlayer.volume = message.volume / 100;
-				// noinspection JSValidateTypes
 				notificationTestPlayer.src = sound;
 				// noinspection JSIgnoredPromiseFromCall
 				notificationTestPlayer.play();
@@ -954,17 +959,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 			break;
 		case "stop-notification-sound":
 			notificationTestPlayer.pause();
-			break;
-		case "updateData":
-			switch (message.type) {
-				case "networth":
-					updateNetworth().then(() => {});
-					sendResponse({ success: true });
-					break;
-				default:
-					sendResponse({ success: false, message: "Unknown data type." });
-					break;
-			}
 			break;
 		case "fetchRelay":
 			fetchApi(message.location, message.options)
@@ -977,7 +971,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	}
 });
 
-// noinspection JSDeprecatedSymbols
 chrome.notifications.onClicked.addListener((id) => {
 	if (settings.notifications.link) {
 		chrome.tabs.create({ url: notificationRelations[id] });
@@ -1004,7 +997,6 @@ function getNotificationSound(type) {
 function getAudioPlayer() {
 	const audioPlayer = new Audio();
 	audioPlayer.autoplay = false;
-	// noinspection JSValidateTypes
 	audioPlayer.preload = true;
 
 	return audioPlayer;
