@@ -23,6 +23,7 @@
 			<div>
 				<div id="content-div">
 					<i class="circle far fa-times-circle"></i>
+					<!--suppress HtmlFormInputWithoutLabel -->
 					<input type="text" id="tt-search-input" />
 					<i class="fas fa-search fa-3x" id="tt-search-button"></i>
 				</div>
@@ -67,12 +68,12 @@
 					&nbsp;-&nbsp;
 					<i id="preferences-show_advanced" class="tooltip fas"><span class="tooltip-text"></span></i>
 				</span>
-				<div id="preferences-search">
-					<div>
-						<span>Search</span>
+				<span id="preferences-search">
+					<span class="search-wrap">
+						<span class="search">Search</span>
 						<i class="fas fa-search"></i>
-					</div>
-				</div>
+					</span>
+				</span>
 			</h2>
 			<section>
 				<nav>
@@ -114,7 +115,7 @@
 						<li name="travel">Travel</li>
 						<li name="trade">Trade</li>
 						<!-- <li>Raceway</li> -->
-						<!-- <li>Stores</li> -->
+						<li name="shops">Shops</li>
 						<!-- <li>Item Market</li> -->
 						<li name="api">API</li>
 
@@ -750,6 +751,29 @@
 						<div class="option">
 							<input id="bazaar-worth" type="checkbox" />
 							<label for="bazaar-worth">Show the worth of the visited bazaar.</label>
+						</div>
+						<div class="option">
+							<input id="bazaar-fillMax" type="checkbox" />
+							<label for="bazaar-fillMax">Show fill max button.</label>
+						</div>
+						<div class="option">
+							<input id="bazaar-maxBuyIgnoreCash" type="checkbox" />
+							<label for="bazaar-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
+						</div>
+					</section>
+					<section name="shops">
+						<div class="header">Shops</div>
+						<div class="option">
+							<input id="shops-fillMax" type="checkbox" />
+							<label for="shops-fillMax">Show fill max button.</label>
+						</div>
+						<div class="option">
+							<input id="shops-maxBuyIgnoreCash" type="checkbox" />
+							<label for="shops-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
+						</div>
+						<div class="option no-mobile">
+							<input id="bazaar-redirects" type="checkbox" />
+							<label for="bazaar-redirects">Highlight the searched item from the item market.</label>
 						</div>
 					</section>
 					<section name="jail">

@@ -317,9 +317,6 @@ function updateReactInput(input, value, options = {}) {
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 			break;
 	}
-
-	// const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-	// nativeSetter.call(input, value);
 }
 
 function isDividendStock(id) {
