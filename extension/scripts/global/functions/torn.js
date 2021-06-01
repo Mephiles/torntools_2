@@ -321,3 +321,9 @@ function updateReactInput(input, value, options = {}) {
 	// const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
 	// nativeSetter.call(input, value);
 }
+
+function isDividendStock(id) {
+	if (isIntNumber(id)) return [1, 4, 5, 6, 7, 9, 10, 12, 15, 16, 17, 18, 19, 22, 27, 28, 29, 31].includes(id);
+
+	return false;
+}

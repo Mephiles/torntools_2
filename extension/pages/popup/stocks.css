@@ -70,6 +70,10 @@ body.dark #stocks .stock-list .information-section .heading {
 	font-weight: bold;
 }
 
+#stocks .stock-list .information-section .content.benefit .duration {
+	margin-left: 0.25em;
+}
+
 #stocks .stock-list .information-section .content.alerts {
 	display: flex;
 }

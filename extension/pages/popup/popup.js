@@ -715,8 +715,10 @@ async function setupStocksOverview() {
 		}
 	}
 
-	for (const id in torndata.stocks) {
+	for (let id in torndata.stocks) {
 		if (id === "date") continue;
+		id = parseInt(id);
+
 		const wrapper = document.newElement({
 			type: "div",
 			class: "stock-wrap",
@@ -751,13 +753,19 @@ async function setupStocksOverview() {
 
 		// Benefit Information
 		if (torndata.stocks[id].benefit) {
+			console.log("DKK stock", isDividendStock(id), id, typeof id);
 			const benefitContent = document.newElement({
 				type: "div",
 				class: "content benefit hidden",
 				children: [
-					document.newElement({ type: "span", text: `Required stocks: ${formatNumber(torndata.stocks[id].benefit.requirement)}` }),
+					document.newElement({ type: "span", text: `Stocks per increment: ${formatNumber(torndata.stocks[id].benefit.requirement)}` }),
 					document.newElement("br"),
-					document.newElement({ type: "span", class: `description`, text: `${torndata.stocks[id].benefit.description}.` }),
+					document.newElement({ type: "span", class: "description", text: `${torndata.stocks[id].benefit.description}` }),
+					document.newElement({
+						type: "span",
+						class: "duration",
+						text: `${isDividendStock(id) ? "every" : "after"} ${torndata.stocks[id].benefit.frequency} days.`,
+					}),
 				],
 			});
 
