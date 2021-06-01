@@ -19,6 +19,16 @@
 	<body>
 		<div id="message" class="hidden"></div>
 		<div id="tt-black-overlay" class="hidden"></div>
+		<div id="tt-search-overlay" class="hidden">
+			<div>
+				<div id="content-div">
+					<i class="circle far fa-times-circle"></i>
+					<input type="text" id="tt-search-input" />
+					<i class="fas fa-search fa-3x" id="tt-search-button"></i>
+				</div>
+				<div id="tt-search-list"></div>
+			</div>
+		</div>
 		<div id="tt-confirmation-popup" class="hidden">
 			<h1 class="title"></h1>
 			<div class="message"></div>
@@ -57,6 +67,12 @@
 					&nbsp;-&nbsp;
 					<i id="preferences-show_advanced" class="tooltip fas"><span class="tooltip-text"></span></i>
 				</span>
+				<div id="preferences-search">
+					<div>
+						<span>Search</span>
+						<i class="fas fa-search"></i>
+					</div>
+				</div>
 			</h2>
 			<section>
 				<nav>
@@ -860,6 +876,10 @@
 						<div class="option">
 							<input id="api-autoFillKey" type="checkbox" />
 							<label for="api-autoFillKey">Automatically fill your API key.</label>
+						</div>
+						<div class="option">
+							<input id="api-autoPretty" type="checkbox" />
+							<label for="api-autoPretty">Automatically select pretty outputs.</label>
 						</div>
 						<div class="option">
 							<input id="api-clickableSelections" type="checkbox" />
