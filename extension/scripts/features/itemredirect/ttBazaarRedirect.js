@@ -28,7 +28,7 @@
 			for (const item of document.findAll("[class*='rowItems_'] [class*='item_']")) {
 				if (
 					item.find("[class*='name_']").innerText.trim() === itemName &&
-					item.find("[class*='price_']").lastChild.textContent.replace(/[\n\$, ]/g, "") === itemPrice
+					item.find("[class*='price_']").lastChild.textContent.replace(/[\n$, ]/g, "") === itemPrice
 				) {
 					foundItem = true;
 					item.classList.add("tt-flash");

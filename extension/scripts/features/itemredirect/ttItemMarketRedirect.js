@@ -21,7 +21,7 @@
 		if (subPage === "itemView") {
 			await requireElement("ul.guns-list > li:not(.clear)");
 			for (const bazaarLink of document.findAll("ul.guns-list > li:not(.clear)")) {
-				const price = bazaarLink.find(".price").firstChild.textContent.replace(/[\n\$, ]/g, "");
+				const price = bazaarLink.find(".price").firstChild.textContent.replace(/[\n$, ]/g, "");
 				const itemId = bazaarLink.find("img").src.match(/(?<=\/)\d+(?=\/)/g)[0];
 
 				let url = bazaarLink.find("a").href.replace("userID", "userId");
