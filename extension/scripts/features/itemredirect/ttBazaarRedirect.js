@@ -1,6 +1,7 @@
 "use strict";
 
 (async () => {
+	if (await checkMobile()) return;
 	featureManager.registerFeature(
 		"Bazaar Redirect",
 		"bazaar",
@@ -17,7 +18,7 @@
 	async function addHighlight() {
 		await requireElement("[class*='rowItems_'] [class*='item_']");
 		const params = getSearchParameters();
-		if (params.has("tt_itemid") && !(await checkMobile())) {
+		if (params.has("tt_itemid")) {
 			const itemID = params.get("tt_itemid");
 			const itemPrice = params.get("tt_itemprice");
 			const itemName = torndata.items[itemID].name;
@@ -36,17 +37,6 @@
 			}
 
 			if (!foundItem) {
-				document.find(".info-msg-cont .msg").appendChild(
-					document.newElement({
-						type: "div",
-						class: "tt-bazaar-redirect",
-						children: [
-							"Could not find ",
-							document.newElement({ type: "span", text: itemName, class: "bold" }),
-							". Please try using the Search function.",
-						],
-					})
-				);
 				updateReactInput(document.find("div[class*='item__'] input"), itemName);
 			}
 		}
