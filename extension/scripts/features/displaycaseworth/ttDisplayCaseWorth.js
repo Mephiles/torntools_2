@@ -17,8 +17,9 @@
 	);
 
 	async function addWorth() {
-		await requireElement(".info-msg-cont .msg");
-		fetchApi("torn", { section: "user", id: window.location.href.split("/").last(), selections: ["display"] })
+		if (window.location.href.split("/").last()) {
+			await requireElement(".info-msg-cont .msg");
+			fetchApi("torn", { section: "user", id: window.location.href.split("/").last(), selections: ["display"] })
 			.then((result) => {
 				let total = 0;
 
@@ -50,6 +51,23 @@
 				);
 				console.log("TT - Display Cabinet Worth API Error:", error);
 			});
+		} else {
+			await requireElement(".info-msg-cont .msg");
+			fetchApi("torn", { section: "user", id: window.location.href.split("/").last(), selections: ["display"] })
+			.then((result) => {
+				let total = 0;
+
+				for (const item of result.display) {
+					total += item.market_price * item.quantity;
+				}
+
+				document.find(".display-cabinet").insertAdjacentElement("beforebegin", newTornInfoBox(`This display cabinet is worth ${formatNumber(total, { currency: true })}.`, "tt-display-worth"));
+			})
+			.catch((error) => {
+				document.find(".display-cabinet").insertAdjacentElement("beforebegin", newTornInfoBox(`TORN API returned error: ${error.toString()}.`, "tt-display-worth"));
+				console.log("TT - Display Cabinet Worth API Error:", error);
+			});
+		}
 	}
 
 	function removeWorth() {
