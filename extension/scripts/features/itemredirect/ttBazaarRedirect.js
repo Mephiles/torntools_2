@@ -1,9 +1,8 @@
 "use strict";
 
 (async () => {
-	if (await checkMobile()) return;
 	featureManager.registerFeature(
-		"Bazaar Redirect",
+		"Item Redirect",
 		"bazaar",
 		() => settings.pages.bazaar.redirects,
 		null,
@@ -12,7 +11,9 @@
 		{
 			storage: ["settings.pages.bazaar.redirects"],
 		},
-		null
+		async () => {
+			if (await checkMobile()) return "Not supported on mobile!";
+		}
 	);
 
 	async function addHighlight() {

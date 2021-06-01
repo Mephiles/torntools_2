@@ -2,8 +2,8 @@
 
 (async () => {
 	featureManager.registerFeature(
-		"Market Redirect",
-		"item market",
+		"Item Redirect",
+		"market",
 		() => settings.pages.bazaar.redirects,
 		null,
 		addParams,
@@ -11,7 +11,9 @@
 		{
 			storage: ["settings.pages.bazaar.redirects"],
 		},
-		null
+		async () => {
+			if (await checkMobile()) return "Not supported on mobile!";
+		}
 	);
 
 	async function addParams() {
