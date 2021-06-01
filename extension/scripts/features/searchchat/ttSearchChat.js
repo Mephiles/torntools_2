@@ -64,13 +64,13 @@
 						id,
 						events: {
 							input: (event) => {
-								const inputValue = event.target.value.toLowerCase();
+								const keyword = event.target.value.toLowerCase();
 
 								for (const message of chat.findAll("[class*='overview_'] [class*='message_']")) {
-									searchChat(message, inputValue);
+									searchChat(message, keyword);
 								}
 
-								if (!inputValue) {
+								if (!keyword) {
 									const viewport = chat.find("[class*='viewport_']");
 									viewport.scrollTop = viewport.scrollHeight;
 								}
@@ -138,21 +138,21 @@
 		}
 	}
 
-	function searchChat(message, inputValue) {
-		let keyword, user, id;
-		if (inputValue.startsWith("by:") || inputValue.startsWith("u:")) {
-			const splitInput = inputValue.split(" ");
-			user = splitInput.shift().split(":")[1];
-			if (!isNaN(user)) id = user;
+	function searchChat(message, keyword) {
+		if (keyword.startsWith("by:") || keyword.startsWith("u:")) {
+			const splitInput = keyword.split(" ");
+			const target = splitInput.shift().split(":")[1];
 			keyword = splitInput.join(" ");
+
+			const user = message.find("a");
+			if (!user.innerText.toLowerCase().includes(target) && (isNaN(target) || !user.href.match(`XID=${target}$`))) {
+				message.classList.add("hidden");
+				return;
+			}
 		}
-		const userName = message.find("a");
+
 		const messageText = message.find("span").innerText.toLowerCase();
-		if (id && !userName.href.includes(id)) {
-			message.classList.add("hidden");
-		} else if (!id && user && !userName.innerText.toLowerCase().includes(user)) {
-			message.classList.add("hidden");
-		} else if (keyword && !messageText.includes(keyword)) {
+		if (keyword && !messageText.includes(keyword)) {
 			message.classList.add("hidden");
 		} else {
 			message.classList.remove("hidden");
