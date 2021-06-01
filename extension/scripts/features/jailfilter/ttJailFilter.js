@@ -5,7 +5,7 @@
 		"Jail Filter",
 		"jail",
 		() => settings.pages.jail.filter,
-		() => {},
+		null,
 		initialize,
 		teardown,
 		{
