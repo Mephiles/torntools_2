@@ -470,7 +470,6 @@ async function setupDashboard() {
 					});
 
 					if (stateTimer > 0) {
-						console.log("DKK state", { stateTimer, current });
 						row.appendChild(document.newElement({ type: "span", class: "duration", text: "for" }));
 						row.appendChild(
 							document.newElement({
@@ -753,7 +752,6 @@ async function setupStocksOverview() {
 
 		// Benefit Information
 		if (torndata.stocks[id].benefit) {
-			console.log("DKK stock", isDividendStock(id), id, typeof id);
 			const benefitContent = document.newElement({
 				type: "div",
 				class: "content benefit hidden",
