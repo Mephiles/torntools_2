@@ -36,6 +36,14 @@
 				value: JAIL_CONSTANTS.unknownFactions,
 				description: "Unknown faction",
 			},
+			...(hasAPIData() && !!userdata.faction.faction_id
+				? [
+						{
+							value: userdata.faction.faction_tag,
+							description: userdata.faction.faction_tag,
+						},
+				  ]
+				: []),
 			{
 				value: "------",
 				description: "------",
@@ -55,10 +63,7 @@
 		let filtersChangedCallback;
 		let quickModesChangedCallback;
 
-		// TODO: Support custom appending instead of auto or as an addition
-		// const container = createContainer("Jail Filter", contentElement);
-		// .appendChild(container.element)
-		const { container, content } = createContainer("Jail Filter", {
+		const { container, content, options } = createContainer("Jail Filter", {
 			nextElement: document.find(".users-list-title"),
 			class: "tt-jail-filters-container",
 		});
@@ -121,15 +126,17 @@
 			}
 		});
 
+		options.appendChild(
+			document.newElement({
+				type: "div",
+				children: [quickModeCheckboxList.element],
+			})
+		);
+
 		const filtersHeaderDiv = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-header",
 			children: [
-				// TODO: Move to container header like old tt
-				document.newElement({
-					type: "div",
-					children: [quickModeCheckboxList.element],
-				}),
 				document.newElement({
 					type: "div",
 					class: "tt-jail-filters-shown-users",
@@ -568,7 +575,6 @@
 			});
 		});
 		inJailFacade.onUsersChanged(() => {
-			// TODO: Add your faction to the list from API
 			const factionItems = inJailFacade.getFactionOptions().map((faction) => ({ value: faction, description: faction }));
 			jailFiltersContainer.updateFactions(factionItems);
 			const shownAmount = inJailFacade.applyFilters(jailFiltersContainer.getFilters());
