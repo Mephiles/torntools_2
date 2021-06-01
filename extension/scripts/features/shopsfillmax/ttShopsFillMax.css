@@ -2,7 +2,7 @@
 	position: relative;
 }
 
-.tt-buy button {
+.tt-buy .buy-act button {
 	transform: translateY(-5px);
 }
 
