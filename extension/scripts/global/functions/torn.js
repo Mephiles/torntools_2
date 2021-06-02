@@ -324,3 +324,11 @@ function isDividendStock(id) {
 
 	return false;
 }
+
+function getRequiredStocks(required, increment) {
+	return (Math.pow(2, increment) - 1) * required;
+}
+
+function getStockIncrement(required, stocks) {
+	return Math.log2(Math.floor(stocks / required) + 1);
+}

@@ -123,6 +123,14 @@ body.dark #stocks .stock-list .information-section .heading {
 	color: #36b320;
 }
 
+#stocks #user-stocks .information-section .content.benefit .description.awaiting {
+	color: #ffa937;
+}
+
 #stocks #user-stocks .information-section .content.benefit .description.not-completed {
 	color: #e44204;
+}
+
+.benefit-frequency {
+	margin-left: 0.25em;
 }

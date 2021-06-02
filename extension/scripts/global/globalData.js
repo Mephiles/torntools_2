@@ -641,6 +641,17 @@ const API_USAGE = {
 			"*": {
 				stock_id: true,
 				total_shares: true,
+				benefit: {
+					ready: true,
+					progress: true,
+					frequency: true,
+				},
+				dividend: {
+					ready: true,
+					increment: true,
+					progress: true,
+					frequency: true,
+				},
 				transactions: {
 					"*": {
 						shares: true,
@@ -694,9 +705,9 @@ const API_USAGE = {
 				acronym: true,
 				current_price: true,
 				benefit: {
+					frequency: true,
 					requirement: true,
 					description: true,
-					frequency: true,
 				},
 			},
 		},
