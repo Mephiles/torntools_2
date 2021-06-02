@@ -659,70 +659,48 @@ async function setupStocksOverview() {
 			);
 
 			// Benefit Information
-			if (torndata.stocks[id].benefit) {
-				let benefitContent;
-				if (isDividendStock(id)) {
-					if (stock.dividend) {
-						const ownedIncrement = getStockIncrement(torndata.stocks[id].benefit.requirement, stock.total_shares);
-						const dividendIncrement = stock.dividend.increment;
+			let benefitContent;
+			if (isDividendStock(id)) {
+				if (stock.dividend) {
+					const ownedIncrement = getStockIncrement(torndata.stocks[id].benefit.requirement, stock.total_shares);
+					const dividendIncrement = stock.dividend.increment;
 
-						const benefitDescription = torndata.stocks[id].benefit.description;
-						let value;
-						if (benefitDescription.startsWith("$")) {
-							const cash = parseInt(benefitDescription.replace("$", "").replaceAll(",", "")) * dividendIncrement;
+					const benefitDescription = torndata.stocks[id].benefit.description;
+					let value;
+					if (benefitDescription.startsWith("$")) {
+						const cash = parseInt(benefitDescription.replace("$", "").replaceAll(",", "")) * dividendIncrement;
 
-							value = formatNumber(cash, { currency: true });
-						} else if (benefitDescription.match(/^[0-9]+x? /i)) {
-							const splitBenefit = benefitDescription.split(" ");
-							const hasX = splitBenefit[0].endsWith("x");
-							const amount = parseInt(splitBenefit.shift().replace("x", "")) * dividendIncrement;
-							const item = splitBenefit.join(" ");
+						value = formatNumber(cash, { currency: true });
+					} else if (benefitDescription.match(/^[0-9]+x? /i)) {
+						const splitBenefit = benefitDescription.split(" ");
+						const hasX = splitBenefit[0].endsWith("x");
+						const amount = parseInt(splitBenefit.shift().replace("x", "")) * dividendIncrement;
+						const item = splitBenefit.join(" ");
 
-							value = `${formatNumber(amount)}${hasX ? "x" : ""} ${item}`;
-						} else {
-							value = "Unknown, please report this!";
-						}
+						value = `${formatNumber(amount)}${hasX ? "x" : ""} ${item}`;
+					} else {
+						value = "Unknown, please report this!";
+					}
 
-						if (stock.dividend.ready) {
-							benefitContent = document.newElement({
-								type: "div",
-								class: "content benefit hidden",
-								children: [
-									document.newElement({
-										type: "span",
-										text: `Required stocks for level ${ownedIncrement}: ${formatNumber(stock.total_shares)}/${formatNumber(
-											getRequiredStocks(torndata.stocks[id].benefit.requirement, ownedIncrement)
-										)}`,
-									}),
-									document.newElement("br"),
-									document.newElement({
-										type: "span",
-										class: "description completed",
-										text: `${value}.`,
-									}),
-								],
-							});
-						} else {
-							benefitContent = document.newElement({
-								type: "div",
-								class: "content benefit hidden",
-								children: [
-									document.newElement({
-										type: "span",
-										text: `Required stocks for level ${ownedIncrement}: ${formatNumber(stock.total_shares)}/${formatNumber(
-											getRequiredStocks(torndata.stocks[id].benefit.requirement, ownedIncrement)
-										)}`,
-									}),
-									document.newElement("br"),
-									document.newElement({ type: "span", class: "description awaiting", text: value }),
-									document.newElement({
-										type: "span",
-										class: "benefit-frequency",
-										text: `in ${stock.dividend.frequency - stock.dividend.progress} days.`,
-									}),
-								],
-							});
-						}
+					if (stock.dividend.ready) {
+						benefitContent = document.newElement({
+							type: "div",
+							class: "content benefit hidden",
+							children: [
+								document.newElement({
+									type: "span",
+									text: `Required stocks for level ${ownedIncrement}: ${formatNumber(stock.total_shares)}/${formatNumber(
+										getRequiredStocks(torndata.stocks[id].benefit.requirement, ownedIncrement)
+									)}`,
+								}),
+								document.newElement("br"),
+								document.newElement({
+									type: "span",
+									class: "description completed",
+									text: `${value}.`,
+								}),
+							],
+						});
 					} else {
 						benefitContent = document.newElement({
 							type: "div",
@@ -730,13 +708,17 @@ async function setupStocksOverview() {
 							children: [
 								document.newElement({
 									type: "span",
-									text: `Required stocks for level 1: ${formatNumber(stock.total_shares)}/${formatNumber(
-										getRequiredStocks(torndata.stocks[id].benefit.requirement, 1)
+									text: `Required stocks for level ${ownedIncrement}: ${formatNumber(stock.total_shares)}/${formatNumber(
+										getRequiredStocks(torndata.stocks[id].benefit.requirement, ownedIncrement)
 									)}`,
 								}),
 								document.newElement("br"),
-								document.newElement({ type: "span", class: "description not-completed", text: `${torndata.stocks[id].benefit.description}` }),
-								document.newElement({ type: "span", class: "benefit-frequency", text: `every ${torndata.stocks[id].benefit.frequency} days.` }),
+								document.newElement({ type: "span", class: "description awaiting", text: value }),
+								document.newElement({
+									type: "span",
+									class: "benefit-frequency",
+									text: `in ${stock.dividend.frequency - stock.dividend.progress} days.`,
+								}),
 							],
 						});
 					}
@@ -747,39 +729,55 @@ async function setupStocksOverview() {
 						children: [
 							document.newElement({
 								type: "span",
-								text: `Required stocks: ${formatNumber(stock.total_shares)}/${formatNumber(torndata.stocks[id].benefit.requirement)}`,
+								text: `Required stocks for level 1: ${formatNumber(stock.total_shares)}/${formatNumber(
+									getRequiredStocks(torndata.stocks[id].benefit.requirement, 1)
+								)}`,
 							}),
 							document.newElement("br"),
+							document.newElement({ type: "span", class: "description not-completed", text: `${torndata.stocks[id].benefit.description}` }),
+							document.newElement({ type: "span", class: "benefit-frequency", text: `every ${torndata.stocks[id].benefit.frequency} days.` }),
 						],
 					});
-
-					const descriptionText = `${torndata.stocks[id].benefit.description}.`;
-					if (stock.benefit) {
-						if (stock.benefit.ready) {
-							benefitContent.appendChild(document.newElement({ type: "span", class: "description completed", text: descriptionText }));
-						} else {
-							benefitContent.appendChild(document.newElement({ type: "span", class: "description awaiting", text: descriptionText }));
-							benefitContent.appendChild(
-								document.newElement({
-									type: "span",
-									class: "benefit-frequency",
-									text: `in ${stock.benefit.frequency - stock.benefit.progress} days.`,
-								})
-							);
-						}
-					} else {
-						benefitContent.appendChild(document.newElement({ type: "span", class: "description not-completed", text: descriptionText }));
-					}
 				}
+			} else {
+				benefitContent = document.newElement({
+					type: "div",
+					class: "content benefit hidden",
+					children: [
+						document.newElement({
+							type: "span",
+							text: `Required stocks: ${formatNumber(stock.total_shares)}/${formatNumber(torndata.stocks[id].benefit.requirement)}`,
+						}),
+						document.newElement("br"),
+					],
+				});
 
-				wrapper.appendChild(
-					document.newElement({
-						type: "div",
-						class: "information-section",
-						children: [getBenefitHeadingElement(benefitContent), benefitContent],
-					})
-				);
+				const descriptionText = `${torndata.stocks[id].benefit.description}.`;
+				if (stock.benefit) {
+					if (stock.benefit.ready) {
+						benefitContent.appendChild(document.newElement({ type: "span", class: "description completed", text: descriptionText }));
+					} else {
+						benefitContent.appendChild(document.newElement({ type: "span", class: "description awaiting", text: descriptionText }));
+						benefitContent.appendChild(
+							document.newElement({
+								type: "span",
+								class: "benefit-frequency",
+								text: `in ${stock.benefit.frequency - stock.benefit.progress} days.`,
+							})
+						);
+					}
+				} else {
+					benefitContent.appendChild(document.newElement({ type: "span", class: "description not-completed", text: descriptionText }));
+				}
 			}
+
+			wrapper.appendChild(
+				document.newElement({
+					type: "div",
+					class: "information-section",
+					children: [getBenefitHeadingElement(benefitContent), benefitContent],
+				})
+			);
 
 			// Alerts
 			addAlertsSection(wrapper, id, buyId);
