@@ -852,6 +852,8 @@ async function setupStocksOverview() {
 		addAlertsSection(wrapper, id, id);
 
 		allStocks.appendChild(wrapper);
+
+		allStocks.appendChild(buildSection(id));
 	}
 
 	// setup searchbar
@@ -881,6 +883,138 @@ async function setupStocksOverview() {
 		userStocks.classList.remove("hidden");
 		allStocks.classList.add("hidden");
 	});
+
+	function buildSection(id) {
+		const stock = torndata.stocks[id];
+		const userStock = settings.apiUsage.user.stocks ? userdata.stocks[id] || false : false;
+
+		let boughtPrice, profit;
+		if (userStock) {
+			const transactions = Object.values(userStock.transactions);
+			const totalPrice = transactions.reduce((price, { shares, bought_price }) => price + shares * bought_price, 0);
+
+			boughtPrice = totalPrice / userStock.total_shares;
+			profit = ((stock.current_price - boughtPrice) * userStock.total_shares).dropDecimals();
+		}
+
+		const wrapper = document.newElement({
+			type: "div",
+			class: "stock-wrap",
+			attributes: { name: `${stock.name} (${stock.acronym})`.toLowerCase() },
+			children: [document.newElement("hr")],
+		});
+
+		createHeading();
+		createPriceInformation();
+		createBenefitInformation();
+
+		// Alerts
+
+		return wrapper;
+
+		function createHeading() {
+			const heading = document.newElement({
+				type: "a",
+				class: "heading",
+				href: `https://www.torn.com/stockexchange.php?stock=${stock.acronym}`,
+				attributes: { target: "_blank" },
+				children: [
+					document.newElement({
+						type: "span",
+						class: "name",
+						text: `${stock[stock.name.length > 35 ? "acronym" : "name"]}`,
+					}),
+					document.newElement("br"),
+				],
+			});
+			wrapper.appendChild(heading);
+
+			if (userStock) {
+				heading.appendChild(
+					document.newElement({
+						type: "span",
+						class: "quantity",
+						text: `(${formatNumber(userStock.total_shares, { shorten: 2 })} share${applyPlural(userStock.total_shares)})`,
+					})
+				);
+				wrapper.appendChild(
+					document.newElement({
+						type: "div",
+						class: `profit ${getProfitClass(profit)}`,
+						text: `${getProfitIndicator(profit)}${formatNumber(Math.abs(profit), { currency: true })}`,
+					})
+				);
+			}
+		}
+
+		function createPriceInformation() {
+			const priceContent = document.newElement({
+				type: "div",
+				class: "content price hidden",
+				children: [
+					document.newElement({
+						type: "span",
+						text: `Current price: ${formatNumber(stock.current_price, { decimals: 3, currency: true })}`,
+					}),
+					document.newElement({
+						type: "span",
+						text: `Total shares: ${formatNumber(stock.total_shares)}`,
+					}),
+				],
+			});
+			wrapper.append(
+				document.newElement({
+					type: "div",
+					class: "information-section",
+					children: [getHeadingElement("Price Information", priceContent), priceContent],
+				})
+			);
+
+			if (userStock) {
+				priceContent.appendChild(document.newElement({ type: "div", class: "flex-break" }));
+				priceContent.appendChild(
+					document.newElement({
+						type: "span",
+						text: `Bought at: ${formatNumber(boughtPrice, { decimals: 3, currency: true })}`,
+					})
+				);
+			}
+		}
+
+		function createBenefitInformation() {
+			const benefitContent = document.newElement({
+				type: "div",
+				class: "content benefit hidden",
+				children: [],
+			});
+			wrapper.append(
+				document.newElement({
+					type: "div",
+					class: "information-section",
+					children: [getHeadingElement("Benefit Information", benefitContent), benefitContent],
+				})
+			);
+
+			if (userStock && false) {
+				// FIXME - Show benefit information based on user stocks.
+			} else {
+				if (isDividendStock(id)) {
+					benefitContent.appendChild(
+						document.newElement({
+							type: "span",
+							text: `Available every ${stock.benefit.frequency} days.`,
+						})
+					);
+					// FIXME - Show benefit information for dividend stocks.
+				} else {
+					benefitContent.appendChild(document.newElement({ type: "span", text: `Required stocks: ${formatNumber(stock.benefit.requirement)}` }));
+					benefitContent.appendChild(document.newElement("br"));
+					benefitContent.appendChild(document.newElement({ type: "span", class: "description not-completed", text: `${stock.benefit.description}` }));
+					benefitContent.appendChild(document.newElement({ type: "span", class: "duration", text: `after ${stock.benefit.frequency} days.` }));
+				}
+			}
+		}
+	}
 
 	function getProfitClass(profit) {
 		return profit > 0 ? "positive" : profit < 0 ? "negative" : "";
@@ -953,12 +1087,12 @@ async function setupStocksOverview() {
 				}),
 			],
 		});
-		const alertHeading = _getHeadingElement("Alerts", alertContent);
+		const alertHeading = getHeadingElement("Alerts", alertContent);
 
 		wrapper.appendChild(document.newElement({ type: "div", class: "information-section", children: [alertHeading, alertContent] }));
 	}
 
-	function _getHeadingElement(title, content) {
+	function getHeadingElement(title, content) {
 		return document.newElement({
 			type: "div",
 			class: "heading",
@@ -974,10 +1108,10 @@ async function setupStocksOverview() {
 	}
 
 	function getPriceHeadingElement(priceContent) {
-		return _getHeadingElement("Price Information", priceContent);
+		return getHeadingElement("Price Information", priceContent);
 	}
 
 	function getBenefitHeadingElement(benefitContent) {
-		return _getHeadingElement("Benefit Information", benefitContent);
+		return getHeadingElement("Benefit Information", benefitContent);
 	}
 }

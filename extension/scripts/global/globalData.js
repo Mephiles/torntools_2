@@ -704,6 +704,7 @@ const API_USAGE = {
 				name: true,
 				acronym: true,
 				current_price: true,
+				total_shares: true,
 				benefit: {
 					frequency: true,
 					requirement: true,
