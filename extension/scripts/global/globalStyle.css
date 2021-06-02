@@ -349,3 +349,18 @@ body.scrolled #tt-page-status.top-right {
 	cursor: pointer;
 	color: var(--default-blue-color);
 }
+
+.tt-svg {
+	width: 128px;
+	height: 128px;
+}
+
+.tt-svg #tt-T-upper, .tt-svg #tt-T-lower {
+	stroke: #000;
+	fill: #000;
+}
+
+.tt-svg #tt-t-upper, .tt-svg #tt-t-middle, .tt-svg #tt-t-lower {
+	stroke: #568725;
+	fill: #568725;
+}

@@ -60,7 +60,7 @@
 			});
 		} else {
 			fetchApi("torn", { section: "user", id: userdata.player_id, selections: ["display"] })
-			.then((result) => {
+			.then(async (result) => {
 				let total = 0;
 
 				for (const item of result.display) {
@@ -69,17 +69,17 @@
 
 				document.find(".display-cabinet").insertAdjacentElement(
 					"beforebegin",
-					newTornInfoBox(`
+					await newTornInfoBox(`
 						This display cabinet is worth 
 							<span>${formatNumber(total, { currency: true })}</span>.`,
 						"tt-display-worth"
 					)
 				);
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				document.find(".display-cabinet").insertAdjacentElement(
 					"beforebegin",
-					newTornInfoBox(`
+					await newTornInfoBox(`
 						TORN API returned error: 
 							${error.toString()}
 						.`,

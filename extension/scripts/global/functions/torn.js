@@ -280,13 +280,14 @@ function hasDarkMode() {
 	return document.body.classList.contains("dark-mode");
 }
 
-function newTornInfoBox(html, additionalClass = "") {
+async function newTornInfoBox(html, additionalClass = "") {
+	const svgHTML = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
 	return document.newElement({
 		type: "div",
 		class: `info-msg-cont border-round m-top10 ${additionalClass}`,
 		html: `
 			<div class="info-msg border-round">
-				<i class="info-icon"></i>
+				${svgHTML}
 				<div class="delimiter">
 					<div class="msg right-round" tabindex="0" role="alert">
 						${html}
