@@ -953,7 +953,7 @@ async function setupStocksOverview() {
 				}),
 			],
 		});
-		const alertHeading = _getHeadingElement("Alerts");
+		const alertHeading = _getHeadingElement("Alerts", alertContent);
 
 		wrapper.appendChild(document.newElement({ type: "div", class: "information-section", children: [alertHeading, alertContent] }));
 	}
