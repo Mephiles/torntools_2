@@ -13,6 +13,10 @@
 	margin-top: 2px;
 }
 
+#sidebarroot .pill:hover {
+	background-color: var(--default-bg-panel-active-color) !important;
+}
+
 #sidebarroot .pill a {
 	overflow: hidden;
 	color: var(--default-font-color);
