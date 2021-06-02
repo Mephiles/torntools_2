@@ -630,7 +630,7 @@ async function setupStocksOverview() {
 				document.newElement({
 					type: "div",
 					class: `profit ${getProfitClass(profit)}`,
-					text: `${getProfitIndicator(profit)}$${formatNumber(Math.abs(profit))}`,
+					text: `${getProfitIndicator(profit)}${formatNumber(Math.abs(profit), { currency: true })}`,
 				})
 			);
 
@@ -641,11 +641,11 @@ async function setupStocksOverview() {
 				children: [
 					document.newElement({
 						type: "span",
-						text: `Current price: $${formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
+						text: `Current price: ${formatNumber(torndata.stocks[id].current_price, { decimals: 3, currency: true })}`,
 					}),
 					document.newElement({
 						type: "span",
-						text: `Bought at: $${formatNumber(boughtPrice, { decimals: 3 })}`,
+						text: `Bought at: ${formatNumber(boughtPrice, { decimals: 3, currency: true })}`,
 					}),
 				],
 			});
@@ -817,7 +817,7 @@ async function setupStocksOverview() {
 			children: [
 				document.newElement({
 					type: "span",
-					text: `Current price: $${formatNumber(torndata.stocks[id].current_price, { decimals: 3 })}`,
+					text: `Current price: ${formatNumber(torndata.stocks[id].current_price, { decimals: 3, currency: true })}`,
 				}),
 			],
 		});
