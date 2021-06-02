@@ -33,11 +33,6 @@ function createSlider(min, max, step, formatFn) {
 		],
 	});
 
-	function updateLabels() {
-		from.innerText = formatFn(parseInt(slider.slider.dataset.low));
-		to.innerText = formatFn(parseInt(slider.slider.dataset.high));
-	}
-
 	function setRange(range) {
 		if (sliderChangesObserver) {
 			sliderChangesObserver.disconnect();
@@ -45,7 +40,7 @@ function createSlider(min, max, step, formatFn) {
 
 		slider.updateValue(slider.handles[0], range.from);
 		slider.updateValue(slider.handles[1], range.to);
-		updateLabels();
+		_updateLabels();
 
 		if (sliderChangesObserver) {
 			sliderChangesObserver.observe(slider.slider, config);
@@ -61,7 +56,7 @@ function createSlider(min, max, step, formatFn) {
 
 	function onRangeChanged(callback) {
 		sliderChangesObserver = new MutationObserver(() => {
-			updateLabels();
+			_updateLabels();
 			callback();
 		});
 		sliderChangesObserver.observe(slider.slider, config);
@@ -72,6 +67,11 @@ function createSlider(min, max, step, formatFn) {
 			sliderChangesObserver.disconnect();
 			sliderChangesObserver = undefined;
 		}
+	}
+
+	function _updateLabels() {
+		from.innerText = formatFn(parseInt(slider.slider.dataset.low));
+		to.innerText = formatFn(parseInt(slider.slider.dataset.high));
 	}
 
 	return {
