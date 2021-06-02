@@ -670,7 +670,7 @@ async function setupStocksOverview() {
 						const benefitDescription = torndata.stocks[id].benefit.description;
 						let value;
 						if (benefitDescription.startsWith("$")) {
-							const cash = parseInt(benefitDescription.replace("$").replaceAll(",", "")) * dividendIncrement;
+							const cash = parseInt(benefitDescription.replace("$", "").replaceAll(",", "")) * dividendIncrement;
 
 							value = formatNumber(cash, { currency: true });
 						} else if (benefitDescription.match(/^[0-9]+x? /i)) {
