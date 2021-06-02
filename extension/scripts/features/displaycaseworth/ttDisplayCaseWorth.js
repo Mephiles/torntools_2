@@ -1,7 +1,7 @@
 "use strict";
 
 (async () => {
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Display Case Worth",
 		"display case",
 		() => settings.pages.displayCase.worth,
@@ -18,12 +18,12 @@
 
 	function xhrListener() {
 		addXHRListener(({ detail: { page, xhr, json } }) => {
-			if (page === "displaycase" && (xhr.requestBody === "step=display" || xhr.requestBody.startsWith("userID="))) addWorth();
+			if (feature.enabled() && page === "displaycase" && (xhr.requestBody === "step=display" || xhr.requestBody.startsWith("userID="))) addWorth();
 		});
 	}
 
 	async function addWorth() {
-		const displayCaseUserId = window.location.href.split("/").last();
+		const displayCaseUserId = window.location.hash.split("/").length > 1 ? window.location.hash.split("/").last() : "";
 		if (displayCaseUserId && !isNaN(displayCaseUserId) && parseInt(displayCaseUserId) !== userdata.player_id) {
 			await requireElement(".info-msg-cont .msg");
 			fetchApi("torn", { section: "user", id: displayCaseUserId, selections: ["display"] })
