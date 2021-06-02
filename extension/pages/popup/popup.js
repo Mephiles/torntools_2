@@ -953,39 +953,19 @@ async function setupStocksOverview() {
 				}),
 			],
 		});
-		const alertHeading = document.newElement({
-			type: "div",
-			class: "heading",
-			children: [
-				document.newElement({ type: "span", class: "title", text: "Alerts" }),
-				document.newElement({
-					type: "i",
-					class: "fas fa-chevron-down",
-				}),
-			],
-			events: {
-				click: (event) => {
-					alertContent.classList[alertContent.classList.contains("hidden") ? "remove" : "add"]("hidden");
-
-					rotateElement((event.target.classList.contains("heading") ? event.target : event.target.parentElement).find("i"), 180);
-				},
-			},
-		});
+		const alertHeading = _getHeadingElement("Alerts");
 
 		wrapper.appendChild(document.newElement({ type: "div", class: "information-section", children: [alertHeading, alertContent] }));
 	}
 
-	function getPriceHeadingElement(priceContent) {
+	function _getHeadingElement(title, content) {
 		return document.newElement({
 			type: "div",
 			class: "heading",
-			children: [
-				document.newElement({ type: "span", class: "title", text: "Price Information" }),
-				document.newElement({ type: "i", class: "fas fa-chevron-down" }),
-			],
+			children: [document.newElement({ type: "span", class: "title", text: title }), document.newElement({ type: "i", class: "fas fa-chevron-down" })],
 			events: {
 				click: (event) => {
-					priceContent.classList[priceContent.classList.contains("hidden") ? "remove" : "add"]("hidden");
+					content.classList[content.classList.contains("hidden") ? "remove" : "add"]("hidden");
 
 					rotateElement((event.target.classList.contains("heading") ? event.target : event.target.parentElement).find("i"), 180);
 				},
@@ -993,24 +973,11 @@ async function setupStocksOverview() {
 		});
 	}
 
-	function getBenefitHeadingElement(benefitContent) {
-		return document.newElement({
-			type: "div",
-			class: "heading",
-			children: [
-				document.newElement({ type: "span", class: "title", text: "Benefit Information" }),
-				document.newElement({
-					type: "i",
-					class: "fas fa-chevron-down",
-				}),
-			],
-			events: {
-				click: (event) => {
-					benefitContent.classList[benefitContent.classList.contains("hidden") ? "remove" : "add"]("hidden");
+	function getPriceHeadingElement(priceContent) {
+		return _getHeadingElement("Price Information", priceContent);
+	}
 
-					rotateElement((event.target.classList.contains("heading") ? event.target : event.target.parentElement).find("i"), 180);
-				},
-			},
-		});
+	function getBenefitHeadingElement(benefitContent) {
+		return _getHeadingElement("Benefit Information", benefitContent);
 	}
 }
