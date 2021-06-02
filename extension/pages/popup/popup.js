@@ -592,11 +592,10 @@ async function setupStocksOverview() {
 	const allStocks = stocksOverview.find("#all-stocks");
 
 	if (settings.apiUsage.user.stocks) {
-		for (const buyId in userdata.stocks) {
-			const stock = userdata.stocks[buyId];
+		for (const [buyId, stock] of Object.entries(userdata.stocks)) {
 			const id = stock.stock_id;
 
-			const transactions = Object.entries(stock.transactions).map(([, value]) => value);
+			const transactions = Object.values(stock.transactions);
 			const totalPrice = transactions.reduce((price, { shares, bought_price }) => price + shares * bought_price, 0);
 
 			const boughtPrice = totalPrice / stock.total_shares;
@@ -783,7 +782,7 @@ async function setupStocksOverview() {
 			}
 
 			// Alerts
-			if (id !== "0") addAlertsSection(wrapper, id, buyId);
+			addAlertsSection(wrapper, id, buyId);
 
 			userStocks.appendChild(wrapper);
 		}
