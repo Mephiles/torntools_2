@@ -151,7 +151,7 @@ const JAIL_CONSTANTS = {
 	timeMax: 100,
 	timeStep: 1,
 	// Level
-	levelMin: 0,
+	levelMin: 1,
 	levelMax: 100,
 	levelStep: 1,
 	// Score

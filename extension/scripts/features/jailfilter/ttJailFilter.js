@@ -389,14 +389,16 @@
 		});
 		usersListTitleContainer.appendChild(mainRefresh);
 
-		const bailRefreshButton = _createRefreshButton("black", "tt-jail-filters-bail-refresh");
-		const bustRefreshButton = _createRefreshButton("black", "tt-jail-filters-bust-refresh");
+		const refreshColor = hasDarkMode() ? "white" : "black";
+		const bailRefreshButton = _createRefreshButton(refreshColor, "tt-jail-filters-bail-refresh");
+		const bustRefreshButton = _createRefreshButton(refreshColor, "tt-jail-filters-bust-refresh");
 		const innerRefreshWrapper = document.newElement({
 			type: "div",
 			class: "tt-jail-filters-inner-refresh-wrapper hidden",
 			children: [bailRefreshButton, bustRefreshButton],
 		});
 		usersListContainer.parentNode.insertBefore(innerRefreshWrapper, usersListContainer.nextSibling);
+		darkModeObserver.addListener(_darkModeChanged);
 
 		function updateRefreshButtons(quickModes) {
 			const showBusts = quickModes.includes(JAIL_CONSTANTS.bust);
@@ -484,13 +486,14 @@
 			usersChangedCallback = undefined;
 			mainRefresh.remove();
 			innerRefreshWrapper.remove();
+			darkModeObserver.removeListener(_darkModeChanged);
 		}
 
 		function _createRefreshButton(mode, classes) {
 			const refreshButton = document.newElement({
 				type: "img",
 				attributes: {
-					src: chrome.runtime.getURL(`resources/images/svg-icons/refresh-icon${mode === "white" ? "-white" : ""}.svg`),
+					src: _getRefreshIconSrc(mode),
 					...(classes ? { class: classes } : {}),
 				},
 				events: {
@@ -499,6 +502,10 @@
 			});
 
 			return refreshButton;
+		}
+
+		function _getRefreshIconSrc(mode) {
+			return chrome.runtime.getURL(`resources/images/svg-icons/refresh-icon${mode === "white" ? "-white" : ""}.svg`);
 		}
 
 		function _buildUsersInfo() {
@@ -511,6 +518,11 @@
 			if (usersChangedCallback) {
 				usersChangedCallback();
 			}
+		}
+
+		function _darkModeChanged(isInDarkMode) {
+			bailRefreshButton.src = _getRefreshIconSrc(isInDarkMode ? "white" : "black");
+			bustRefreshButton.src = _getRefreshIconSrc(isInDarkMode ? "white" : "black");
 		}
 
 		return {
