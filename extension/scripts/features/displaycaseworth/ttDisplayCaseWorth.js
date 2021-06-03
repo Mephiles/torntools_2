@@ -26,7 +26,7 @@
 		const displayCaseUserId = window.location.hash.split("/").length > 1 ? window.location.hash.split("/").last() : "";
 		if (displayCaseUserId && !isNaN(displayCaseUserId) && parseInt(displayCaseUserId) !== userdata.player_id) {
 			await requireElement(".info-msg-cont .msg");
-			fetchApi("torn", { section: "user", id: displayCaseUserId, selections: ["display"] })
+			fetchData("torn", { section: "user", id: displayCaseUserId, selections: ["display"] })
 			.then((result) => {
 				let total = 0;
 
@@ -59,7 +59,7 @@
 				console.log("TT - Display Cabinet Worth API Error:", error);
 			});
 		} else {
-			fetchApi("torn", { section: "user", id: userdata.player_id, selections: ["display"] })
+			fetchData("torn", { section: "user", id: userdata.player_id, selections: ["display"] })
 			.then(async (result) => {
 				let total = 0;
 
