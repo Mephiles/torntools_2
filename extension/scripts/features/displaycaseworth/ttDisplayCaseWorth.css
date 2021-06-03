@@ -4,8 +4,8 @@
 
 .tt-display-worth svg {
 	width: 34px;
-    height: 34px;
-    margin-top: 1.5px;
+	height: 34px;
+	margin-top: 1.5px;
 	transform: scale(0.75);
 }
 
@@ -13,8 +13,7 @@
 .tt-display-worth svg .tt-T-lower,
 .tt-display-worth svg .tt-t-upper,
 .tt-display-worth svg .tt-t-middle,
-.tt-display-worth svg .tt-t-lower
-{
+.tt-display-worth svg .tt-t-lower {
 	stroke: #fff;
 	fill: #fff;
 }
