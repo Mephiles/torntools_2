@@ -12,7 +12,7 @@
 			storage: ["settings.pages.displayCase.worth"],
 		},
 		() => {
-			if (!hasAPIData() || !settings.apiUsage.user.displaycase) return "No API access.";
+			if (!hasAPIData()) return "No API access.";
 		}
 	);
 

@@ -284,12 +284,12 @@ async function newTornInfoBox(html, additionalClass = "") {
 	const svgHTML = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
 	return document.newElement({
 		type: "div",
-		class: `info-msg-cont border-round m-top10 ${additionalClass}`,
+		class: `tt-msg-box ${additionalClass}`,
 		html: `
-			<div class="info-msg border-round">
+			<div class="tt-msg-div">
 				${svgHTML}
-				<div class="delimiter">
-					<div class="msg right-round" tabindex="0" role="alert">
+				<div class="tt-msg">
+					<div class="tt-content">
 						${html}
 					</div>
 				</div>
