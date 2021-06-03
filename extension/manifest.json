@@ -31,7 +31,14 @@
 	},
 	"permissions": ["storage", "notifications", "tabs", "https://api.torn.com/"],
 	"optional_permissions": ["https://beta.tornstats.com/", "https://yata.yt/"],
-	"web_accessible_resources": ["resources/images/*.png", "pages/*", "scripts/background.js", "scripts/*.inject.js", "vendor/*"],
+	"web_accessible_resources": [
+		"resources/images/*.png",
+		"resources/images/svg-icons/*.svg",
+		"pages/*",
+		"scripts/background.js",
+		"scripts/*.inject.js",
+		"vendor/*"
+	],
 	"options_ui": {
 		"page": "pages/settings/settings.html",
 		"open_in_tab": true
@@ -49,6 +56,9 @@
 				"scripts/global/globalVariables.css",
 				"scripts/global/globalStyle.css",
 				"scripts/global/functions/dom.css",
+				"scripts/global/elements/checkbox/ttCheckbox.css",
+				"scripts/global/elements/checkbox-list/ttCheckboxList.css",
+				"scripts/global/elements/slider/ttSlider.css",
 				"scripts/features/alignleft/ttAlignLeft.css",
 				"scripts/features/fontsize/ttFontSize.css",
 				"scripts/features/hideleave/ttHideLeave.css",
@@ -76,6 +86,10 @@
 				"scripts/global/functions/utilities.js",
 				"scripts/global/functions/api.js",
 				"scripts/global/featureManager.js",
+				"scripts/global/elements/checkbox/ttCheckbox.js",
+				"scripts/global/elements/checkbox-list/ttCheckboxList.js",
+				"scripts/global/elements/select/ttSelect.js",
+				"scripts/global/elements/slider/ttSlider.js",
 				"scripts/content/global/ttGlobal.entry.js",
 				"scripts/features/alignleft/ttAlignLeft.entry.js",
 				"scripts/features/fontsize/ttFontSize.entry.js",
@@ -157,13 +171,19 @@
 				"scripts/features/drugdetails/ttDrugDetails.css",
 				"scripts/features/itemvalues/ttItemValues.css",
 				"scripts/features/totalitemcost/ttTotalItemCost.css",
-				"scripts/features/bazaarworth/ttBazaarWorth.css"
+				"scripts/features/bazaarworth/ttBazaarWorth.css",
+				"scripts/features/itemredirect/ttBazaarRedirect.css",
+				"scripts/features/bazaarworth/ttBazaarWorth.css",
+				"scripts/features/bazaarfillmax/ttBazaarFillMax.css"
 			],
 			"js": [
 				"scripts/features/drugdetails/ttDrugDetails.js",
 				"scripts/features/itemvalues/ttItemValues.js",
 				"scripts/features/totalitemcost/ttTotalItemCost.js",
-				"scripts/features/bazaarworth/ttBazaarWorth.js"
+				"scripts/features/bazaarworth/ttBazaarWorth.js",
+				"scripts/features/itemredirect/ttBazaarRedirect.js",
+				"scripts/features/bazaarworth/ttBazaarWorth.js",
+				"scripts/features/bazaarfillmax/ttBazaarFillMax.js"
 			],
 			"run_at": "document_end"
 		},
@@ -202,14 +222,14 @@
 		},
 		{
 			"matches": ["https://www.torn.com/hospitalview.php*"],
-			"css": ["scripts/global/functions/slider.css", "scripts/global/functions/filters.css", "scripts/features/hospitalfilter/ttHospitalFilter.css"],
-			"js": ["scripts/global/functions/slider.js", "scripts/content/hospital/ttHospital.js", "scripts/features/hospitalfilter/ttHospitalFilter.js"],
+			"css": ["scripts/global/functions/filters.css", "scripts/features/hospitalfilter/ttHospitalFilter.css"],
+			"js": ["scripts/content/hospital/ttHospital.js", "scripts/features/hospitalfilter/ttHospitalFilter.js"],
 			"run_at": "document_end"
 		},
 		{
 			"matches": ["https://www.torn.com/imarket.php*"],
 			"css": ["scripts/features/drugdetails/ttDrugDetails.css"],
-			"js": ["scripts/features/drugdetails/ttDrugDetails.js"],
+			"js": ["scripts/features/drugdetails/ttDrugDetails.js", "scripts/features/itemredirect/ttItemMarketRedirect.js"],
 			"run_at": "document_end"
 		},
 		{
@@ -237,8 +257,8 @@
 		},
 		{
 			"matches": ["https://www.torn.com/index.php?page=people*"],
-			"css": ["scripts/global/functions/slider.css", "scripts/global/functions/filters.css", "scripts/features/abroadpeoplefilter/ttPeopleFilter.css"],
-			"js": ["scripts/global/functions/slider.js", "scripts/features/abroadpeoplefilter/ttPeopleFilter.js"],
+			"css": ["scripts/global/functions/filters.css", "scripts/features/abroadpeoplefilter/ttPeopleFilter.css"],
+			"js": ["scripts/features/abroadpeoplefilter/ttPeopleFilter.js"],
 			"run_at": "document_end"
 		},
 		{
@@ -279,8 +299,8 @@
 		},
 		{
 			"matches": ["https://www.torn.com/jailview.php*"],
-			"css": ["scripts/global/functions/slider.css", "scripts/global/functions/filters.css", "scripts/features/jailfilter/ttJailFilter.css"],
-			"js": ["scripts/global/functions/slider.js", "scripts/content/jail/ttJail.js", "scripts/features/jailfilter/ttJailFilter.js"],
+			"css": ["scripts/global/functions/filters.css", "scripts/features/jailfilter/ttJailFilter.css"],
+			"js": ["scripts/content/jail/ttJail.js", "scripts/features/jailfilter/ttJailFilter.js"],
 			"run_at": "document_end"
 		},
 		{
@@ -304,6 +324,12 @@
 			"matches": ["https://www.torn.com/page.php?sid=stocks*"],
 			"css": ["scripts/features/stockacronyms/ttStockAcronyms.css"],
 			"js": ["scripts/features/stockacronyms/ttStockAcronyms.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/shops.php*", "https://www.torn.com/bigalgunshop.php*"],
+			"css": ["scripts/features/shopsfillmax/ttShopsFillMax.css"],
+			"js": ["scripts/features/shopsfillmax/ttShopsFillMax.js"],
 			"run_at": "document_end"
 		},
 		{

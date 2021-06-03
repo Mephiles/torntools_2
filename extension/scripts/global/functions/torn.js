@@ -280,6 +280,51 @@ function hasDarkMode() {
 	return document.body.classList.contains("dark-mode");
 }
 
+const darkModeObserver = (() => {
+	const listeners = new Set();
+	let prevDarkModeState;
+
+	const observer = new MutationObserver(() => {
+		const darkModeState = hasDarkMode();
+
+		if (darkModeState !== prevDarkModeState) {
+			prevDarkModeState = darkModeState;
+			_invokeListeners(darkModeState);
+		}
+	});
+
+	function addListener(callback) {
+		if (!prevDarkModeState) {
+			prevDarkModeState = hasDarkMode();
+		}
+
+		listeners.add(callback);
+
+		if (listeners.size === 1) {
+			observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+		}
+	}
+
+	function removeListener(callback) {
+		listeners.delete(callback);
+
+		if (listeners.size === 0) {
+			observer.disconnect();
+		}
+	}
+
+	function _invokeListeners(isInDarkMode) {
+		for (const listener of listeners.values()) {
+			listener(isInDarkMode);
+		}
+	}
+
+	return {
+		addListener,
+		removeListener,
+	};
+})();
+
 const REACT_UPDATE_VERSIONS = {
 	DEFAULT: "default",
 	NATIVE_SETTER: "nativeSetter",
@@ -317,7 +362,4 @@ function updateReactInput(input, value, options = {}) {
 			input.dispatchEvent(new Event("input", { bubbles: true }));
 			break;
 	}
-
-	// const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-	// nativeSetter.call(input, value);
 }
