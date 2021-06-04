@@ -22,7 +22,9 @@
 			showOutside("under", "customLinksUnder");
 			showInside();
 		} else {
-			// FIXME - Mobile custom links.
+			const { content } = createContainer("Custom Links", {
+				nextElement: document.find("#sidebarroot [class*='user-information-mobile__']"),
+			});
 		}
 
 		function showOutside(filter, id) {
