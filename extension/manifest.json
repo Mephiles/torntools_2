@@ -59,6 +59,7 @@
 				"scripts/global/elements/checkbox/ttCheckbox.css",
 				"scripts/global/elements/checkbox-list/ttCheckboxList.css",
 				"scripts/global/elements/slider/ttSlider.css",
+				"scripts/global/elements/table/ttTable.css",
 				"scripts/features/alignleft/ttAlignLeft.css",
 				"scripts/features/fontsize/ttFontSize.css",
 				"scripts/features/hideleave/ttHideLeave.css",
@@ -90,6 +91,10 @@
 				"scripts/global/elements/checkbox-list/ttCheckboxList.js",
 				"scripts/global/elements/select/ttSelect.js",
 				"scripts/global/elements/slider/ttSlider.js",
+				"scripts/global/elements/table/ttTable.js",
+				"scripts/global/elements/table/ttTableRow.js",
+				"scripts/global/elements/table/ttTableCell.js",
+				"scripts/global/elements/table/ttHeaderCell.js",
 				"scripts/content/global/ttGlobal.entry.js",
 				"scripts/features/alignleft/ttAlignLeft.entry.js",
 				"scripts/features/fontsize/ttFontSize.entry.js",
@@ -363,6 +368,12 @@
 			"matches": ["https://www.torn.com/forums.php*"],
 			"css": ["scripts/features/forumwarning/ttForumWarning.css"],
 			"js": ["scripts/features/forumwarning/ttForumWarning.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/bank.php*"],
+			"css": ["scripts/features/bankinvestment/ttBankInvestment.css"],
+			"js": ["scripts/features/bankinvestment/ttBankInvestment.js"],
 			"run_at": "document_end"
 		}
 	]
