@@ -32,7 +32,7 @@
 .tt-mobile .tt-custom-links-container {
 	display: flex;
 	border-bottom: 1px solid #000;
-	background: var(--tt-color-light-green);
+	background-color: #85b005;
 	line-height: 16px;
 	list-style: none;
 	border-bottom: 1px solid #000;
