@@ -28,3 +28,36 @@
 	line-height: 22px;
 	margin-left: 8px;
 }
+
+.tt-mobile .tt-custom-links-container {
+	display: flex;
+	border-bottom: 1px solid #000;
+	background: var(--tt-color-light-green);
+	line-height: 16px;
+	list-style: none;
+	border-bottom: 1px solid #000;
+	overflow: scroll;
+}
+
+.tt-mobile .tt-custom-links-container::-webkit-scrollbar {
+	display: none;
+}
+
+.tt-mobile .tt-custom-links-container .tt-slide {
+	height: 100%;
+	padding: 0 2px;
+	text-align: center;
+	flex-shrink: 0;
+}
+
+.tt-mobile .tt-custom-links-container .tt-mobile-link {
+	color: #333;
+    font-weight: 700;
+	font-size: 12px;
+	padding: 0 5px;
+    text-decoration: none;
+}
+
+.tt-mobile .dummy-div {
+    margin-top: 17px;
+}
