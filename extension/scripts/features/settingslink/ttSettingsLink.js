@@ -17,17 +17,16 @@
 
 	async function addLink() {
 		await requireSidebar();
+
 		const settingsA = document.newElement({
 			type: "a",
 			text: "TornTools Settings",
 		});
-		const ttSvg = await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg")).then(x => x.text());
+		const ttSvg = await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg")).then((x) => x.text());
 		const ttSettingsDiv = document.newElement({
 			type: "div",
 			class: "tt-settings pill",
-			children: [
-				settingsA,
-			],
+			children: [settingsA],
 		});
 		ttSettingsDiv.insertAdjacentHTML("afterbegin", ttSvg);
 		ttSettingsDiv.addEventListener("click", () => {
