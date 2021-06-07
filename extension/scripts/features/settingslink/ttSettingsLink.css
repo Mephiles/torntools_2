@@ -38,6 +38,7 @@
 	width: 15px;
 	height: 16px;
 	padding: 5px;
+	fill: var(--content-title-links);
 }
 
 .tt-settings-iframe {
