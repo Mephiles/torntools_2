@@ -328,6 +328,14 @@
 			"run_at": "document_end"
 		},
 		{
+			"matches": ["https://www.torn.com/loader.php?sid=racing*"],
+			"css": [],
+			"js": [
+				"scripts/features/carwinpercentage/ttCarWinPercentage.js"
+			],
+			"run_at": "document_end"
+		},
+		{
 			"matches": ["https://www.torn.com/page.php?sid=stocks*"],
 			"css": ["scripts/features/stockacronyms/ttStockAcronyms.css"],
 			"js": ["scripts/features/stockacronyms/ttStockAcronyms.js"],
