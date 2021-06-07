@@ -98,7 +98,7 @@
 						<li name="bazaar">Bazaar</li>
 						<!-- <li>Gym</li> -->
 						<!-- <li>Properties</li> -->
-						<!-- <li>Education</li> -->
+						<li name="education">Education</li>
 						<!-- <li>Crimes</li> -->
 						<!-- <li>Missions</li> -->
 						<!-- <li>Newspaper</li> -->
@@ -399,11 +399,11 @@
 						</div>
 
 						<div class="header">Refills</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-highlightEnergy" type="checkbox" />
 							<label for="sidebar-highlightEnergy">Highlight energy when refill hasn't been used yet.</label>
 						</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-highlightNerve" type="checkbox" />
 							<label for="sidebar-highlightNerve">Highlight nerve when refill hasn't been used yet.</label>
 						</div>
@@ -628,6 +628,13 @@
 						</div>
 						<div class="tabbed note">Separate by commas (5,60,120)</div>
 					</section>
+					<section name="education">
+						<div class="header">Education</div>
+						<div class="option">
+							<input id="education-greyOut" type="checkbox" />
+							<label for="education-greyOut">Grey out completed education categories.</label>
+						</div>
+					</section>
 					<section name="external">
 						<div class="header">External Services</div>
 						<div class="option">
@@ -761,7 +768,7 @@
 							<input id="bazaar-fillMax" type="checkbox" />
 							<label for="bazaar-fillMax">Show fill max button.</label>
 						</div>
-						<div class="option">
+						<div class="option tabbed">
 							<input id="bazaar-maxBuyIgnoreCash" type="checkbox" />
 							<label for="bazaar-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
 						</div>
@@ -772,7 +779,7 @@
 							<input id="shops-fillMax" type="checkbox" />
 							<label for="shops-fillMax">Show fill max button.</label>
 						</div>
-						<div class="option">
+						<div class="option tabbed">
 							<input id="shops-maxBuyIgnoreCash" type="checkbox" />
 							<label for="shops-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
 						</div>
