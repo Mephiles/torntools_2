@@ -4,7 +4,7 @@
 }
 
 .tt-settings a {
-	display: inline-block;
+	display: inline-block !important;
 }
 
 .tt-settings svg {
