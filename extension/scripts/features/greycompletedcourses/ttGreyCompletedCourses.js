@@ -14,7 +14,6 @@
 		null
 	);
 
-	let courseObserver;
 	function initialiseObserver() {
 		window.addEventListener("hashchange", greyOut, false);
 	}
