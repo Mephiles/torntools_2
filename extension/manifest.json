@@ -338,9 +338,7 @@
 		{
 			"matches": ["https://www.torn.com/loader.php?sid=racing*"],
 			"css": [],
-			"js": [
-				"scripts/features/carwinpercentage/ttCarWinPercentage.js"
-			],
+			"js": ["scripts/features/car-win-percentage/ttCarWinPercentage.js"],
 			"run_at": "document_end"
 		},
 		{
