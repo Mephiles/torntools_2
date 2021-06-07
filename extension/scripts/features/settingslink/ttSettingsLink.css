@@ -1,12 +1,13 @@
-#sidebarroot .pill {
+.tt-settings {
 	margin-bottom: 2px;
+	height: 23px;
 }
 
-#sidebarroot .pill a {
-    display: inline-block;
+.tt-settings a {
+	display: inline-block;
 }
 
-.tt-svg {
+.tt-settings svg {
 	width: 21px;
 	height: 21px;
 	margin-left: 5px;

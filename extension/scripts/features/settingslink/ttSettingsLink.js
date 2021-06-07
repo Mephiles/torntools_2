@@ -78,7 +78,7 @@
 
 		document.body.classList.remove("tt-align-left");
 
-		const sidebarLink = document.find(".tt-settings.pill");
+		const sidebarLink = document.find(".tt-settings");
 		if (sidebarLink) sidebarLink.remove();
 	}
 })();
