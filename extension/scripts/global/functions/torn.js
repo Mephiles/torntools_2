@@ -396,6 +396,47 @@ function getStockIncrement(required, stocks) {
 	return Math.log2(Math.floor(stocks / required) + 1);
 }
 
+function getStockReward(reward, increment) {
+	let value;
+	if (reward.startsWith("$")) {
+		const cash = parseInt(reward.replace("$", "").replaceAll(",", "")) * increment;
+
+		value = formatNumber(cash, { currency: true });
+	} else if (reward.match(/^[0-9]+x? /i)) {
+		const splitBenefit = reward.split(" ");
+		const hasX = splitBenefit[0].endsWith("x");
+		const amount = parseInt(splitBenefit.shift().replace("x", "")) * increment;
+		const item = splitBenefit.join(" ");
+
+		value = `${formatNumber(amount)}${hasX ? "x" : ""} ${item}`;
+	} else {
+		value = "Unknown, please report this!";
+	}
+
+	return value;
+}
+
+function getRewardValue(reward) {
+	let value;
+	if (reward.startsWith("$")) {
+		value = parseInt(reward.replace("$", "").replaceAll(",", ""));
+	} else if (reward.match(/^[0-9]+x? /i)) {
+		const rewardItem = reward.split(" ").slice(1).join(" ");
+
+		const item = findItemsInObject(torndata.items, { name: rewardItem }, { single: true });
+
+		if (item) value = item ? item.market_value : -1;
+		else {
+			console.log("DKK getRewardValue - Unknown item", rewardItem, item);
+			value = -1;
+		} // FIXME - Get value for some things (HRG, cache block).
+	} else {
+		value = -1;
+	}
+
+	return value;
+}
+
 function getStockBoughtPrice(stock) {
 	const boughtTotal = Object.values(stock.transactions).reduce((prev, trans) => prev + trans.bought_price * trans.shares, 0);
 

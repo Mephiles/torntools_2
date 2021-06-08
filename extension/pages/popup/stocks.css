@@ -120,11 +120,13 @@ body.dark #stocks .stock-list .information-section .heading {
 	color: #ec3f3f;
 }
 
-#stocks .information-section .content.benefit .description.completed {
+#stocks .information-section .content.benefit .description.completed,
+#stocks .information-section .content.benefit .increment.completed {
 	color: #36b320;
 }
 
-#stocks .information-section .content.benefit .description.awaiting {
+#stocks .information-section .content.benefit .description.awaiting,
+#stocks .information-section .content.benefit .increment.awaiting {
 	color: #ffa937;
 }
 
@@ -134,4 +136,8 @@ body.dark #stocks .stock-list .information-section .heading {
 
 .benefit-frequency {
 	margin-left: 0.25em;
+}
+
+.content.benefit table {
+	width: 100%;
 }
