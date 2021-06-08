@@ -280,6 +280,7 @@ const DEFAULT_STORAGE = {
 				highlightNerve: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				ocTimer: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				collapseAreas: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				settingsLink: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				hideGymHighlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				upkeepPropHighlight: new DefaultSetting({ type: "number", defaultValue: 5000000 }),
 			},
@@ -299,6 +300,9 @@ const DEFAULT_STORAGE = {
 				life: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				chain: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				travel: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			education: {
+				greyOut: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			jail: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -370,6 +374,9 @@ const DEFAULT_STORAGE = {
 			},
 			casino: {
 				netTotal: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			racing: {
+				winPercentage: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
