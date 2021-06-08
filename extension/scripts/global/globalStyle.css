@@ -63,6 +63,13 @@
 	position: relative;
 }
 
+.flex-break {
+	flex-basis: 100% !important;
+	height: 0;
+	margin: 0;
+	border: 0;
+}
+
 /* Replace Torn classes */
 
 /* CHECK - Replaces m-top10 */
@@ -404,4 +411,27 @@ body.scrolled #tt-page-status.top-right {
 .tt-svg .tt-t-lower {
 	stroke: #568725;
 	fill: #568725;
+}
+
+#sidebarroot .pill {
+	position: relative;
+	cursor: pointer;
+	overflow: hidden;
+	vertical-align: top;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: var(--default-bg-panel-color);
+	margin-top: 2px;
+}
+
+#sidebarroot .pill a {
+	overflow: hidden;
+	color: var(--default-font-color);
+	text-decoration: none;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	line-height: 22px;
+	margin-left: 8px;
 }

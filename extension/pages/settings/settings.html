@@ -124,7 +124,7 @@
 					<li name="bazaar">Bazaar</li>
 					<!-- <li>Gym</li> -->
 					<!-- <li>Properties</li> -->
-					<!-- <li>Education</li> -->
+					<li name="education">Education</li>
 					<!-- <li>Crimes</li> -->
 					<!-- <li>Missions</li> -->
 					<!-- <li>Newspaper</li> -->
@@ -142,7 +142,7 @@
 					<li name="travel">Travel</li>
 					<li name="trade">Trade</li>
 					<li name="display-case">Display Case</li>
-					<!-- <li>Raceway</li> -->
+					<li name="racing">Raceway</li>
 					<li name="shops">Shops</li>
 					<!-- <li>Item Market</li> -->
 					<li name="api">API</li>
@@ -474,7 +474,6 @@
 						</li>
 					</ul>
 					<div class="note">Placeholders:</div>
-
 					<div class="header">Title Highlights</div>
 					<ul id="chatTitleHighlight"
 							class="list-table">
@@ -505,6 +504,11 @@
 						<label for="sidebar-collapseAreas">Collapse areas section.</label>
 					</div>
 					<div class="option no-mobile">
+						<input id="sidebar-settingsLink"
+									 type="checkbox" />
+						<label for="sidebar-settingsLink">Show a link to TornTools settings page.</label>
+					</div>
+					<div class="option no-mobile">
 						<input id="sidebar-ocTimer"
 									 type="checkbox" />
 						<label for="sidebar-ocTimer">Show OC ready time in sidebar.</label>
@@ -524,12 +528,12 @@
 					</div>
 
 					<div class="header">Refills</div>
-					<div class="option">
+					<div class="option no-mobile">
 						<input id="sidebar-highlightEnergy"
 									 type="checkbox" />
 						<label for="sidebar-highlightEnergy">Highlight energy when refill hasn't been used yet.</label>
 					</div>
-					<div class="option">
+					<div class="option no-mobile">
 						<input id="sidebar-highlightNerve"
 									 type="checkbox" />
 						<label for="sidebar-highlightNerve">Highlight nerve when refill hasn't been used yet.</label>
@@ -817,6 +821,14 @@
 					</div>
 					<div class="tabbed note">Separate by commas (5,60,120)</div>
 				</section>
+				<section name="education">
+					<div class="header">Education</div>
+					<div class="option">
+						<input id="education-greyOut"
+									 type="checkbox" />
+						<label for="education-greyOut">Grey out completed education categories.</label>
+					</div>
+				</section>
 				<section name="external">
 					<div class="header">External Services</div>
 					<div class="option">
@@ -942,7 +954,6 @@
 						<input id="companies-specials"
 									 type="checkbox" />
 						<label for="companies-specials">Help with several different company specials.</label>
-
 						<label for="companies-specials"
 									 class="note">
 							<ul class="inline">
@@ -974,7 +985,7 @@
 									 type="checkbox" />
 						<label for="bazaar-fillMax">Show fill max button.</label>
 					</div>
-					<div class="option">
+					<div class="option tabbed">
 						<input id="bazaar-maxBuyIgnoreCash"
 									 type="checkbox" />
 						<label for="bazaar-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
@@ -987,7 +998,7 @@
 									 type="checkbox" />
 						<label for="shops-fillMax">Show fill max button.</label>
 					</div>
-					<div class="option">
+					<div class="option tabbed">
 						<input id="shops-maxBuyIgnoreCash"
 									 type="checkbox" />
 						<label for="shops-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
@@ -996,6 +1007,14 @@
 						<input id="bazaar-redirects"
 									 type="checkbox" />
 						<label for="bazaar-redirects">Highlight the searched item from the item market.</label>
+					</div>
+				</section>
+				<section name="racing">
+					<div class="header">Racing</div>
+					<div class="option">
+						<input id="racing-winPercentage"
+									 type="checkbox" />
+						<label for="racing-winPercentage">Show win percentage of each car.</label>
 					</div>
 				</section>
 				<section name="display-case">
@@ -1016,14 +1035,6 @@
 							Uses the new score formula from
 							<a href="https://www.torn.com/forums.php#/p=threads&amp;f=61&amp;t=16192039"> this forum post.</a>
 						</div>
-					</div>
-				</section>
-				<section name="bank">
-					<div class="header">Bank Investment</div>
-					<div class="option">
-						<input id="bank-investment"
-									 type="checkbox" />
-						<label for="bank-investment">Enable bank investment info.</label>
 					</div>
 				</section>
 				<section name="trade">
@@ -1090,6 +1101,11 @@
 				</section>
 				<section name="casino">
 					<div class="header">Casino</div>
+					<div class="option">
+						<input id="casino-netTotal"
+									 type="checkbox" />
+						<label for="casino-netTotal">Show net total of casino game.</label>
+					</div>
 					<div class="header extra-mb">Hide Casino games</div>
 					<div id="hide-casino-games"></div>
 				</section>
@@ -1164,8 +1180,156 @@
 									 type="checkbox" />
 						<label for="api-clickableSelections">Make API selections clickable.</label>
 					</div>
-				</section>
 			</div>
+		</section>
+		<section name="bank">
+			<div class="header">Bank Investment</div>
+			<div class="option">
+				<input id="bank-investment"
+							 type="checkbox" />
+				<label for="bank-investment">Enable bank investment info.</label>
+			</div>
+		</section>
+		<section name="trade">
+			<div class="header">Trade</div>
+			<div class="option">
+				<input id="trade-itemValues"
+							 type="checkbox" />
+				<label for="trade-itemValues">Show value of items in trade.</label>
+			</div>
+			<div class="option">
+				<input id="trade-openChat"
+							 type="checkbox" />
+				<label for="trade-openChat">Show button to open chat.</label>
+			</div>
+		</section>
+		<section name="profile">
+			<div class="header">Profile</div>
+			<div class="option">
+				<input id="profile-idBesideProfileName"
+							 type="checkbox" />
+				<label for="profile-idBesideProfileName">Reformat profile page headings as "USERNAME [ID]".</label>
+			</div>
+			<div class="option">
+				<input id="profile-statusIndicator"
+							 type="checkbox" />
+				<label for="profile-statusIndicator">Show user's status indicator next to their name.</label>
+			</div>
+			<div class="option">
+				<input id="profile-notes"
+							 type="checkbox" />
+				<label for="profile-notes">Show profile notes.</label>
+			</div>
+			<div class="option">
+				<input id="profile-ageToWords"
+							 type="checkbox" />
+				<label for="profile-ageToWords">Show age of profile in words.</label>
+			</div>
+			<div class="header">Friendly Fire</div>
+			<div class="option">
+				<input id="profile-showAllyWarning"
+							 type="checkbox" />
+				<label for="profile-showAllyWarning">Show ally warning on profiles.</label>
+			</div>
+			<ul id="allyFactions"
+					class="list-table">
+				<li class="input">
+					<!--suppress HtmlFormInputWithoutLabel -->
+					<input class="faction"
+								 placeholder="Ally faction name or ID..." />
+					<button class="add-icon-wrap"
+									id="addAllyFaction">
+						<i class="add-icon fas fa-plus"></i>
+					</button>
+				</li>
+			</ul>
+		</section>
+		<section name="stock-exchange">
+			<div class="header">Stock Exchange</div>
+			<div class="option">
+				<input id="stocks-acronyms"
+							 type="checkbox" />
+				<label for="stocks-acronyms">Display acronyms beside stock names.</label>
+			</div>
+		</section>
+		<section name="casino">
+			<div class="header">Casino</div>
+			<div class="header extra-mb">Hide Casino games</div>
+			<div id="hide-casino-games"></div>
+		</section>
+		<section name="forums">
+			<div class="header">Forums</div>
+			<div class="option">
+				<input id="forums-warning"
+							 type="checkbox" />
+				<label for="forums-warning">Show warning in Bugs & Issues.</label>
+			</div>
+		</section>
+		<section name="travel">
+			<div class="header">Travel</div>
+			<div class="option">
+				<input id="travel-computer"
+							 type="checkbox" />
+				<label for="travel-computer">Show a computer link while flying or abroad.</label>
+			</div>
+			<div class="option">
+				<input id="travel-cleanFlight"
+							 type="checkbox" />
+				<label for="travel-cleanFlight">Hide plane & funfact box on Flying page.</label>
+			</div>
+			<div class="option">
+				<input id="travel-travelProfits"
+							 type="checkbox" />
+				<label for="travel-travelProfits">Show profits of items in market.</label>
+			</div>
+			<div class="option">
+				<input id="travel-fillMax"
+							 type="checkbox" />
+				<label for="travel-fillMax">Show fill max button.</label>
+			</div>
+			<div class="option">
+				<input id="travel-peopleFilter"
+							 type="checkbox" />
+				<label for="travel-peopleFilter">Show filter for people.</label>
+			</div>
+			<div class="option">
+				<input id="travel-sortable"
+							 type="checkbox" />
+				<label for="travel-sortable">Make market table sortable.</label>
+			</div>
+			<div class="option">
+				<input id="travel-table"
+							 type="checkbox" />
+				<label for="travel-table">Show a table of all countries with their item and their stocks.</label>
+				<br />
+				<label class="note"
+							 for="travel-table">Requires YATA to be enabled as external service.</label>
+			</div>
+		</section>
+		<section name="api">
+			<div class="header">API</div>
+			<div class="option">
+				<input id="api-autoDemo"
+							 type="checkbox" />
+				<label for="api-autoDemo">Automatically show demo content.</label>
+			</div>
+			<div class="option">
+				<input id="api-autoFillKey"
+							 type="checkbox" />
+				<label for="api-autoFillKey">Automatically fill your API key.</label>
+			</div>
+			<div class="option">
+				<input id="api-autoPretty"
+							 type="checkbox" />
+				<label for="api-autoPretty">Automatically select pretty outputs.</label>
+			</div>
+			<div class="option">
+				<input id="api-clickableSelections"
+							 type="checkbox" />
+				<label for="api-clickableSelections">Make API selections clickable.</label>
+			</div>
+		</section>
+		</div>
 		</section>
 		<section>
 			<footer>

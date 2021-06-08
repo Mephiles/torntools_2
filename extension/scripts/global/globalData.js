@@ -280,6 +280,7 @@ const DEFAULT_STORAGE = {
 				highlightNerve: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				ocTimer: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				collapseAreas: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				settingsLink: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				hideGymHighlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				upkeepPropHighlight: new DefaultSetting({ type: "number", defaultValue: 5000000 }),
 			},
@@ -299,6 +300,9 @@ const DEFAULT_STORAGE = {
 				life: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				chain: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				travel: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			education: {
+				greyOut: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			jail: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -370,6 +374,12 @@ const DEFAULT_STORAGE = {
 			shops: {
 				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				maxBuyIgnoreCash: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
+			casino: {
+				netTotal: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			racing: {
+				winPercentage: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
@@ -684,8 +694,24 @@ const API_USAGE = {
 		stocks: {
 			"*": {
 				stock_id: true,
-				shares: true,
-				bought_price: true,
+				total_shares: true,
+				benefit: {
+					ready: true,
+					progress: true,
+					frequency: true,
+				},
+				dividend: {
+					ready: true,
+					increment: true,
+					progress: true,
+					frequency: true,
+				},
+				transactions: {
+					"*": {
+						shares: true,
+						bought_price: true,
+					},
+				},
 			},
 		},
 		enhancer_perks: true,
@@ -733,10 +759,8 @@ const API_USAGE = {
 				acronym: true,
 				current_price: true,
 				total_shares: true,
-				available_shares: true,
-				// forecast: true,
-				// demand: true,
 				benefit: {
+					frequency: true,
 					requirement: true,
 					description: true,
 				},
@@ -744,6 +768,11 @@ const API_USAGE = {
 		},
 		education: {
 			"*": {},
+		},
+		properties: {
+			"*": {
+				cost: true,
+			},
 		},
 	},
 };
@@ -772,7 +801,7 @@ const API_SELECTIONS = {
 	faction: ["crimes"],
 	company: [],
 	item_market: [],
-	torn: ["education", "honors", "items", "medals", "stocks", "pawnshop"],
+	torn: ["education", "honors", "items", "medals", "stocks", "pawnshop", "properties"],
 };
 
 const CHAT_TITLE_COLORS = {
