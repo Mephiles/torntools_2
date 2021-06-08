@@ -26,7 +26,7 @@
 	);
 
 	function initialiseListener() {
-		if (window.location.href.includes("bookies")) {
+		if (isBookie()) {
 			window.addEventListener("hashchange", () => {
 				if (feature.enabled() && window.location.hash.includes("stats/")) {
 					addTotal();
@@ -36,9 +36,11 @@
 	}
 
 	async function addTotal() {
-		if (page === "bookies" && !window.location.hash.includes("stats/")) return;
+		if (isBookie() && !window.location.hash.includes("stats/")) return;
 
 		for (const statsType of ["overall", "your"]) {
+			if (statsType === "overall" && isPoker()) continue;
+
 			await requireElement(`#${statsType}-stats .stat-value`);
 			const moneyElementsList = document.evaluate(
 				`//div[contains(@id,"${statsType}-stats")]
@@ -59,17 +61,25 @@
 			const totalLostElement = moneyElementsList.snapshotItem(1);
 			const totalLost = parseInt(totalLostElement.innerText.replace(/[$, ]/g, ""));
 
-			if (document.find(`.${statsType}-stats-wrap .tt-net-total`) || (window.location.toString().includes("Poker") && statsType === "overall")) return;
+			if (document.find(`.${statsType}-stats-wrap .tt-net-total`)) return;
 
 			await requireElement(`.stats-wrap .${statsType}-stats-wrap .stat`);
 			totalLostElement.closest("li:not(.stat-value)").insertAdjacentHTML(
 				"afterend",
-				`<div class="tt-net-total ${window.location.href.includes("bookie") ? "bookie" : ""}">
+				`<div class="tt-net-total ${isBookie() ? "bookie" : ""}">
 						<li class="name">Net total</li>
 						<li class="value">${formatNumber(totalWon - totalLost, { currency: true })}</li>
 					</div>`
 			);
 		}
+
+		function isPoker() {
+			return page === "loader" && getSearchParameters().get("sid") === "viewPokerStats";
+		}
+	}
+
+	function isBookie() {
+		return page === "bookies" || (page === "page" && getSearchParameters().get("sid") === "bookie");
 	}
 
 	function removeTotal() {

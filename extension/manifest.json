@@ -326,7 +326,13 @@
 			"run_at": "document_end"
 		},
 		{
-			"matches": ["https://www.torn.com/bookies.php*"],
+			"matches": ["https://www.torn.com/page.php?sid=bookie*"],
+			"css": ["scripts/features/casino-net-total/ttCasinoNetTotal.css"],
+			"js": ["scripts/features/casino-net-total/ttCasinoNetTotal.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/page.php?sid=bookie*"],
 			"css": ["scripts/features/casino-net-total/ttCasinoNetTotal.css"],
 			"js": ["scripts/features/casino-net-total/ttCasinoNetTotal.js"],
 			"run_at": "document_end"
