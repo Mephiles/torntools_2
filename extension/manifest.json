@@ -311,6 +311,18 @@
 			"run_at": "document_end"
 		},
 		{
+			"matches": ["https://www.torn.com/loader.php?sid=view*", "https://www.torn.com/loader.php?sid=rouletteStatistics"],
+			"css": ["scripts/features/casinonettotal/ttCasinoNetTotal.css"],
+			"js": ["scripts/features/casinonettotal/ttCasinoNetTotal.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/bookies.php*"],
+			"css": ["scripts/features/casinonettotal/ttCasinoNetTotal.css"],
+			"js": ["scripts/features/casinonettotal/ttCasinoNetTotal.js"],
+			"run_at": "document_end"
+		},
+		{
 			"matches": ["https://www.torn.com/profiles.php*"],
 			"css": [
 				"scripts/features/profilenotes/ttProfileNotes.css",
