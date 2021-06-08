@@ -134,6 +134,32 @@ const ttStorage = new (class {
 	}
 })();
 
+const JAIL_CONSTANTS = {
+	// Activity
+	online: "online",
+	idle: "idle",
+	offline: "offline",
+	// Factions
+	allFactions: "__all__",
+	noFaction: "__none__",
+	unknownFactions: "__unknown__",
+	// Quick modes
+	bust: "bust",
+	bail: "bail",
+	// Time
+	timeMin: 0,
+	timeMax: 100,
+	timeStep: 1,
+	// Level
+	levelMin: 1,
+	levelMax: 100,
+	levelStep: 1,
+	// Score
+	scoreMin: 0,
+	scoreMax: 5000,
+	scoreStep: 25,
+};
+
 const DEFAULT_STORAGE = {
 	version: {
 		oldVersion: new DefaultSetting({ type: "string" }),
@@ -254,6 +280,7 @@ const DEFAULT_STORAGE = {
 				highlightNerve: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				ocTimer: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				collapseAreas: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				settingsLink: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				hideGymHighlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				upkeepPropHighlight: new DefaultSetting({ type: "number", defaultValue: 5000000 }),
 			},
@@ -273,6 +300,9 @@ const DEFAULT_STORAGE = {
 				life: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				chain: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				travel: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			education: {
+				greyOut: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			jail: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -335,9 +365,15 @@ const DEFAULT_STORAGE = {
 				itemValues: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				openChat: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			displayCase: {
+				worth: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
 			shops: {
 				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				maxBuyIgnoreCash: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
+			racing: {
+				winPercentage: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
@@ -359,13 +395,19 @@ const DEFAULT_STORAGE = {
 			revivesOn: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 		jail: {
-			timeStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			timeEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
-			levelStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
-			scoreStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			scoreEnd: new DefaultSetting({ type: "number", defaultValue: 5000 }),
-			faction: new DefaultSetting({ type: "string", defaultValue: "" }),
+			time: {
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMax }),
+			},
+			level: {
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMax }),
+			},
+			score: {
+				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMin }),
+				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMax }),
+			},
+			faction: new DefaultSetting({ type: "string", defaultValue: JAIL_CONSTANTS.allFactions }),
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
 		containers: new DefaultSetting({ type: "object", defaultValue: {} }),
@@ -414,6 +456,7 @@ const DEFAULT_STORAGE = {
 	},
 	quick: {
 		items: new DefaultSetting({ type: "array", defaultValue: [] }),
+		jail: new DefaultSetting({ type: "array", defaultValue: [] }),
 	},
 };
 
@@ -471,6 +514,11 @@ const CONTRIBUTORS = {
 		id: 2639608,
 		name: "Tesa",
 		color: "brown",
+	},
+	AllMight: {
+		id: 1878147,
+		name: "AllMight",
+		color: "#ff3333",
 	},
 };
 

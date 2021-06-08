@@ -280,6 +280,69 @@ function hasDarkMode() {
 	return document.body.classList.contains("dark-mode");
 }
 
+const darkModeObserver = (() => {
+	const listeners = new Set();
+	let prevDarkModeState;
+
+	const observer = new MutationObserver(() => {
+		const darkModeState = hasDarkMode();
+
+		if (darkModeState !== prevDarkModeState) {
+			prevDarkModeState = darkModeState;
+			_invokeListeners(darkModeState);
+		}
+	});
+
+	function addListener(callback) {
+		if (!prevDarkModeState) {
+			prevDarkModeState = hasDarkMode();
+		}
+
+		listeners.add(callback);
+
+		if (listeners.size === 1) {
+			observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+		}
+	}
+
+	function removeListener(callback) {
+		listeners.delete(callback);
+
+		if (listeners.size === 0) {
+			observer.disconnect();
+		}
+	}
+
+	function _invokeListeners(isInDarkMode) {
+		for (const listener of listeners.values()) {
+			listener(isInDarkMode);
+		}
+	}
+
+	return {
+		addListener,
+		removeListener,
+	};
+})();
+
+async function newTornInfoBox(html, additionalClass = "") {
+	const svgHTML = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
+	return document.newElement({
+		type: "div",
+		class: `tt-msg-box ${additionalClass}`,
+		html: `
+			<div class="tt-msg-div">
+				${svgHTML}
+				<div class="tt-msg">
+					<div class="tt-content">
+						${html}
+					</div>
+				</div>
+			</div>
+		`,
+	});
+}
+
 const REACT_UPDATE_VERSIONS = {
 	DEFAULT: "default",
 	NATIVE_SETTER: "nativeSetter",
@@ -331,4 +394,10 @@ function getRequiredStocks(required, increment) {
 
 function getStockIncrement(required, stocks) {
 	return Math.log2(Math.floor(stocks / required) + 1);
+}
+
+function getStockBoughtPrice(stock) {
+	const boughtTotal = Object.values(stock.transactions).reduce((prev, trans) => prev + trans.bought_price * trans.shares, 0);
+
+	return { boughtTotal, boughtPrice: boughtTotal / stock.total_shares };
 }

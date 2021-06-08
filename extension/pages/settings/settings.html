@@ -98,7 +98,7 @@
 						<li name="bazaar">Bazaar</li>
 						<!-- <li>Gym</li> -->
 						<!-- <li>Properties</li> -->
-						<!-- <li>Education</li> -->
+						<li name="education">Education</li>
 						<!-- <li>Crimes</li> -->
 						<!-- <li>Missions</li> -->
 						<!-- <li>Newspaper</li> -->
@@ -114,7 +114,8 @@
 						<li name="stock-exchange">Stock Exchange</li>
 						<li name="travel">Travel</li>
 						<li name="trade">Trade</li>
-						<!-- <li>Raceway</li> -->
+						<li name="display-case">Display Case</li>
+						<li name="racing">Raceway</li>
 						<li name="shops">Shops</li>
 						<!-- <li>Item Market</li> -->
 						<li name="api">API</li>
@@ -379,6 +380,10 @@
 							<label for="sidebar-collapseAreas">Collapse areas section.</label>
 						</div>
 						<div class="option no-mobile">
+							<input id="sidebar-settingsLink" type="checkbox" />
+							<label for="sidebar-settingsLink">Show a link to TornTools settings page.</label>
+						</div>
+						<div class="option no-mobile">
 							<input id="sidebar-ocTimer" type="checkbox" />
 							<label for="sidebar-ocTimer">Show OC ready time in sidebar.</label>
 							<br />
@@ -394,11 +399,11 @@
 						</div>
 
 						<div class="header">Refills</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-highlightEnergy" type="checkbox" />
 							<label for="sidebar-highlightEnergy">Highlight energy when refill hasn't been used yet.</label>
 						</div>
-						<div class="option">
+						<div class="option no-mobile">
 							<input id="sidebar-highlightNerve" type="checkbox" />
 							<label for="sidebar-highlightNerve">Highlight nerve when refill hasn't been used yet.</label>
 						</div>
@@ -623,6 +628,13 @@
 						</div>
 						<div class="tabbed note">Separate by commas (5,60,120)</div>
 					</section>
+					<section name="education">
+						<div class="header">Education</div>
+						<div class="option">
+							<input id="education-greyOut" type="checkbox" />
+							<label for="education-greyOut">Grey out completed education categories.</label>
+						</div>
+					</section>
 					<section name="external">
 						<div class="header">External Services</div>
 						<div class="option">
@@ -756,7 +768,7 @@
 							<input id="bazaar-fillMax" type="checkbox" />
 							<label for="bazaar-fillMax">Show fill max button.</label>
 						</div>
-						<div class="option">
+						<div class="option tabbed">
 							<input id="bazaar-maxBuyIgnoreCash" type="checkbox" />
 							<label for="bazaar-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
 						</div>
@@ -767,13 +779,27 @@
 							<input id="shops-fillMax" type="checkbox" />
 							<label for="shops-fillMax">Show fill max button.</label>
 						</div>
-						<div class="option">
+						<div class="option tabbed">
 							<input id="shops-maxBuyIgnoreCash" type="checkbox" />
 							<label for="shops-maxBuyIgnoreCash">Ignore cash on hand for fill max button.</label>
 						</div>
 						<div class="option no-mobile">
 							<input id="bazaar-redirects" type="checkbox" />
 							<label for="bazaar-redirects">Highlight the searched item from the item market.</label>
+						</div>
+					</section>
+					<section name="racing">
+						<div class="header">Racing</div>
+						<div class="option">
+							<input id="racing-winPercentage" type="checkbox" />
+							<label for="racing-winPercentage">Show win percentage of each car.</label>
+						</div>
+					</section>
+					<section name="display-case">
+						<div class="header">Display Case</div>
+						<div class="option">
+							<input id="displayCase-worth" type="checkbox" />
+							<label for="displayCase-worth">Show the worth of the visited display case.</label>
 						</div>
 					</section>
 					<section name="jail">
@@ -946,7 +972,9 @@
 					</li>
 					<li>
 						Individually
-						<ul></ul>
+						<ul>
+							<li>Display Cabinet info when visited.</li>
+						</ul>
 					</li>
 					<li>
 						<strong>Cache</strong>

@@ -324,7 +324,7 @@ async function setupDashboard() {
 			full = `${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer", hideHours: true })}`;
 		else if (name === "traveling") full = `Landing in ${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer" })}`;
 		else {
-			full = `Full in ${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer" })}`;
+			full = `Full in ${formatTime({ seconds: toSeconds(full_at - current) }, { type: "timer", daysToHours: true })}`;
 
 			if (settings.pages.popup.hoverBarTime) full += ` (${formatTime({ milliseconds: full_at }, { type: "normal" })})`;
 		}
@@ -519,7 +519,7 @@ async function setupMarketSearch() {
 		const viewItem = document.find("#market #item-information");
 		viewItem.find(".market").classList.add("hidden");
 
-		fetchApi("torn", { section: "market", id, selections: ["bazaar", "itemmarket"] })
+		fetchData("torn", { section: "market", id, selections: ["bazaar", "itemmarket"] })
 			.then((result) => {
 				const list = viewItem.find(".market");
 				list.innerHTML = "";
@@ -595,10 +595,7 @@ async function setupStocksOverview() {
 		for (const [buyId, stock] of Object.entries(userdata.stocks)) {
 			const id = stock.stock_id;
 
-			const transactions = Object.values(stock.transactions);
-			const totalPrice = transactions.reduce((price, { shares, bought_price }) => price + shares * bought_price, 0);
-
-			const boughtPrice = totalPrice / stock.total_shares;
+			const { boughtPrice } = getStockBoughtPrice(stock);
 			const profit = ((torndata.stocks[id].current_price - boughtPrice) * stock.total_shares).dropDecimals();
 
 			const wrapper = document.newElement({ type: "div", class: "stock-wrap" });
@@ -641,11 +638,11 @@ async function setupStocksOverview() {
 				children: [
 					document.newElement({
 						type: "span",
-						text: `Current price: ${formatNumber(torndata.stocks[id].current_price, { decimals: 3, currency: true })}`,
+						text: `Current price: ${formatNumber(torndata.stocks[id].current_price, { decimals: 2, currency: true })}`,
 					}),
 					document.newElement({
 						type: "span",
-						text: `Bought at: ${formatNumber(boughtPrice, { decimals: 3, currency: true })}`,
+						text: `Bought at: ${formatNumber(boughtPrice, { decimals: 2, currency: true })}`,
 					}),
 				],
 			});
