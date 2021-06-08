@@ -763,6 +763,11 @@ const API_USAGE = {
 		education: {
 			"*": {},
 		},
+		properties: {
+			"*": {
+				cost: true,
+			},
+		},
 	},
 };
 
@@ -790,7 +795,7 @@ const API_SELECTIONS = {
 	faction: ["crimes"],
 	company: [],
 	item_market: [],
-	torn: ["education", "honors", "items", "medals", "stocks", "pawnshop"],
+	torn: ["education", "honors", "items", "medals", "stocks", "pawnshop", "properties"],
 };
 
 const CHAT_TITLE_COLORS = {

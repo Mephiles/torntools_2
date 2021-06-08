@@ -427,9 +427,31 @@ function getRewardValue(reward) {
 
 		if (item) value = item ? item.market_value : -1;
 		else {
-			console.log("DKK getRewardValue - Unknown item", rewardItem, item);
-			value = -1;
-		} // FIXME - Get value for some things (HRG, cache block).
+			let prices;
+
+			switch (rewardItem) {
+				case "Ammunition Pack":
+					break;
+				case "Clothing Cache":
+					prices = [1057, 1112, 1113, 1114, 1115, 1116, 1117].map((id) => torndata.items[id].market_value);
+					break;
+				case "Random Property":
+					prices = Object.values(torndata.properties)
+						.map((property) => property.cost)
+						.filter((price) => !!price)
+						.map((price) => price * 0.75);
+					break;
+				case "Happiness":
+					break;
+				case "Energy":
+					break;
+				default:
+					value = -1;
+					break;
+			}
+
+			if (Array.isArray(prices)) value = prices.totalSum() / prices.length;
+		}
 	} else {
 		value = -1;
 	}
