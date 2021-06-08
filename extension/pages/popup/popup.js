@@ -594,69 +594,6 @@ async function setupStocksOverview() {
 		if (id === "date") continue;
 		id = parseInt(id);
 
-		const wrapper = document.newElement({
-			type: "div",
-			class: "stock-wrap",
-			attributes: { name: `${torndata.stocks[id].name} (${torndata.stocks[id].acronym})`.toLowerCase() },
-		});
-		wrapper.appendChild(document.newElement("hr"));
-
-		// Heading
-		wrapper.appendChild(
-			document.newElement({
-				type: "a",
-				class: "heading",
-				href: `https://www.torn.com/stockexchange.php?stock=${torndata.stocks[id].acronym}`,
-				attributes: { target: "_blank" },
-				children: [document.newElement({ type: "span", class: "name", text: torndata.stocks[id].name })],
-			})
-		);
-
-		// Price Information
-		const priceContent = document.newElement({
-			type: "div",
-			class: "content price hidden",
-			children: [
-				document.newElement({
-					type: "span",
-					text: `Current price: ${formatNumber(torndata.stocks[id].current_price, { decimals: 3, currency: true })}`,
-				}),
-			],
-		});
-
-		wrapper.appendChild(document.newElement({ type: "div", class: "information-section", children: [getPriceHeadingElement(priceContent), priceContent] }));
-
-		// Benefit Information
-		if (torndata.stocks[id].benefit) {
-			const benefitContent = document.newElement({
-				type: "div",
-				class: "content benefit hidden",
-				children: [
-					document.newElement({ type: "span", text: `Stocks per increment: ${formatNumber(torndata.stocks[id].benefit.requirement)}` }),
-					document.newElement("br"),
-					document.newElement({ type: "span", class: "description", text: `${torndata.stocks[id].benefit.description}` }),
-					document.newElement({
-						type: "span",
-						class: "duration",
-						text: `${isDividendStock(id) ? "every" : "after"} ${torndata.stocks[id].benefit.frequency} days.`,
-					}),
-				],
-			});
-
-			wrapper.appendChild(
-				document.newElement({
-					type: "div",
-					class: "information-section",
-					children: [getBenefitHeadingElement(benefitContent), benefitContent],
-				})
-			);
-		}
-
-		// Alerts
-		addAlertsSection(wrapper, id, id);
-
-		// allStocks.appendChild(wrapper);
-
 		allStocks.appendChild(buildSection(id));
 	}
 
@@ -717,7 +654,7 @@ async function setupStocksOverview() {
 		createHeading();
 		createPriceInformation();
 		createBenefitInformation();
-		// FIXME - Show alerts section.
+		createAlertsSection();
 
 		return wrapper;
 
@@ -753,6 +690,14 @@ async function setupStocksOverview() {
 						text: `${getProfitIndicator(profit)}${formatNumber(Math.abs(profit), { currency: true })}`,
 					})
 				);
+			}
+
+			function getProfitClass(profit) {
+				return profit > 0 ? "positive" : profit < 0 ? "negative" : "";
+			}
+
+			function getProfitIndicator(profit) {
+				return profit > 0 ? "+" : profit < 0 ? "-" : "";
 			}
 		}
 
@@ -944,21 +889,22 @@ async function setupStocksOverview() {
 				}
 			}
 		}
-	}
 
-	function getProfitClass(profit) {
-		return profit > 0 ? "positive" : profit < 0 ? "negative" : "";
-	}
+		function createAlertsSection() {
+			const alertsContent = document.newElement({
+				type: "div",
+				class: "content alerts hidden",
+				children: [],
+			});
+			wrapper.append(
+				document.newElement({
+					type: "div",
+					class: "information-section",
+					children: [getHeadingElement("Alerts", alertsContent), alertsContent],
+				})
+			);
 
-	function getProfitIndicator(profit) {
-		return profit > 0 ? "+" : profit < 0 ? "-" : "";
-	}
-
-	function addAlertsSection(wrapper, id, stockId) {
-		const alertContent = document.newElement({
-			type: "div",
-			class: "content alerts hidden",
-			children: [
+			alertsContent.appendChild(
 				document.newElement({
 					type: "div",
 					children: [
@@ -966,10 +912,10 @@ async function setupStocksOverview() {
 						document.newElement({
 							type: "div",
 							children: [
-								document.newElement({ type: "label", attributes: { for: `stock-${stockId}-alert__reaches` }, text: "reaches" }),
+								document.newElement({ type: "label", attributes: { for: `stock-${id}-alert__reaches` }, text: "reaches" }),
 								document.newElement({
 									type: "input",
-									id: `stock-${stockId}-alert__reaches`,
+									id: `stock-${id}-alert__reaches`,
 									attributes: { type: "number", min: 0 },
 									value: () => {
 										if (!(id in settings.notifications.types.stocks)) return "";
@@ -991,10 +937,10 @@ async function setupStocksOverview() {
 						document.newElement({
 							type: "div",
 							children: [
-								document.newElement({ type: "label", attributes: { for: `stock-${stockId}-alert__falls` }, text: "falls to" }),
+								document.newElement({ type: "label", attributes: { for: `stock-${id}-alert__falls` }, text: "falls to" }),
 								document.newElement({
 									type: "input",
-									id: `stock-${stockId}-alert__falls`,
+									id: `stock-${id}-alert__falls`,
 									attributes: { type: "number", min: 0 },
 									value: () => {
 										if (!(id in settings.notifications.types.stocks)) return "";
@@ -1014,34 +960,26 @@ async function setupStocksOverview() {
 							],
 						}),
 					],
-				}),
-			],
-		});
-		const alertHeading = getHeadingElement("Alerts", alertContent);
+				})
+			);
+		}
 
-		wrapper.appendChild(document.newElement({ type: "div", class: "information-section", children: [alertHeading, alertContent] }));
-	}
+		function getHeadingElement(title, content) {
+			return document.newElement({
+				type: "div",
+				class: "heading",
+				children: [
+					document.newElement({ type: "span", class: "title", text: title }),
+					document.newElement({ type: "i", class: "fas fa-chevron-down" }),
+				],
+				events: {
+					click: (event) => {
+						content.classList[content.classList.contains("hidden") ? "remove" : "add"]("hidden");
 
-	function getHeadingElement(title, content) {
-		return document.newElement({
-			type: "div",
-			class: "heading",
-			children: [document.newElement({ type: "span", class: "title", text: title }), document.newElement({ type: "i", class: "fas fa-chevron-down" })],
-			events: {
-				click: (event) => {
-					content.classList[content.classList.contains("hidden") ? "remove" : "add"]("hidden");
-
-					rotateElement((event.target.classList.contains("heading") ? event.target : event.target.parentElement).find("i"), 180);
+						rotateElement((event.target.classList.contains("heading") ? event.target : event.target.parentElement).find("i"), 180);
+					},
 				},
-			},
-		});
-	}
-
-	function getPriceHeadingElement(priceContent) {
-		return getHeadingElement("Price Information", priceContent);
-	}
-
-	function getBenefitHeadingElement(benefitContent) {
-		return getHeadingElement("Benefit Information", benefitContent);
+			});
+		}
 	}
 }
