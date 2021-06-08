@@ -53,6 +53,7 @@
 				title: "Period",
 				width: 120,
 				cellRenderer: "string",
+				sortable: true,
 			},
 			{
 				id: "regular",
@@ -110,7 +111,9 @@
 
 		const table = createTable(tableColumnsDefs, tableRowsData, {
 			cellRenderers: customCellRenderers,
+			// DARK: background-color: #207037;
 			rowStyle: (rowData) => (rowData.period === bestPeriod ? { backgroundColor: "#9bff9b" } : {}),
+			stretchColumns: true,
 		});
 
 		const { content } = createContainer("Bank Investment - Based on 2b investment", {

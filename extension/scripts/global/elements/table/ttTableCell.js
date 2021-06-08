@@ -8,8 +8,7 @@ function createTableCell(data, columnDef, cellRenderer, options) {
 		type: "div",
 		class: "tt-table-row-cell",
 		style: {
-			minWidth: `${columnDef.width}px`,
-			flex: 1,
+			...(options.stretchColumns ? { minWidth: `${columnDef.width}px`, flex: 1 } : { width: `${columnDef.width}px` }),
 		},
 		children: [cell.element],
 	});

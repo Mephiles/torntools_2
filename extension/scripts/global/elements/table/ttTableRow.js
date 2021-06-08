@@ -8,11 +8,13 @@ function createTableRow(rowData, tableColumnsDefs, options) {
 		class: "tt-table-row",
 		style: {
 			...(options.rowStyle ? options.rowStyle(rowData) || {} : {}),
+			...(!options.stretchColumns ? { minWidth: "fit-content" } : {}),
 		},
 		children: rowCells.map((cell) => cell.element),
 	});
 
 	return {
 		element: rowElement,
+		data: rowData,
 	};
 }
