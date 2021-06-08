@@ -2,6 +2,11 @@
 	padding: 10px;
 }
 
+.tt-bank-investment-selected-row {
+	/* DARK: background-color: #207037; */
+	background-color: #9bff9b;
+}
+
 .bank-investment-money-cell-wrapper {
 	display: flex;
 	flex-direction: column;

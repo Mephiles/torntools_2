@@ -111,8 +111,7 @@
 
 		const table = createTable(tableColumnsDefs, tableRowsData, {
 			cellRenderers: customCellRenderers,
-			// DARK: background-color: #207037;
-			rowStyle: (rowData) => (rowData.period === bestPeriod ? { backgroundColor: "#9bff9b" } : {}),
+			rowClass: (rowData) => (rowData.period === bestPeriod ? "tt-bank-investment-selected-row" : ""),
 			stretchColumns: true,
 		});
 
