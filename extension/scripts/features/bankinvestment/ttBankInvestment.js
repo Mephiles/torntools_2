@@ -158,7 +158,38 @@
 		};
 	}
 
+	function createBankInvestmentFacade() {
+		const investmentTimeLeftElement = document.querySelector("p.m-clear");
+
+		const bankDueDateMs = new Date().setSeconds(userdata.city_bank.time_left);
+		const formattedDate = formatDate({ milliseconds: bankDueDateMs }, { showYear: true });
+		const formattedTime = formatTime(bankDueDateMs);
+		const formatted = `${formattedDate} ${formattedTime}`;
+
+		const investmentDueTimeElement = document.newElement({
+			type: "span",
+			children: [
+				document.createTextNode("Investment will be completed on "),
+				document.newElement({
+					type: "b",
+					text: formatted,
+				}),
+			],
+		});
+
+		investmentTimeLeftElement.insertAdjacentElement("afterEnd", investmentDueTimeElement);
+
+		function dispose() {
+			investmentDueTimeElement.remove();
+		}
+
+		return {
+			dispose,
+		};
+	}
+
 	let bankInvestmentInfoContainer;
+	let bankInvestmentFacade;
 
 	async function initialize() {
 		await requireElement(".content-wrapper > .delimiter-999");
@@ -167,12 +198,13 @@
 		const bankAprInfo = res.bank;
 
 		bankInvestmentInfoContainer = createBankInvestmentContainer(bankAprInfo);
-
-		// TODO: Add investment time left
+		bankInvestmentFacade = createBankInvestmentFacade();
 	}
 
 	function teardown() {
 		bankInvestmentInfoContainer.dispose();
 		bankInvestmentInfoContainer = undefined;
+		bankInvestmentFacade.dispose();
+		bankInvestmentFacade = undefined;
 	}
 })();
