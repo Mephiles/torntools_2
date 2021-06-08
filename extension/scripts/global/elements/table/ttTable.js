@@ -8,11 +8,8 @@ function stringCellRenderer(value) {
 
 	return {
 		element,
+		dispose: () => {},
 	};
-}
-
-function stringComparator(a, b) {
-	return a.localeCompare(b);
 }
 
 function createTable(tableColumnsDefs, tableRowsData, options = {}) {
@@ -35,7 +32,7 @@ function createTable(tableColumnsDefs, tableRowsData, options = {}) {
 			}
 
 			currentSortedHeaderCell = headerCell;
-			sortColumn(columnDef.id, direction);
+			sortColumn(columnDef, direction);
 		});
 
 		return headerCell;
@@ -63,24 +60,46 @@ function createTable(tableColumnsDefs, tableRowsData, options = {}) {
 		],
 	});
 
-	function sortColumn(columnId, direction) {
-		// TODO: Sort comparator choosing
-		tableRows.sort((a, b) =>
-			direction === COLUMN_SORT_DIRECTION.Asc
-				? stringComparator(a.data[columnId], b.data[columnId])
-				: stringComparator(b.data[columnId], a.data[columnId])
-		);
+	function sortColumn(columnDef, direction) {
+		tableRows.sort((a, b) => {
+			if (columnDef.sortComparator) {
+				return columnDef.sortComparator(a.data[columnDef.id], b.data[columnDef.id], direction);
+			}
+
+			const valueSelector = columnDef.valueSelector ?? ((fieldValue) => fieldValue);
+			const valueA = valueSelector(a.data[columnDef.id]);
+			const valueB = valueSelector(b.data[columnDef.id]);
+
+			let comparatorResult = 0;
+
+			if (valueA != null && valueB != null) {
+				if (valueA > valueB) {
+					comparatorResult = 1;
+				} else if (valueA < valueB) {
+					comparatorResult = -1;
+				}
+			} else if (valueA != null) {
+				comparatorResult = 1;
+			} else if (valueB != null) {
+				comparatorResult = -1;
+			}
+
+			return comparatorResult * (direction === COLUMN_SORT_DIRECTION.Asc ? 1 : -1);
+		});
 
 		for (const tableRow of tableRows) {
 			tableBodyElem.appendChild(tableRow.element);
 		}
 	}
 
+	function dispose() {
+		tableHeaders.forEach((tableHeader) => tableHeader.dispose());
+		tableRows.forEach((tableRow) => tableRow.dispose());
+	}
+
 	return {
 		element: tableElem,
-		// applyFilters,
 		sortColumn,
-		// hideColumns,
-		// dispose,
+		dispose,
 	};
 }

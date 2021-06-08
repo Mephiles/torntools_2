@@ -12,8 +12,13 @@ function createTableRow(rowData, tableColumnsDefs, options) {
 		children: rowCells.map((cell) => cell.element),
 	});
 
+	function dispose() {
+		rowCells.forEach((rowCell) => rowCell.dispose());
+	}
+
 	return {
 		element: rowElement,
 		data: rowData,
+		dispose,
 	};
 }

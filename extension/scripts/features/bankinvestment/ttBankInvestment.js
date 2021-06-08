@@ -46,6 +46,30 @@
 		[INVESTMENTS_BONUSES.Merit]: 0.5,
 	};
 
+	function bankMoneyCellRenderer(bankMoneyData) {
+		const element = document.newElement({
+			type: "div",
+			class: "bank-investment-money-cell-wrapper",
+			children: [
+				document.newElement({
+					type: "div",
+					class: "bank-investment-money-cell-total",
+					text: formatNumber(bankMoneyData.total, { currency: true, decimals: 0 }),
+				}),
+				document.newElement({
+					type: "div",
+					class: "bank-investment-money-cell-per-day",
+					text: formatNumber(bankMoneyData.daily, { currency: true, decimals: 0 }),
+				}),
+			],
+		});
+
+		return {
+			element,
+			dispose: () => {},
+		};
+	}
+
 	function createBankInvestmentContainer(bankAprInfo) {
 		const tableColumnsDefs = [
 			{
@@ -81,32 +105,9 @@
 			},
 		];
 		const tableRowsData = Object.values(PERIOD_TYPE).map((period) => _createRow(period));
-		// TODO: Better way to find max?
 		const bestPeriod = tableRowsData.reduce((maxRow, row) => (row.regular.daily > maxRow.regular.daily ? row : maxRow), tableRowsData[0]).period;
 		const customCellRenderers = {
-			// TODO: Extract?
-			bankMoney: (value) => {
-				const element = document.newElement({
-					type: "div",
-					class: "bank-investment-money-cell-wrapper",
-					children: [
-						document.newElement({
-							type: "div",
-							class: "bank-investment-money-cell-total",
-							text: formatNumber(value.total, { currency: true, decimals: 0 }),
-						}),
-						document.newElement({
-							type: "div",
-							class: "bank-investment-money-cell-per-day",
-							text: formatNumber(value.daily, { currency: true, decimals: 0 }),
-						}),
-					],
-				});
-
-				return {
-					element,
-				};
-			},
+			bankMoney: bankMoneyCellRenderer,
 		};
 
 		const table = createTable(tableColumnsDefs, tableRowsData, {
@@ -115,13 +116,16 @@
 			stretchColumns: true,
 		});
 
-		const { content } = createContainer("Bank Investment - Based on 2b investment", {
+		const { content, container } = createContainer("Bank Investment - Based on 2b investment", {
 			previousElement: document.find(".content-wrapper > .delimiter-999"),
 			class: "tt-bank-investment-container",
 		});
 		content.appendChild(table.element);
 
-		function dispose() {}
+		function dispose() {
+			table.dispose();
+			container.remove();
+		}
 
 		function _createRow(period) {
 			return {

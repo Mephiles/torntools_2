@@ -1,11 +1,14 @@
 .tt-table {
 	overflow: auto;
-	/* DARK: background-color: #555; */
 	background-color: white;
-	/* DARK: #999999 */
 	border: 1px solid lightgrey;
 	border-radius: 5px;
 	padding: 5px;
+}
+
+body.dark-mode .tt-table {
+	background-color: #555;
+	border-color: #999999;
 }
 
 .tt-table-header {
@@ -16,8 +19,11 @@
 	font-weight: bold;
 	font-size: 0.8rem;
 	padding: 0 5px;
-	/* DARK: background-color: #444; */
 	background-color: #f8f8f8;
+}
+
+body.dark-mode .tt-table-header {
+	background-color: #444;
 }
 
 .tt-table-header-cell {
@@ -57,9 +63,12 @@
 	display: flex;
 	align-items: center;
 	min-height: 30px;
-	/* DARK: #999999 */
 	border-top: 1px solid lightgrey;
 	padding: 5px;
+}
+
+body.dark-mode .tt-table-row {
+	border-color: #999999;
 }
 
 .tt-table-row-cell {

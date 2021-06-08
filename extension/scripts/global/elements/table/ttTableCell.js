@@ -1,8 +1,4 @@
 function createTableCell(data, columnDef, cellRenderer, options) {
-	// columnDef.sortable;
-	// columnDef.filterType;
-	// columnDef.valueSelector;
-
 	const cell = cellRenderer(data);
 	const cellElement = document.newElement({
 		type: "div",
@@ -13,7 +9,12 @@ function createTableCell(data, columnDef, cellRenderer, options) {
 		children: [cell.element],
 	});
 
+	function dispose() {
+		cell.dispose();
+	}
+
 	return {
 		element: cellElement,
+		dispose,
 	};
 }

@@ -3,8 +3,11 @@
 }
 
 .tt-bank-investment-selected-row {
-	/* DARK: background-color: #207037; */
 	background-color: #9bff9b;
+}
+
+body.dark-mode .tt-bank-investment-selected-row {
+	background-color: #207037;
 }
 
 .bank-investment-money-cell-wrapper {
@@ -17,6 +20,9 @@
 }
 
 .bank-investment-money-cell-per-day {
-	/* DARK: color: #60e5ff; */
 	color: #0f4983;
+}
+
+body.dark-mode .bank-investment-money-cell-per-day {
+	color: #60e5ff;
 }
