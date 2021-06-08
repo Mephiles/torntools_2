@@ -405,8 +405,8 @@
 		},
 		{
 			"matches": ["https://www.torn.com/bank.php*"],
-			"css": ["scripts/features/bankinvestment/ttBankInvestment.css"],
-			"js": ["scripts/features/bankinvestment/ttBankInvestment.js"],
+			"css": ["scripts/features/bank-investment/ttBankInvestment.css"],
+			"js": ["scripts/features/bank-investment/ttBankInvestment.js"],
 			"run_at": "document_end"
 		}
 	]
