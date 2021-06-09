@@ -10,6 +10,8 @@
 	list-style: none;
 	border-bottom: 1px solid #000;
 	overflow: scroll;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .tt-mobile .tt-custom-links-container::-webkit-scrollbar {
