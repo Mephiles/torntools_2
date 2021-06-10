@@ -31,7 +31,6 @@
 
 		function connect() {
 			const key = document.find("#newapi").getAttribute("value");
-			console.log("DKK connect", key);
 
 			changeAPIKey(key).then(() => {
 				connectButton.setAttribute("disabled", "");
