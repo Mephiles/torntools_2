@@ -12,6 +12,7 @@ function createContainer(title, options = {}) {
 		spacer: false,
 		contentBackground: true,
 		allowDragging: false,
+		collapsed: false,
 		...options,
 	};
 
@@ -42,7 +43,7 @@ function createContainer(title, options = {}) {
 		containerClasses.push(theme.containerClass);
 		const container = document.newElement({ type: "div", class: containerClasses.join(" "), id: options.id });
 
-		const collapsed = options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false);
+		const collapsed = options.collapsed || (options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false));
 
 		let html = "";
 		if (options.showHeader)
