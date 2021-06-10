@@ -543,6 +543,18 @@ const HIGHLIGHT_PLACEHOLDERS = [{ name: "$player", value: () => userdata.name ||
 
 const API_USAGE = {
 	user: {
+		bazaar: {
+			"*": {
+				quantity: true, // target
+				market_price: true, // target
+			},
+		},
+		display: {
+			"*": {
+				quantity: true, // target
+				market_price: true, // target
+			},
+		},
 		name: true,
 		player_id: true,
 		server_time: true,
@@ -587,6 +599,7 @@ const API_USAGE = {
 		},
 		travel: {
 			destination: true,
+			method: true,
 			timestamp: true,
 			departed: true,
 			time_left: true,
@@ -633,20 +646,22 @@ const API_USAGE = {
 			},
 		},
 		attacks: {
-			timestamp_ended: true,
-			attacker_id: true,
-			attacker_name: true,
-			defender_id: true,
-			defender_name: true,
-			result: true,
-			stealthed: true,
-			respect_gain: true,
-			modifiers: {
-				war: true,
-				// 	retaliation: true,
-				group_attack: true,
-				overseas: true,
-				chain_bonus: true,
+			"*": {
+				timestamp_ended: true,
+				attacker_id: true,
+				attacker_name: true,
+				defender_id: true,
+				defender_name: true,
+				result: true,
+				stealthed: true,
+				respect_gain: true,
+				modifiers: {
+					war: true,
+					// 	retaliation: true,
+					group_attack: true,
+					overseas: true,
+					chain_bonus: true,
+				},
 			},
 		},
 		networth: {
@@ -721,31 +736,48 @@ const API_USAGE = {
 			faction_id: true,
 			faction_tag: true,
 		},
+		timestamp: true,
 	},
 	properties: {},
 	faction: {
 		crimes: {
-			// crime_id: true,
-			// crime_name: true,
-			participants: true,
-			// time_started: true,
-			time_ready: true,
-			// time_left: true,
-			// time_completed: true,
-			initiated: true,
-			// initiated_by: true,
-			// planned_by: true,
-			// success: true,
-			// money_gain: true,
-			// respect_gain: true,
+			"*": {
+				// crime_id: true,
+				// crime_name: true,
+				participants: true,
+				// time_started: true,
+				time_ready: true,
+				// time_left: true,
+				// time_completed: true,
+				initiated: true,
+				// initiated_by: true,
+				// planned_by: true,
+				// success: true,
+				// money_gain: true,
+				// respect_gain: true,
+			},
 		},
 	},
 	company: {},
-	item_market: {},
+	item_market: {
+		bazaar: {
+			"*": {
+				quantity: true,
+				cost: true,
+			},
+		},
+		itemmarket: {
+			"*": {
+				quantity: true,
+				cost: true,
+			},
+		},
+	},
 	torn: {
 		items: {
 			"*": {
 				name: true,
+				effect: true,
 				type: true,
 				market_value: true,
 				circulation: true,
