@@ -308,7 +308,8 @@ const DEFAULT_STORAGE = {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			bank: {
-				investment: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				investmentInfo: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				investmentDueTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			home: {
 				networthDetails: new DefaultSetting({ type: "boolean", defaultValue: true }),

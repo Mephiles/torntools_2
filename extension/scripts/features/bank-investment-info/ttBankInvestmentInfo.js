@@ -2,14 +2,14 @@
 
 (async () => {
 	featureManager.registerFeature(
-		"Bank Investment",
+		"Bank Investment Info",
 		"bank",
-		() => settings.pages.bank.investment,
+		() => settings.pages.bank.investmentInfo,
 		null,
 		initialize,
 		teardown,
 		{
-			storage: ["settings.pages.bank.investment"],
+			storage: ["settings.pages.bank.investmentInfo"],
 		},
 		null
 	);
@@ -157,53 +157,20 @@
 		};
 	}
 
-	function createBankInvestmentFacade() {
-		const investmentTimeLeftElement = document.find("p.m-clear");
-
-		const bankDueDateMs = new Date().setSeconds(userdata.city_bank.time_left);
-		const formattedDate = formatDate({ milliseconds: bankDueDateMs }, { showYear: true });
-		const formattedTime = formatTime(bankDueDateMs);
-		const formatted = `${formattedDate} ${formattedTime}`;
-
-		const investmentDueTimeElement = document.newElement({
-			type: "span",
-			children: [
-				document.createTextNode("Investment will be completed on "),
-				document.newElement({
-					type: "b",
-					text: formatted,
-				}),
-			],
-		});
-
-		investmentTimeLeftElement.insertAdjacentElement("afterend", investmentDueTimeElement);
-
-		function dispose() {
-			investmentDueTimeElement.remove();
-		}
-
-		return {
-			dispose,
-		};
-	}
-
 	let bankInvestmentInfoContainer;
-	let bankInvestmentFacade;
 
 	async function initialize() {
 		await requireElement(".content-wrapper > .delimiter-999");
 
+		// TODO: Apply caching here till next Torn day
 		const res = await fetchData("torn", { section: "torn", selections: ["bank"] });
 		const bankAprInfo = res.bank;
 
 		bankInvestmentInfoContainer = createBankInvestmentContainer(bankAprInfo);
-		bankInvestmentFacade = createBankInvestmentFacade();
 	}
 
 	function teardown() {
 		bankInvestmentInfoContainer.dispose();
 		bankInvestmentInfoContainer = undefined;
-		bankInvestmentFacade.dispose();
-		bankInvestmentFacade = undefined;
 	}
 })();
