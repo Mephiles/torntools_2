@@ -74,7 +74,12 @@
 				const modifiedPre = document.newElement({ type: "pre", class: "modified active" });
 				responseElement.insertBefore(modifiedPre, originalPre);
 
-				populateResponse();
+				try {
+					populateResponse();
+				} catch (error) {
+					modifiedPre.appendChild(document.createTextNode("ERROR occurred!"));
+					console.error(error);
+				}
 				createTabs();
 
 				function populateResponse() {
@@ -125,7 +130,7 @@
 								} else if (value === null) {
 									displayValue(key, null, indent, marking);
 								} else {
-									const toMark = key in marking || "*" in marking;
+									const toMark = marking === true || key in marking || "*" in marking;
 
 									modifiedPre.appendChild(
 										document.newElement({ type: "span", class: toMark ? "used" : "", text: `${getIndent(indent)}"${key}": {` })
