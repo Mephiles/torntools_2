@@ -2,6 +2,7 @@
 
 (async () => {
 	if (await checkMobile()) return "Not supported on mobile!";
+	if (isFlying() || isAbroad()) return;
 
 	const feature = featureManager.registerFeature(
 		"TT Settings Link",
