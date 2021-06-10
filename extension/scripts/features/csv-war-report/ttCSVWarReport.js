@@ -18,8 +18,7 @@
 		await requireElement(".faction-war");
 		const { options } = createContainer("Chain Report", {
 			previousElement: document.find(".content-wrapper .content-title"),
-			collapsible: false,
-			collapsed: true,
+			onlyHeader: true,
 		});
 		const ttExportButton = document.newElement({
 			type: "div",
