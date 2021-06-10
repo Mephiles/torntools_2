@@ -68,8 +68,7 @@
 				"scripts/features/highlight-nerve-refill/ttHighlightNerveRefill.css",
 				"scripts/features/hide-areas/ttHideAreas.css",
 				"scripts/features/hide-icons/ttHideIcons.css",
-				"scripts/features/block-zalgo/ttBlockZalgo.css",
-				"scripts/features/collapsible-areas/ttCollapsibleAreas.css"
+				"scripts/features/block-zalgo/ttBlockZalgo.css"
 			],
 			"js": [
 				"vendor/fontawesome/fontawesome.js",
@@ -104,8 +103,7 @@
 				"scripts/features/highlight-nerve-refill/ttHighlightNerveRefill.entry.js",
 				"scripts/features/hide-areas/ttHideAreas.entry.js",
 				"scripts/features/hide-icons/ttHideIcons.entry.js",
-				"scripts/features/block-zalgo/ttBlockZalgo.entry.js",
-				"scripts/features/collapsible-areas/ttCollapsibleAreas.js"
+				"scripts/features/block-zalgo/ttBlockZalgo.entry.js"
 			],
 			"run_at": "document_start"
 		},
@@ -125,7 +123,9 @@
 				"scripts/features/hide-gym-highlight/ttHideGymHighlight.css",
 				"scripts/features/trade-timer/ttTradeTimer.css",
 				"scripts/features/highlight-properties/ttHighlightProperties.css",
-				"scripts/features/settings-link/ttSettingsLink.css"
+				"scripts/features/settings-link/ttSettingsLink.css",
+				"scripts/features/bar-links/ttBarLinks.css",
+				"scripts/features/collapsible-areas/ttCollapsibleAreas.css"
 			],
 			"js": [
 				"scripts/content/global/ttGlobal.js",
@@ -144,7 +144,9 @@
 				"scripts/features/hide-gym-highlight/ttHideGymHighlight.js",
 				"scripts/features/trade-timer/ttTradeTimer.js",
 				"scripts/features/highlight-properties/ttHighlightProperties.js",
-				"scripts/features/settings-link/ttSettingsLink.js"
+				"scripts/features/settings-link/ttSettingsLink.js",
+				"scripts/features/bar-links/ttBarLinks.js",
+				"scripts/features/collapsible-areas/ttCollapsibleAreas.js"
 			],
 			"run_at": "document_end"
 		},
@@ -163,12 +165,17 @@
 		},
 		{
 			"matches": ["https://www.torn.com/api.html*"],
-			"css": ["scripts/features/api-selections/ttAPISelections.css"],
+			"css": [
+				"scripts/global/globalVariables.css",
+				"scripts/features/api-selections/ttAPISelections.css",
+				"scripts/features/api-marking/ttAPIMarking.css"
+			],
 			"js": [
 				"scripts/features/api-demo/ttAPIDemo.js",
 				"scripts/features/auto-api-fill/ttAutoAPIFill.js",
 				"scripts/features/auto-pretty/ttAutoPretty.js",
-				"scripts/features/api-selections/ttAPISelections.js"
+				"scripts/features/api-selections/ttAPISelections.js",
+				"scripts/features/api-marking/ttAPIMarking.js"
 			],
 			"run_at": "document_end"
 		},
@@ -401,6 +408,12 @@
 			"matches": ["https://www.torn.com/forums.php*"],
 			"css": ["scripts/features/forum-warning/ttForumWarning.css"],
 			"js": ["scripts/features/forum-warning/ttForumWarning.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/preferences.php*"],
+			"css": ["scripts/features/preference-settings/ttPreferenceSettings.css"],
+			"js": ["scripts/features/preference-settings/ttPreferenceSettings.js"],
 			"run_at": "document_end"
 		},
 		{

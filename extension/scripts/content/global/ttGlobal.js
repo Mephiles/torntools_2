@@ -1,18 +1,42 @@
 "use strict";
 
 (async () => {
-	storageListeners.settings.push((oldSettings) => {
-		if (oldSettings.themes.containers !== settings.themes.containers) {
-			for (const container of document.findAll(`.${THEMES[oldSettings.themes.containers].containerClass}`)) {
-				container.classList.remove(THEMES[oldSettings.themes.containers].containerClass);
-				container.classList.add(THEMES[settings.themes.containers].containerClass);
+	handleTheme();
+	createOverlay();
+	detectScroll();
+	observeChat().catch(console.error);
+	observeBody().catch(console.error);
+
+	setInterval(decreaseCountdown, 1000);
+
+	function handleTheme() {
+		storageListeners.settings.push((oldSettings) => {
+			if (oldSettings.themes.containers !== settings.themes.containers) {
+				for (const container of document.findAll(`.${THEMES[oldSettings.themes.containers].containerClass}`)) {
+					container.classList.remove(THEMES[oldSettings.themes.containers].containerClass);
+					container.classList.add(THEMES[settings.themes.containers].containerClass);
+				}
 			}
+		});
+	}
+
+	function createOverlay() {
+		document.body.appendChild(document.newElement({ type: "div", class: "tt-overlay hidden" }));
+	}
+
+	function detectScroll() {
+		checkScroll();
+		document.addEventListener("scroll", checkScroll);
+
+		function checkScroll() {
+			if (window.scrollY >= 75) document.body.classList.add("scrolled");
+			else document.body.classList.remove("scrolled");
 		}
-	});
+	}
 
-	document.body.appendChild(document.newElement({ type: "div", class: "tt-overlay hidden" }));
+	async function observeChat() {
+		await requireChatsLoaded();
 
-	requireChatsLoaded().then(() => {
 		new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
 				for (const addedNode of mutation.addedNodes) {
@@ -36,9 +60,21 @@
 				}
 			}
 		}).observe(document.find("#chatRoot"), { childList: true, subtree: true });
-	});
+	}
 
-	setInterval(() => {
+	async function observeBody() {
+		new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				switch (mutation.attributeName) {
+					case "data-layout":
+						triggerCustomListener(EVENT_CHANNELS.STATE_CHANGED, { oldState: mutation.oldValue, newState: document.body.dataset.layout });
+						break;
+				}
+			}
+		}).observe(document.body, { attributes: true, attributeFilter: ["data-layout"], attributeOldValue: true });
+	}
+
+	function decreaseCountdown() {
 		for (const countdown of document.findAll(".countdown.automatic[data-seconds]")) {
 			const seconds = parseInt(countdown.dataset.seconds) - 1;
 
@@ -51,13 +87,5 @@
 			countdown.innerText = formatTime({ seconds }, JSON.parse(countdown.dataset.timeSettings));
 			countdown.dataset.seconds = seconds;
 		}
-	}, 1000);
-
-	checkScroll();
-	document.addEventListener("scroll", checkScroll);
-
-	function checkScroll() {
-		if (window.scrollY >= 75) document.body.classList.add("scrolled");
-		else document.body.classList.remove("scrolled");
 	}
 })();
