@@ -595,6 +595,7 @@ const API_USAGE = {
 		status: {
 			description: true,
 			state: true,
+			color: true,
 			until: true,
 		},
 		travel: {
@@ -630,7 +631,9 @@ const API_USAGE = {
 			nerve_refill_used: true,
 		},
 		last_action: {
+			status: true,
 			timestamp: true,
+			relative: true,
 		},
 		merits: {
 			"Masterful Looting": true,
@@ -657,7 +660,7 @@ const API_USAGE = {
 				respect_gain: true,
 				modifiers: {
 					war: true,
-					// 	retaliation: true,
+					retaliation: true,
 					group_attack: true,
 					overseas: true,
 					chain_bonus: true,
@@ -681,7 +684,7 @@ const API_USAGE = {
 			company: true,
 			bookie: true,
 			// loan: true,
-			// unpaidfees: true,
+			unpaidfees: true,
 			total: true,
 			// parsetime: true,
 		},
@@ -702,12 +705,12 @@ const API_USAGE = {
 			networthcompany: true,
 			networthbookie: true,
 			// networthloan: true,
-			// networthunpaidfees: true,
+			networthunpaidfees: true,
 			networth: true,
 		},
 		stocks: {
 			"*": {
-				stock_id: true,
+				// stock_id: true,
 				total_shares: true,
 				benefit: {
 					ready: true,
@@ -729,9 +732,10 @@ const API_USAGE = {
 			},
 		},
 		enhancer_perks: true,
-		// job_perks: true,
+		job_perks: true,
 		faction_perks: true,
-		// book_perk: true,
+		company_perks: true,
+		book_perk: true,
 		faction: {
 			faction_id: true,
 			faction_tag: true,
@@ -742,19 +746,9 @@ const API_USAGE = {
 	faction: {
 		crimes: {
 			"*": {
-				// crime_id: true,
-				// crime_name: true,
 				participants: true,
-				// time_started: true,
 				time_ready: true,
-				// time_left: true,
-				// time_completed: true,
 				initiated: true,
-				// initiated_by: true,
-				// planned_by: true,
-				// success: true,
-				// money_gain: true,
-				// respect_gain: true,
 			},
 		},
 	},
@@ -804,6 +798,9 @@ const API_USAGE = {
 			"*": {
 				cost: true,
 			},
+		},
+		bank: {
+			"*": true,
 		},
 	},
 };
