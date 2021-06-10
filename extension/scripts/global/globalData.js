@@ -351,6 +351,7 @@ const DEFAULT_STORAGE = {
 				autoDemo: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				autoPretty: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				clickableSelections: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				marking: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			forums: {
 				warning: new DefaultSetting({ type: "boolean", defaultValue: true }),
