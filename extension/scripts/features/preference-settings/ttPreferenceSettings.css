@@ -11,18 +11,18 @@
 	vertical-align: top;
 	height: 16px;
 	line-height: 16px;
-	margin-top: 4px;
 	text-decoration: none;
+	box-sizing: content-box;
 }
 
 .preference-button:hover {
 	background: linear-gradient(180deg, #fff, #cbcbcb 61%, #b0b0b0 83%, #acacac 91%, #b0b0b0 96%, #b1b1b1);
 }
 
-/*.preference-button[disabled] {*/
-/*	color: #777 !important;*/
-/*	cursor: default;*/
-/*	text-shadow: 0 -1px 0 #ffffff66;*/
-/*	box-shadow: 0 1px 0 #ffffffa6;*/
-/*	background: transparent linear-gradient(180deg, #999999 0%, #cccccc 100%) 0 0 no-repeat;*/
-/*}*/
+.preference-button[disabled] {
+	color: #777 !important;
+	cursor: default;
+	text-shadow: 0 -1px 0 #ffffff66;
+	box-shadow: 0 1px 0 #ffffffa6;
+	background: transparent linear-gradient(180deg, #999999 0%, #cccccc 100%) 0 0 no-repeat;
+}

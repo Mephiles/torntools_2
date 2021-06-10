@@ -17,6 +17,29 @@
 				},
 			})
 		);
+
+		const connectButton = document.newElement({ type: "button", class: "preference-button", text: "Connect" });
+
+		if (api.torn.key) {
+			connectButton.setAttribute("disabled", "");
+			connectButton.innerText = "Connected!";
+		} else {
+			connectButton.addEventListener("click", connect);
+		}
+
+		options.appendChild(connectButton);
+
+		function connect() {
+			const key = document.find("#newapi").getAttribute("value");
+			console.log("DKK connect", key);
+
+			changeAPIKey(key).then(() => {
+				connectButton.setAttribute("disabled", "");
+				connectButton.innerText = "Connected!";
+
+				connectButton.removeEventListener("click", connect);
+			});
+		}
 	}
 
 	function dispose() {
