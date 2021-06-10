@@ -16,7 +16,7 @@
 
 	async function addCSVContainer() {
 		await requireElement(".faction-war");
-		const { options } = createContainer("Chain Report", {
+		const { options } = createContainer("War Report", {
 			previousElement: document.find(".content-wrapper .content-title"),
 			onlyHeader: true,
 		});
@@ -62,6 +62,6 @@
 	}
 
 	function removeCSVContainer() {
-		removeContainer("Chain Report");
+		removeContainer("War Report");
 	}
 })();
