@@ -7,14 +7,15 @@ function createContainer(title, options = {}) {
 		nextElement: false,
 		previousElement: false,
 		showHeader: true,
+		onlyHeader: false,
 		collapsible: true,
 		applyRounding: true,
 		spacer: false,
 		contentBackground: true,
 		allowDragging: false,
-		collapsed: false,
 		...options,
 	};
+	if (options.onlyHeader) options.collapsible = false;
 
 	const container = _createContainer(title, options);
 
@@ -43,7 +44,7 @@ function createContainer(title, options = {}) {
 		containerClasses.push(theme.containerClass);
 		const container = document.newElement({ type: "div", class: containerClasses.join(" "), id: options.id });
 
-		const collapsed = options.collapsed || (options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false));
+		const collapsed = options.onlyHeader || (options.collapsible && (options.id in filters.containers ? filters.containers[options.id] : false));
 
 		let html = "";
 		if (options.showHeader)
@@ -53,7 +54,7 @@ function createContainer(title, options = {}) {
 					<div class="options"></div>
 					${options.collapsible ? '<i class="icon fas fa-caret-down"></i>' : ""}
 				</div>`;
-		html += `<main class="${options.contentBackground ? "background" : ""}"></main>`;
+		if (!options.onlyHeader) html += `<main class="${options.contentBackground ? "background" : ""}"></main>`;
 		container.innerHTML = html;
 
 		if (options.collapsible) {
