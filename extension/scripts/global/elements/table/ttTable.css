@@ -1,10 +1,14 @@
 .tt-table {
 	display: grid;
 	overflow: auto;
-	background-color: white;
-	border: 1px solid lightgrey;
+	border: 1px solid;
 	border-radius: 5px;
 	padding: 5px;
+}
+
+body:not(.dark-mode) .tt-table {
+	background-color: white;
+	border-color: lightgrey;
 }
 
 body.dark-mode .tt-table {
@@ -20,6 +24,9 @@ body.dark-mode .tt-table {
 	font-weight: bold;
 	font-size: 0.8rem;
 	padding: 0 5px;
+}
+
+body:not(.dark-mode) .tt-table-header {
 	background-color: #f8f8f8;
 }
 
@@ -64,8 +71,12 @@ body.dark-mode .tt-table-header {
 	display: flex;
 	align-items: center;
 	min-height: 30px;
-	border-top: 1px solid lightgrey;
+	border-top: 1px solid;
 	padding: 5px;
+}
+
+body:not(.dark-mode) .tt-table-row {
+	border-color: lightgrey;
 }
 
 body.dark-mode .tt-table-row {

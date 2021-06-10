@@ -63,7 +63,7 @@ function createTable(tableColumnsDefs, tableRowsData, options = {}) {
 				return columnDef.sortComparator(a.data[columnDef.id], b.data[columnDef.id], direction);
 			}
 
-			const valueSelector = columnDef.valueSelector ?? ((fieldValue) => fieldValue);
+			const valueSelector = columnDef.valueSelector ? columnDef.valueSelector : (fieldValue) => fieldValue;
 			const valueA = valueSelector(a.data[columnDef.id]);
 			const valueB = valueSelector(b.data[columnDef.id]);
 

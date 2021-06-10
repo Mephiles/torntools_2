@@ -17,33 +17,33 @@
 	const DAYS_IN_YEAR = 365;
 	const BALANCE = 2_000_000_000;
 	const PERIOD_TYPE = {
-		OneWeek: "1w",
-		TwoWeeks: "2w",
-		OneMonth: "1m",
-		TwoMonths: "2m",
-		ThreeMonths: "3m",
+		ONE_WEEK: "1w",
+		TWO_WEEKS: "2w",
+		ONE_MONTH: "1m",
+		TWO_MONTHS: "2m",
+		THREE_MONTHS: "3m",
 	};
 	const PERIOD_DESC = {
-		[PERIOD_TYPE.OneWeek]: "1 Week",
-		[PERIOD_TYPE.TwoWeeks]: "2 Weeks",
-		[PERIOD_TYPE.OneMonth]: "1 Month",
-		[PERIOD_TYPE.TwoMonths]: "2 Months",
-		[PERIOD_TYPE.ThreeMonths]: "3 Months",
+		[PERIOD_TYPE.ONE_WEEK]: "1 Week",
+		[PERIOD_TYPE.TWO_WEEKS]: "2 Weeks",
+		[PERIOD_TYPE.ONE_MONTH]: "1 Month",
+		[PERIOD_TYPE.TWO_MONTHS]: "2 Months",
+		[PERIOD_TYPE.THREE_MONTHS]: "3 Months",
 	};
 	const INVESTMENTS_BONUSES = {
-		TCB: "tcb",
-		Merit: "merit",
+		TCI: "tci",
+		MERIT: "merit",
 	};
 	const DAYS = {
-		[PERIOD_TYPE.OneWeek]: 7,
-		[PERIOD_TYPE.TwoWeeks]: 14,
-		[PERIOD_TYPE.OneMonth]: 30,
-		[PERIOD_TYPE.TwoMonths]: 60,
-		[PERIOD_TYPE.ThreeMonths]: 90,
+		[PERIOD_TYPE.ONE_WEEK]: 7,
+		[PERIOD_TYPE.TWO_WEEKS]: 14,
+		[PERIOD_TYPE.ONE_MONTH]: 30,
+		[PERIOD_TYPE.TWO_MONTHS]: 60,
+		[PERIOD_TYPE.THREE_MONTHS]: 90,
 	};
 	const BONUSES_RATIO = {
-		[INVESTMENTS_BONUSES.TCB]: 0.1,
-		[INVESTMENTS_BONUSES.Merit]: 0.5,
+		[INVESTMENTS_BONUSES.TCI]: 0.1,
+		[INVESTMENTS_BONUSES.MERIT]: 0.5,
 	};
 
 	function bankMoneyCellRenderer(bankMoneyData) {
@@ -130,9 +130,9 @@
 			return {
 				period: PERIOD_DESC[period],
 				regular: _getMoneyInfo(period, []),
-				tcbOnly: _getMoneyInfo(period, [INVESTMENTS_BONUSES.TCB]),
-				meritsOnly: _getMoneyInfo(period, [INVESTMENTS_BONUSES.Merit]),
-				meritsAndTcb: _getMoneyInfo(period, [INVESTMENTS_BONUSES.TCB, INVESTMENTS_BONUSES.Merit]),
+				tcbOnly: _getMoneyInfo(period, [INVESTMENTS_BONUSES.TCI]),
+				meritsOnly: _getMoneyInfo(period, [INVESTMENTS_BONUSES.MERIT]),
+				meritsAndTcb: _getMoneyInfo(period, [INVESTMENTS_BONUSES.TCI, INVESTMENTS_BONUSES.MERIT]),
 			};
 		}
 
@@ -158,7 +158,7 @@
 	}
 
 	function createBankInvestmentFacade() {
-		const investmentTimeLeftElement = document.querySelector("p.m-clear");
+		const investmentTimeLeftElement = document.find("p.m-clear");
 
 		const bankDueDateMs = new Date().setSeconds(userdata.city_bank.time_left);
 		const formattedDate = formatDate({ milliseconds: bankDueDateMs }, { showYear: true });
@@ -176,7 +176,7 @@
 			],
 		});
 
-		investmentTimeLeftElement.insertAdjacentElement("afterEnd", investmentDueTimeElement);
+		investmentTimeLeftElement.insertAdjacentElement("afterend", investmentDueTimeElement);
 
 		function dispose() {
 			investmentDueTimeElement.remove();

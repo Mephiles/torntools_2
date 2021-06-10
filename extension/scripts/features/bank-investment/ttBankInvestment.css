@@ -2,7 +2,7 @@
 	padding: 10px;
 }
 
-.tt-bank-investment-selected-row {
+body:not(.dark-mode) .tt-bank-investment-selected-row {
 	background-color: #9bff9b;
 }
 
@@ -19,7 +19,7 @@ body.dark-mode .tt-bank-investment-selected-row {
 	font-size: 1rem;
 }
 
-.bank-investment-money-cell-per-day {
+body:not(.dark-mode) .bank-investment-money-cell-per-day {
 	color: #0f4983;
 }
 
