@@ -19,15 +19,15 @@
 
 	function initialiseLink() {
 		CUSTOM_LISTENERS[EVENT_CHANNELS.STATE_CHANGED].push(({ oldState, newState }) => {
-			console.log("DKK STATE_CHANGED 1", oldState, newState);
 			if (!feature.enabled()) return;
 
 			const setting = document.find(".tt-settings");
-			console.log("DKK STATE_CHANGED 2", setting);
 			if (!setting) return;
 
-			setting.parentElement.appendChild(setting);
-			console.log("DKK STATE_CHANGED 4");
+			new MutationObserver((mutations, observer) => {
+				observer.disconnect();
+				setting.parentElement.appendChild(setting);
+			}).observe(setting.parentElement, { childList: true });
 		});
 	}
 
