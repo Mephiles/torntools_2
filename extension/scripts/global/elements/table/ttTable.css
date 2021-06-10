@@ -1,4 +1,5 @@
 .tt-table {
+	display: grid;
 	overflow: auto;
 	background-color: white;
 	border: 1px solid lightgrey;

@@ -6,9 +6,6 @@ function createTableRow(rowData, tableColumnsDefs, options) {
 	const rowElement = document.newElement({
 		type: "div",
 		class: ["tt-table-row", ...(options.rowClass ? [options.rowClass(rowData)] : [])].join(" "),
-		style: {
-			...(!options.stretchColumns ? { minWidth: "fit-content" } : {}),
-		},
 		children: rowCells.map((cell) => cell.element),
 	});
 

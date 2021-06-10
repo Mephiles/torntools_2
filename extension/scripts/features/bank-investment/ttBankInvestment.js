@@ -77,7 +77,6 @@
 				title: "Period",
 				width: 120,
 				cellRenderer: "string",
-				sortable: true,
 			},
 			{
 				id: "regular",

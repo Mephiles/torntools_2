@@ -51,9 +51,6 @@ function createTable(tableColumnsDefs, tableRowsData, options = {}) {
 			document.newElement({
 				type: "div",
 				class: "tt-table-header",
-				style: {
-					...(!options.stretchColumns ? { minWidth: "fit-content" } : {}),
-				},
 				children: tableHeaders.map((header) => header.element),
 			}),
 			tableBodyElem,
