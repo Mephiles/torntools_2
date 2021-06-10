@@ -778,29 +778,31 @@ const API_USAGE = {
 
 const API_SELECTIONS = {
 	user: [
-		"profile",
-		"timestamp",
+		"attacks",
 		"bars",
+		"bazaar", // target
 		"cooldowns",
-		"travel",
+		"display", // target
+		"education",
 		"events",
-		"messages",
-		"money",
-		"refills",
-		"personalstats",
-		"stocks",
 		"inventory",
 		"merits",
-		"education",
-		"attacks",
+		"messages",
+		"money",
 		"networth",
 		"perks",
+		"personalstats",
+		"profile",
+		"refills",
+		"stocks",
+		"timestamp",
+		"travel",
 	],
 	properties: [],
 	faction: ["crimes"],
 	company: [],
-	item_market: [],
-	torn: ["education", "honors", "items", "medals", "stocks", "pawnshop", "properties"],
+	item_market: ["bazaar", "itemmarket"],
+	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks"],
 };
 
 const CHAT_TITLE_COLORS = {

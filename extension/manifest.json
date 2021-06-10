@@ -160,7 +160,11 @@
 		},
 		{
 			"matches": ["https://www.torn.com/api.html*"],
-			"css": ["scripts/features/api-selections/ttAPISelections.css", "scripts/features/api-marking/ttAPIMarking.css"],
+			"css": [
+				"scripts/global/globalVariables.css",
+				"scripts/features/api-selections/ttAPISelections.css",
+				"scripts/features/api-marking/ttAPIMarking.css"
+			],
 			"js": [
 				"scripts/features/api-demo/ttAPIDemo.js",
 				"scripts/features/auto-api-fill/ttAutoAPIFill.js",
