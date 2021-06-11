@@ -15,22 +15,17 @@
 }
 
 .tt-back {
-	text-shadow: none;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	height: auto;
 	width: auto;
 	margin-right: 26px;
-	border: none;
-	position: relative;
-	background: 0 0;
 	font-weight: 700;
-	line-height: 24px;
 	color: var(--content-title-links);
 	cursor: pointer;
-	text-decoration: none;
-	float: right;
+	position: absolute;
+	left: 50vw;
 }
 
 .tt-back svg {
