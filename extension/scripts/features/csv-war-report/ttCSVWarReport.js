@@ -56,7 +56,7 @@
 			const encodedUri = encodeURI(table);
 			const ttExportLink = options.find("#ttExportLink");
 			ttExportLink.setAttribute("href", encodedUri);
-			ttExportLink.setAttribute("download", `war_report_[${warID}].csv`);
+			ttExportLink.setAttribute("download", `War Report [${warID}].csv`);
 			ttExportLink.click();
 		});
 		options.insertAdjacentElement("afterbegin", ttExportButton);
