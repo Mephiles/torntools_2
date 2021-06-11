@@ -386,6 +386,7 @@ const DEFAULT_STORAGE = {
 			},
 			faction: {
 				csvWarReport: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				csvChainReport: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
