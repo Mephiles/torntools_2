@@ -12,7 +12,7 @@
 			storage: ["settings.pages.education.finishTime"],
 		},
 		() => {
-			if (!hasAPIData()) return "No API access.";
+			if (!hasAPIData() || !settings.apiUsage.user.education) return "No API access.";
 		}
 	);
 
