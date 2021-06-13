@@ -1,0 +1,21 @@
+#specialistGyms .background {
+	display: flex;
+}
+
+.tt-mobile #specialistGyms .background {
+	flex-direction: column;
+}
+
+#specialistGyms .specialist-gym {
+	flex-basis: 100%;
+	padding: 4px;
+}
+
+#specialistGyms .specialist-gym select {
+	width: 100%;
+}
+
+#specialistGyms .specialist-gym span {
+	display: block;
+	margin-top: 2px;
+}

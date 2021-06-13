@@ -392,6 +392,9 @@ const DEFAULT_STORAGE = {
 			property: {
 				value: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			gym: {
+				specialist: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
 		},
 		external: {
 			tornstats: new DefaultSetting({ type: "boolean", defaultValue: false }),
