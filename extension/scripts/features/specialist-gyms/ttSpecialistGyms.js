@@ -144,15 +144,18 @@
 				continue;
 			}
 
-			let text, colorClass;
+			let text, colorClass, title;
 			if (value > 0) {
 				text = `Allowed: ${formatNumber(value, { decimals: 0 })}`;
 				colorClass = "tt-color-green";
+				title = `Gain no more than ${formatNumber(value, { decimals: 0 })} ${stat} to keep access to your selected gyms.`;
 			} else if (value < 0) {
 				text = `Required: ${formatNumber(-value, { decimals: 0 })}`;
 				colorClass = "tt-color-red";
+				title = `Gain ${formatNumber(-value, { decimals: 0 })} ${stat} to get your selected gyms.`;
 			} else {
 				text = "";
+				title = false;
 			}
 
 			if (specialistStat) specialistStat.innerText = text;
@@ -166,6 +169,9 @@
 
 				gymProperties.find(`:scope > [class*='${stat}___'] [class*='propertyContent___']`).appendChild(specialistStat);
 			}
+
+			if (title) specialistStat.setAttribute("title", title);
+			else specialistStat.removeAttribute("title");
 
 			specialistStat.classList.remove("tt-color-green", "tt-color-red");
 			if (colorClass) specialistStat.classList.add(colorClass);
