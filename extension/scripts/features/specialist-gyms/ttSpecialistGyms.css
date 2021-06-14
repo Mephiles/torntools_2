@@ -1,8 +1,4 @@
-#specialistGyms .background {
-	display: flex;
-}
-
-.tt-mobile #specialistGyms .background {
+.tt-mobile #specialistGyms main {
 	flex-direction: column;
 }
 
