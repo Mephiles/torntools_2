@@ -16,15 +16,6 @@
 		null
 	);
 
-	const SPECIALITY_GYMS = {
-		balboas: ["defense", "dexterity"],
-		frontline: ["strength", "speed"],
-		gym3000: ["strength"],
-		isoyamas: ["defense"],
-		rebound: ["speed"],
-		elites: ["dexterity"],
-	};
-
 	let battleStats = {};
 
 	function initialiseListeners() {
@@ -80,14 +71,66 @@
 	}
 
 	function updateStats() {
-		// FIXME - Update stats.
-		console.log("DKK updateStats 1", battleStats);
+		const SPECIALITY_GYMS = {
+			balboas: ["defense", "dexterity"],
+			frontline: ["strength", "speed"],
+			gym3000: ["strength"],
+			isoyamas: ["defense"],
+			rebound: ["speed"],
+			elites: ["dexterity"],
+		};
+
+		const allowedGains = Object.keys(battleStats).reduce((a, b) => ({ ...a, [b]: [] }), {});
 
 		for (const section of document.findAll(".specialist-gym")) {
 			const gym = section.find("select").value;
 
-			console.log("DKK updateStats 2", gym);
+			const requiredStats = SPECIALITY_GYMS[gym];
+			if (!requiredStats) continue;
+
+			const primaryStats = {};
+			const secondaryStats = {};
+			for (const stat in battleStats) {
+				if (requiredStats.includes(stat)) primaryStats[stat] = battleStats[stat];
+				else secondaryStats[stat] = battleStats[stat];
+			}
+
+			let text, secondary, otherStats;
+			let silentStats = [];
+			const primary = Object.values(primaryStats).totalSum();
+			if (requiredStats.length === 1) {
+				secondary = Object.values(secondaryStats).findHighest();
+				otherStats = [Object.entries(secondaryStats).find(([, value]) => value === secondary)[0]];
+				silentStats = Object.keys(secondaryStats).filter((stat) => stat !== otherStats[0]);
+			} else {
+				secondary = Object.values(secondaryStats).totalSum();
+				otherStats = Object.keys(battleStats).filter((stat) => !requiredStats.includes(stat));
+			}
+
+			if (primary >= 1.25 * secondary) {
+				const amount = (primary / 1.25 - secondary).dropDecimals();
+
+				otherStats.forEach((stat) => allowedGains[stat].push(amount));
+
+				for (const stat of silentStats) {
+					allowedGains[stat].push((primary / 1.25 - secondaryStats[stat]).dropDecimals());
+				}
+
+				text = `Gain no more than ${formatNumber(amount, { decimals: 0 })} ${otherStats.join(" and ")}.`;
+			} else {
+				const amount = (secondary * 1.25 - primary).dropDecimals();
+
+				requiredStats.forEach((stat) => allowedGains[stat].push(amount));
+
+				text = `Gain ${formatNumber(amount, { decimals: 0 })} ${requiredStats.join(" and ")}.`;
+			}
+
+			if (text) section.find("span").innerText = text;
 		}
+
+		Object.entries(allowedGains).forEach(([stat, values]) => (allowedGains[stat] = values.findLowest()));
+		console.log("DKK updateStats", allowedGains);
+		// FIXME - Show allowed stats in box.
 	}
 
 	function dispose() {

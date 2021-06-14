@@ -15,7 +15,7 @@
 				}
 
 				triggerCustomListener(EVENT_CHANNELS.GYM_LOAD, { stats: STATS });
-			} else if (json && step === "sendItemAction") {
+			} else if (json && step === "train") {
 				if (!json.success) return;
 
 				STATS[json.stat.name] = parseInt(json.stat.newValue.replaceAll(",", ""));
@@ -25,7 +25,7 @@
 		}
 	});
 
-	new Promise(async (resolve, reject) => {
+	new Promise(async (resolve) => {
 		for (let stat of ["strength", "defense", "speed", "dexterity"]) {
 			await requireElement(`#${stat}-val`);
 
