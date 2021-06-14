@@ -36,23 +36,21 @@
 	function startFeature() {
 		const { content } = createContainer("Specialist Gyms", { class: "mt10" });
 
-		// FIXME - Load gyms from storage.
-		content.appendChild(createSection("none"));
-		content.appendChild(createSection("none"));
+		content.appendChild(createSection(filters.gym.specialist1, (gym) => ttStorage.change({ filters: { gym: { specialist1: gym } } })));
+		content.appendChild(createSection(filters.gym.specialist2, (gym) => ttStorage.change({ filters: { gym: { specialist2: gym } } })));
 
-		function createSection(gym) {
-			const select = document.newElement({ type: "select", html: getGyms() });
+		function createSection(gym, callback) {
+			const select = document.newElement({ type: "select", html: getGyms(), value: gym });
 			const section = document.newElement({
 				type: "div",
 				class: "specialist-gym",
 				children: [select, document.newElement({ type: "span", class: "specialist-gym-text" })],
 			});
 
-			select.value = gym;
-
-			select.addEventListener("change", () => {
-				// FIXME - Save gym change.
+			select.addEventListener("change", async () => {
 				updateStats();
+
+				await callback(select.value);
 			});
 
 			return section;
@@ -109,8 +107,6 @@
 			}
 
 			if (primary >= 1.25 * secondary) {
-				console.log("DKK updateStats 1", { primaryStats, secondaryStats }, { primary, secondary });
-
 				const amount = (primary / 1.25 - secondary).dropDecimals();
 
 				otherStats.forEach((stat) => allowedGains[stat].push(amount));

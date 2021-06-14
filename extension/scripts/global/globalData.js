@@ -454,6 +454,10 @@ const DEFAULT_STORAGE = {
 		trade: {
 			hideValues: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
+		gym: {
+			specialist1: new DefaultSetting({ type: "string", defaultValue: "none" }),
+			specialist2: new DefaultSetting({ type: "string", defaultValue: "none" }),
+		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
 	torndata: new DefaultSetting({ type: "object", defaultValue: {} }),
