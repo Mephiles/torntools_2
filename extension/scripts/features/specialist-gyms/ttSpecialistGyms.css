@@ -6,16 +6,20 @@
 	flex-direction: column;
 }
 
-#specialistGyms .specialist-gym {
+.specialist-gym {
 	flex-basis: 100%;
 	padding: 4px;
 }
 
-#specialistGyms .specialist-gym select {
+.specialist-gym select {
 	width: 100%;
 }
 
-#specialistGyms .specialist-gym span {
+.specialist-gym span {
 	display: block;
 	margin-top: 2px;
+}
+
+.tt-specialist-stat {
+	margin-top: 4px;
 }

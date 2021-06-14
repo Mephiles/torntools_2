@@ -37,8 +37,8 @@
 		const { content } = createContainer("Specialist Gyms", { class: "mt10" });
 
 		// FIXME - Load gyms from storage.
-		content.appendChild(createSection("frontline"));
-		content.appendChild(createSection("isoyamas"));
+		content.appendChild(createSection("none"));
+		content.appendChild(createSection("none"));
 
 		function createSection(gym) {
 			const select = document.newElement({ type: "select", html: getGyms() });
@@ -59,6 +59,7 @@
 
 			function getGyms() {
 				return `
+					<option value="none">None</option>
 					<option value="balboas">Balboas Gym (def/dex)</option>
 					<option value="frontline">Frontline Fitness (str/spd)</option>
 					<option value="gym3000">Gym 3000 (str)</option>
@@ -108,6 +109,8 @@
 			}
 
 			if (primary >= 1.25 * secondary) {
+				console.log("DKK updateStats 1", { primaryStats, secondaryStats }, { primary, secondary });
+
 				const amount = (primary / 1.25 - secondary).dropDecimals();
 
 				otherStats.forEach((stat) => allowedGains[stat].push(amount));
@@ -120,7 +123,7 @@
 			} else {
 				const amount = (secondary * 1.25 - primary).dropDecimals();
 
-				requiredStats.forEach((stat) => allowedGains[stat].push(amount));
+				requiredStats.forEach((stat) => allowedGains[stat].push(-amount));
 
 				text = `Gain ${formatNumber(amount, { decimals: 0 })} ${requiredStats.join(" and ")}.`;
 			}
@@ -128,21 +131,25 @@
 			if (text) section.find("span").innerText = text;
 		}
 
-		Object.entries(allowedGains).forEach(([stat, values]) => (allowedGains[stat] = values.findLowest()));
+		Object.entries(allowedGains).forEach(([stat, values]) => (allowedGains[stat] = values.length ? values.findLowest() : 0));
 
 		const gymProperties = document.find("ul[class*='properties___']");
 		for (const [stat, value] of Object.entries(allowedGains)) {
-			if (!value) continue;
+			let specialistStat = gymProperties.find(`.tt-specialist-stat[data-stat="${stat}"]`);
 
-			// FIXME - Improve design.
-			let text;
-			if (value > 0) {
-				text = formatNumber(value, { decimals: 0 });
-			} else {
-				text = formatNumber(value, { decimals: 0 });
+			if (!value) {
+				if (specialistStat) specialistStat.remove();
+				continue;
 			}
 
-			let specialistStat = gymProperties.find(`.tt-specialist-stat[data-stat="${stat}"]`);
+			let text, colorClass;
+			if (value > 0) {
+				text = `Allowed: ${formatNumber(value, { decimals: 0 })}`;
+				colorClass = "tt-color-green";
+			} else {
+				text = `Required: ${formatNumber(-value, { decimals: 0 })}`;
+				colorClass = "tt-color-red";
+			}
 
 			if (specialistStat) specialistStat.innerText = text;
 			else {
@@ -155,6 +162,9 @@
 
 				gymProperties.find(`:scope > [class*='${stat}___'] [class*='propertyContent___']`).appendChild(specialistStat);
 			}
+
+			specialistStat.classList.remove("tt-color-green", "tt-color-red");
+			specialistStat.classList.add(colorClass);
 		}
 	}
 
