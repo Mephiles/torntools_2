@@ -85,7 +85,10 @@
 			const gym = section.find("select").value;
 
 			const requiredStats = SPECIALITY_GYMS[gym];
-			if (!requiredStats) continue;
+			if (!requiredStats) {
+				section.find("span").innerText = "";
+				continue;
+			}
 
 			const primaryStats = {};
 			const secondaryStats = {};
