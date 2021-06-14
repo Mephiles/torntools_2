@@ -133,11 +133,13 @@
 
 		Object.entries(allowedGains).forEach(([stat, values]) => (allowedGains[stat] = values.length ? values.findLowest() : 0));
 
+		const hasAllowed = Object.values(allowedGains).some((value) => !!value);
+
 		const gymProperties = document.find("ul[class*='properties___']");
 		for (const [stat, value] of Object.entries(allowedGains)) {
 			let specialistStat = gymProperties.find(`.tt-specialist-stat[data-stat="${stat}"]`);
 
-			if (!value) {
+			if (!value && !hasAllowed) {
 				if (specialistStat) specialistStat.remove();
 				continue;
 			}
@@ -146,9 +148,11 @@
 			if (value > 0) {
 				text = `Allowed: ${formatNumber(value, { decimals: 0 })}`;
 				colorClass = "tt-color-green";
-			} else {
+			} else if (value < 0) {
 				text = `Required: ${formatNumber(-value, { decimals: 0 })}`;
 				colorClass = "tt-color-red";
+			} else {
+				text = "";
 			}
 
 			if (specialistStat) specialistStat.innerText = text;
@@ -164,7 +168,7 @@
 			}
 
 			specialistStat.classList.remove("tt-color-green", "tt-color-red");
-			specialistStat.classList.add(colorClass);
+			if (colorClass) specialistStat.classList.add(colorClass);
 		}
 	}
 
