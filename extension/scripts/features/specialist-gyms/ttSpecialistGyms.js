@@ -129,11 +129,38 @@
 		}
 
 		Object.entries(allowedGains).forEach(([stat, values]) => (allowedGains[stat] = values.findLowest()));
-		console.log("DKK updateStats", allowedGains);
-		// FIXME - Show allowed stats in box.
+
+		const gymProperties = document.find("ul[class*='properties___']");
+		for (const [stat, value] of Object.entries(allowedGains)) {
+			if (!value) continue;
+
+			// FIXME - Improve design.
+			let text;
+			if (value > 0) {
+				text = formatNumber(value, { decimals: 0 });
+			} else {
+				text = formatNumber(value, { decimals: 0 });
+			}
+
+			let specialistStat = gymProperties.find(`.tt-specialist-stat[data-stat="${stat}"]`);
+
+			if (specialistStat) specialistStat.innerText = text;
+			else {
+				specialistStat = document.newElement({
+					type: "div",
+					class: "tt-specialist-stat",
+					children: [document.newElement({ type: "p", text })],
+					dataset: { stat },
+				});
+
+				gymProperties.find(`:scope > [class*='${stat}___'] [class*='propertyContent___']`).appendChild(specialistStat);
+			}
+		}
 	}
 
 	function dispose() {
 		removeContainer("Specialist Gyms");
+
+		for (const stat of document.findAll(".tt-specialist-stat")) stat.remove();
 	}
 })();
