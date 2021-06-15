@@ -1,17 +1,20 @@
 (async () => {
 	if (getSearchParameters().get("step") === "your") {
-		addXHRListener(async ({ detail: { page, json, xhr, uri } }) => {
+		addXHRListener(async ({ detail: { page, xhr } }) => {
 			if (page === "factions") {
 				const params = new URLSearchParams(xhr.requestBody);
 				const step = params.get("step");
 
-				console.log("DKK XHR", step, { json, uri });
+				if (step === "crimes") {
+					loadCrimes().then(() => {});
+				}
 			}
 		});
 
 		await requireElement(".faction-tabs");
 
-		document.find(".faction-tabs li[data-case=crimes]").addEventListener("click", loadCrimes);
+		// TODO - Check if XHR listener is enough.
+		// document.find(".faction-tabs li[data-case=crimes]").addEventListener("click", loadCrimes);
 		document.find(".faction-tabs li[data-case=armoury]").addEventListener("click", loadArmory);
 
 		switch (getSubpage()) {

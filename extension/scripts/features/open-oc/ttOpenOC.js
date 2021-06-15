@@ -25,8 +25,6 @@
 
 			openCrimes();
 		});
-		// FIXME - Listen to crime starts.
-		// FIXME - Listen to crime plans.
 	}
 
 	async function openCrimes() {
