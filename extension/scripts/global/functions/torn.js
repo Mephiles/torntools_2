@@ -327,19 +327,43 @@ const darkModeObserver = (() => {
 	};
 })();
 
-async function newTornInfoBox(html, additionalClass = "") {
-	const svgHTML = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
+async function newTornInfoBox(content, options = {}) {
+	options = {
+		class: "",
+		...options,
+	};
+
+	const icon = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
+
 	return document.newElement({
 		type: "div",
-		class: `tt-msg-box ${additionalClass}`,
+		class: `tt-msg-box ${options.class}`,
 		html: `
 			<div class="tt-msg-div">
-				${svgHTML}
+				${icon}
 				<div class="tt-msg">
-					<div class="tt-content">
-						${html}
-					</div>
+					<div class="tt-content">${content}</div>
 				</div>
+			</div>
+		`,
+	});
+}
+
+function createMessageBox(content, options = {}) {
+	options = {
+		class: "",
+		...options,
+	};
+
+	return document.newElement({
+		type: "div",
+		class: `tt-message-box ${options.class}`,
+		html: `
+			<div class="tt-message-icon">
+				<i class="tt-icon-info"></i>
+			</div>
+			<div class="tt-message-wrap">
+				<div class="tt-message">${content}</div>
 			</div>
 		`,
 	});
