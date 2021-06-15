@@ -426,6 +426,11 @@ body.scrolled #tt-page-status.top-right {
 	justify-content: center;
 }
 
+.tt-message-box .tt-svg {
+	width: 34px;
+	height: 34px;
+}
+
 .tt-message-box .tt-icon-info {
 	margin-top: 9px;
 }

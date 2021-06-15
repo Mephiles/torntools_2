@@ -349,18 +349,21 @@ async function newTornInfoBox(content, options = {}) {
 	});
 }
 
-function createMessageBox(content, options = {}) {
+async function createMessageBox(content, options = {}) {
 	options = {
 		class: "",
 		...options,
 	};
+
+	const icon = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/icon_128.svg"))).text();
 
 	return document.newElement({
 		type: "div",
 		class: `tt-message-box ${options.class}`,
 		html: `
 			<div class="tt-message-icon">
-				<i class="tt-icon-info"></i>
+<!--				<i class="tt-icon-info"></i>-->
+				${icon}
 			</div>
 			<div class="tt-message-wrap">
 				<div class="tt-message">${content}</div>

@@ -41,7 +41,7 @@
 			const crimes = document.find("#faction-crimes");
 
 			crimes.insertBefore(
-				createMessageBox(`${amount} member${applyPlural(amount)} available for OCs.`, { class: "tt-available-players" }),
+				await createMessageBox(`${amount} member${applyPlural(amount)} available for OCs.`, { class: "tt-available-players" }),
 				crimes.firstElementChild
 			);
 		}
