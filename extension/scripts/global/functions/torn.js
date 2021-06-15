@@ -361,9 +361,8 @@ async function createMessageBox(content, options = {}) {
 		type: "div",
 		class: `tt-message-box ${options.class}`,
 		html: `
-			<div class="tt-message-icon">
-<!--				<i class="tt-icon-info"></i>-->
-				${icon}
+			<div class="tt-message-icon-wrap">
+				<div class="tt-message-icon">${icon}</div>
 			</div>
 			<div class="tt-message-wrap">
 				<div class="tt-message">${content}</div>

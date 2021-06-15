@@ -415,12 +415,19 @@ body.scrolled #tt-page-status.top-right {
 	display: flex;
 	color: var(--info-msg-font-color);
 	font-size: 13px;
+	box-shadow: var(--info-msg-box-shadow);
+}
+
+.tt-message-box .tt-message-icon-wrap {
+	width: 34px;
+	height: 34px;
+	background: var(--info-msg-grey-gradient);
 }
 
 .tt-message-box .tt-message-icon {
 	width: 34px;
 	height: 34px;
-	background: var(--tt-background-green);
+	background: var(--info-msg-horizontal-gradient);
 	border-radius: 5px 0 0 5px;
 	display: flex;
 	justify-content: center;
