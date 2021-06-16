@@ -42,6 +42,7 @@
 
 	async function showRecommendedNNB() {
 		const parent = document.find(".faction-crimes-wrap .begin-wrap");
+		parent.classList.add("tt-modified");
 
 		const heading = parent.find(".plan-crimes[role=heading]");
 		heading.appendChild(document.newElement({ type: "span", class: "tt-recommended-nnb", text: mobile ? "NNB" : "Recommended NNB" }));
