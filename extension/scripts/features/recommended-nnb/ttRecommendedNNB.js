@@ -12,7 +12,7 @@
 		() => settings.pages.faction.recommendedNnb,
 		initialiseListeners,
 		null,
-		null,
+		removeRecommendedNNB,
 		{
 			storage: ["settings.pages.faction.recommendedNnb"],
 		},
@@ -49,6 +49,15 @@
 
 		for (const crime of parent.findAll(".crimes-list .item-wrap .plan-crimes")) {
 			crime.appendChild(document.newElement({ type: "span", class: "tt-recommended-nnb", text: ORGANIZED_CRIMES[crime.innerText] }));
+		}
+	}
+
+	function removeRecommendedNNB() {
+		const parent = document.find(".faction-crimes-wrap .begin-wrap");
+		parent.classList.remove("tt-modified");
+
+		for (const nnb of document.findAll(".tt-recommended-nnb")) {
+			nnb.remove();
 		}
 	}
 })();
