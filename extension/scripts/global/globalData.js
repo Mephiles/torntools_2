@@ -134,6 +134,50 @@ const ttStorage = new (class {
 	}
 })();
 
+const ttCache = new (class {
+	constructor() {
+		this.cache = {};
+	}
+
+	set cache(value) {
+		this._cache = value || {};
+	}
+
+	get cache() {
+		return this._cache;
+	}
+
+	get(key) {
+		return this.hasValue(key) ? this.cache[key].value : undefined;
+	}
+
+	hasValue(key) {
+		return key in this.cache && this.cache[key].timeout > Date.now();
+	}
+
+	async set(object, ttl) {
+		const timeout = Date.now() + ttl;
+		for (const [key, value] of Object.entries(object)) {
+			this.cache[key] = { value, timeout };
+		}
+
+		await ttStorage.set({ cache: this.cache });
+	}
+
+	clear() {}
+
+	async refresh() {
+		const now = Date.now();
+		for (const [key, value] of Object.entries(this.cache)) {
+			if (value.timeout > now) continue;
+
+			delete this.cache[key];
+		}
+
+		await ttStorage.set({ cache: this.cache });
+	}
+})();
+
 const JAIL_CONSTANTS = {
 	// Activity
 	online: "online",
@@ -486,6 +530,7 @@ const DEFAULT_STORAGE = {
 		items: new DefaultSetting({ type: "array", defaultValue: [] }),
 		jail: new DefaultSetting({ type: "array", defaultValue: [] }),
 	},
+	cache: new DefaultSetting({ type: "object", defaultValue: {} }),
 };
 
 const CONTRIBUTORS = {

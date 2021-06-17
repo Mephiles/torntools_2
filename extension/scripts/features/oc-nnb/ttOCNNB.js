@@ -45,8 +45,16 @@
 			const data = {};
 
 			if (settings.external.tornstats) {
-				// FIXME - Cache response.
-				const result = await fetchData("tornstats", { section: "faction/crimes" });
+				let result;
+				if (ttCache.hasValue("tsCrimes")) {
+					result = ttCache.get("tsCrimes");
+				} else {
+					result = await fetchData("tornstats", { section: "faction/crimes" });
+
+					if (result.status) {
+						ttCache.set({ tsCrimes: result }, TO_MILLIS.HOURS).then(() => {});
+					}
+				}
 
 				if (result.status) {
 					for (const [user, value] of Object.entries(result.members)) {
@@ -58,12 +66,20 @@
 							verified: !!value.verified,
 						};
 					}
+
+					ttCache.set({ tsCrimes: result }, TO_MILLIS.HOURS).then(() => {});
 				}
 			}
 
 			if (settings.external.yata) {
-				// FIXME - Cache response.
-				const result = await fetchData("yata", { section: "faction/crimes/export", includeKey: true, relay: true });
+				let result;
+				if (ttCache.hasValue("yataCrimes")) {
+					result = ttCache.get("yataCrimes");
+				} else {
+					result = await fetchData("yata", { section: "faction/crimes/export", includeKey: true, relay: true });
+
+					ttCache.set({ yataCrimes: result }, TO_MILLIS.HOURS).then(() => {});
+				}
 
 				for (const [user, value] of Object.entries(result.members)) {
 					if (!value.NNB) continue;
