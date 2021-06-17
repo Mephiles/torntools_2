@@ -27,7 +27,7 @@
 		"Bomb Threat": "25-30",
 		"Planned Robbery": "30-40",
 		"Rob a money train": "40-50",
-		"Take over a cruise liner": "40-50",
+		"Take over a cruise liner": "40-55",
 		"Hijack a plane": "55-60",
 		"Political Assassination": "~60",
 	};
