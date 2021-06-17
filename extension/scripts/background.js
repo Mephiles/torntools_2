@@ -121,7 +121,7 @@ function registerUpdaters() {
 	timedUpdates();
 
 	setInterval(sendNotifications, 5 * TO_MILLIS.SECONDS);
-	setInterval(clearCache, 15 * TO_MILLIS.SECONDS);
+	setInterval(clearCache, 5 * TO_MILLIS.SECONDS);
 	setInterval(timedUpdates, 30 * TO_MILLIS.SECONDS);
 }
 
