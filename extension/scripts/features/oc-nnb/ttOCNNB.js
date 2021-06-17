@@ -40,14 +40,47 @@
 
 		populateCrimes();
 		populateSelection();
-		// FIXME - Show nnb.
 
 		async function loadData() {
-			// FIXME - Load data from YATA in the background.
-			// FIXME - Load data from TornStats.
+			const data = {};
 
-			// FIXME - Combine the data to form a single source.
-			return {};
+			if (settings.external.tornstats) {
+				// FIXME - Cache response.
+				const result = await fetchData("tornstats", { section: "faction/crimes" });
+
+				if (result.status) {
+					for (const [user, value] of Object.entries(result.members)) {
+						data[user] = {
+							nnb: value.natural_nerve,
+							degree: !!value.psych_degree,
+							federal_judge: !!value.federal_judge,
+							merits: value.crime_success,
+							verified: !!value.verified,
+						};
+					}
+				}
+			}
+
+			if (settings.external.yata) {
+				// FIXME - Cache response.
+				const result = await fetchData("yata", { section: "faction/crimes/export", includeKey: true, relay: true });
+
+				for (const [user, value] of Object.entries(result.members)) {
+					if (!value.NNB) continue;
+
+					if (user in data) {
+						// Prioritise TornStats nnb by not modifying it.
+						data[user].verified = data[user].nnb === value.NNB;
+					} else {
+						data[user] = {
+							nnb: value.NNB,
+							verified: true,
+						};
+					}
+				}
+			}
+
+			return data;
 		}
 
 		function populateCrimes() {
@@ -59,7 +92,6 @@
 
 				const stat = row.find(".stat");
 				if (row.classList.contains("title")) {
-					// <div className="t-delimiter white"></div>
 					stat.parentElement.insertBefore(
 						document.newElement({
 							type: "li",
@@ -72,11 +104,14 @@
 					continue;
 				}
 
-				// TODO - Works with honors disabled?
 				const id = row.find(".h").getAttribute("href").split("XID=")[1];
-				const nnb = "N/A"; // FIXME - Use loaded data.
+				if (id in data) {
+					const { nnb, verified } = data[id];
 
-				stat.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb", text: nnb }), stat);
+					stat.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb", text: `${verified ? "" : "*"}${nnb}` }), stat);
+				} else {
+					stat.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb", text: "N/A" }), stat);
+				}
 			}
 		}
 
@@ -101,12 +136,14 @@
 					continue;
 				}
 
-				// TODO - Works with honors disabled?
-				let id = row.find(".h").getAttribute("href").split("XID=")[1];
-				// noinspection JSUnresolvedVariable
-				const nnb = "N/A"; // FIXME - Use loaded data.
+				const id = row.find(".h").getAttribute("href").split("XID=")[1];
+				if (id in data) {
+					const { nnb, verified } = data[id];
 
-				act.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb short", text: nnb }), act);
+					act.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb short", text: `${verified ? "" : "*"}${nnb}` }), act);
+				} else {
+					act.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb short", text: "N/A" }), act);
+				}
 			}
 		}
 	}
