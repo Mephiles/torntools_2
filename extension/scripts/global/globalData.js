@@ -167,14 +167,16 @@ const ttCache = new (class {
 	clear() {}
 
 	async refresh() {
+		let hasChanged = false;
 		const now = Date.now();
 		for (const [key, value] of Object.entries(this.cache)) {
 			if (value.timeout > now) continue;
 
+			hasChanged = true;
 			delete this.cache[key];
 		}
 
-		await ttStorage.set({ cache: this.cache });
+		if (hasChanged) await ttStorage.set({ cache: this.cache });
 	}
 })();
 
