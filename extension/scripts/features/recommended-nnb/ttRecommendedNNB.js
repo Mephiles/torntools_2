@@ -11,7 +11,7 @@
 		"faction",
 		() => settings.pages.faction.recommendedNnb,
 		initialiseListeners,
-		null,
+		startFeature,
 		removeRecommendedNNB,
 		{
 			storage: ["settings.pages.faction.recommendedNnb"],
@@ -38,6 +38,12 @@
 
 			showRecommendedNNB();
 		});
+	}
+
+	function startFeature() {
+		if (!document.find(".faction-crimes-wrap")) return;
+
+		showRecommendedNNB();
 	}
 
 	async function showRecommendedNNB() {
