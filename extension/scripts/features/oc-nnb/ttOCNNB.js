@@ -35,6 +35,7 @@
 	async function showNNB() {
 		const data = await loadData().catch((error) => {
 			// TODO - Handle error while loading data.
+			console.error("TT - Unhandled error. Report this to the TornTools developers!", error);
 		});
 		if (!data) return;
 
