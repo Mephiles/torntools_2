@@ -36,16 +36,16 @@
 
 /* Selection */
 
-.plans-list .offences.tt-modified {
-	width: 55px !important;
-}
-
 .tt-mobile .plans-list .member.tt-modified {
 	width: 100px !important;
 }
 
 .tt-mobile .plans-list .level.tt-modified {
 	width: 15px !important;
+}
+
+.plans-list .offences.tt-modified {
+	width: 115px !important;
 }
 
 .tt-mobile .plans-list .offences.tt-modified {

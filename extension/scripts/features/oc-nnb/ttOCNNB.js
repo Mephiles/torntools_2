@@ -59,7 +59,16 @@
 
 				const stat = row.find(".stat");
 				if (row.classList.contains("title")) {
-					stat.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb", text: "NNB" }), stat);
+					// <div className="t-delimiter white"></div>
+					stat.parentElement.insertBefore(
+						document.newElement({
+							type: "li",
+							class: "tt-nnb",
+							text: "NNB",
+							children: [document.newElement({ type: "div", class: "t-delimiter" })],
+						}),
+						stat
+					);
 					continue;
 				}
 
@@ -80,7 +89,15 @@
 
 				const act = row.find(".act");
 				if (row.classList.contains("title")) {
-					act.parentElement.insertBefore(document.newElement({ type: "li", class: "tt-nnb short", text: "NNB" }), act);
+					act.parentElement.insertBefore(
+						document.newElement({
+							type: "li",
+							class: "tt-nnb short",
+							text: "NNB",
+							children: [document.newElement({ type: "div", class: "t-delimiter" })],
+						}),
+						act
+					);
 					continue;
 				}
 
