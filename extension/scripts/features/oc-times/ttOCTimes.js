@@ -9,15 +9,15 @@
 	const feature = featureManager.registerFeature(
 		"OC Times",
 		"faction",
-		() => settings.pages.faction.ocNnb,
+		() => settings.pages.faction.ocTimes,
 		initialiseListeners,
 		startFeature,
 		removeTimes,
 		{
-			storage: ["settings.pages.faction.ocNnb"],
+			storage: ["settings.pages.faction.ocTimes"],
 		},
 		async () => {
-			if (!hasAPIData() || !factiondata) return "No API access.";
+			if (!hasAPIData() || !factiondata || !factiondata.crimes) return "No API access.";
 		}
 	);
 
@@ -35,7 +35,24 @@
 		showTimes();
 	}
 
-	function showTimes() {}
+	function showTimes() {
+		for (const crime of document.findAll(".organize-wrap .crimes-list > .item-wrap")) {
+			const id = crime.find(".details-wrap").dataset.crime;
 
-	function removeTimes() {}
+			let text;
+			if (id in factiondata.crimes) {
+				const finish = new Date(factiondata.crimes[id].time_ready * 1000);
+
+				text = `${formatTime(finish)} | ${formatDate(finish)}`;
+			} else {
+				text = "N/A";
+			}
+
+			crime.find(".status").appendChild(document.newElement({ type: "span", class: "tt-oc-time", text }));
+		}
+	}
+
+	function removeTimes() {
+		for (const timer of document.findAll(".tt-oc-time")) timer.remove();
+	}
 })();
