@@ -600,8 +600,10 @@ async function loadMarketSearch() {
 }
 
 async function setupCalculator() {
+	const calculator = document.find("#calculator");
+
 	// setup itemlist
-	const itemSelection = document.find("#market .item-list");
+	const itemSelection = calculator.find(".item-list");
 
 	for (const id in torndata.items) {
 		const name = torndata.items[id].name;
@@ -614,12 +616,12 @@ async function setupCalculator() {
 		div.addEventListener("click", async () => {
 			itemSelection.classList.add("hidden");
 
-			showMarketInfo(id);
+			// showMarketInfo(id);
 		});
 	}
 
 	// setup searchbar
-	document.find("#market #search-bar").addEventListener("keyup", (event) => {
+	calculator.find(".search").addEventListener("keyup", (event) => {
 		const keyword = event.target.value.toLowerCase();
 
 		if (!keyword) {
@@ -627,7 +629,7 @@ async function setupCalculator() {
 			return;
 		}
 
-		for (const item of document.findAll("#market .item-list li")) {
+		for (const item of calculator.findAll(".item-list > li")) {
 			if (item.textContent.toLowerCase().includes(keyword)) {
 				item.classList.remove("hidden");
 				itemSelection.classList.remove("hidden");
@@ -636,11 +638,11 @@ async function setupCalculator() {
 			}
 		}
 	});
-	document.find("#market #search-bar").addEventListener("click", (event) => {
+	calculator.find(".search").addEventListener("click", (event) => {
 		event.target.value = "";
 
-		document.find("#market .item-list").classList.add("hidden");
-		document.find("#market #item-information").classList.add("hidden");
+		calculator.find(".item-list").classList.add("hidden");
+		// calculator.find("#market #item-information").classList.add("hidden");
 	});
 
 	function showMarketInfo(id) {
