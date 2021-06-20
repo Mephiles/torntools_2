@@ -981,4 +981,31 @@ async function setupAPIInfo() {
 
 function setupRemote() {}
 
-function setupAbout() {}
+function setupAbout() {
+	const about = document.find("#about");
+
+	// version
+	about.find(".version").innerText = chrome.runtime.getManifest().version;
+
+	// disk space
+	ttStorage.getSize().then((size) => (about.find(".disk-space").innerText = formatBytes(size)));
+}
+
+function formatBytes(bytes, options = {}) {
+	options = {
+		decimals: 2,
+		...options,
+	};
+
+	if (bytes === 0) return "0 bytes";
+	else if (bytes < 0) throw "Negative bytes are impossible";
+
+	const unitExponent = 1024;
+	const units = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+	const effectiveUnit = Math.floor(Math.log(bytes) / Math.log(unitExponent));
+
+	const xBytes = bytes / Math.pow(unitExponent, effectiveUnit);
+
+	return `${formatNumber(xBytes, { decimals: options.decimals })} ${units[effectiveUnit]}`;
+}

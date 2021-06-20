@@ -132,6 +132,15 @@ const ttStorage = new (class {
 			}
 		});
 	}
+
+	async getSize() {
+		let size;
+
+		if (chrome.storage.local.getBytesInUse) size = await new Promise((resolve) => chrome.storage.local.getBytesInUse((data) => resolve(data)));
+		else size = JSON.stringify(await this.get(null)).length;
+
+		return size;
+	}
 })();
 
 const ttCache = new (class {
