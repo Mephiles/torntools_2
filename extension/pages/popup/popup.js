@@ -721,7 +721,7 @@ async function setupCalculator() {
 }
 
 async function loadCalculator() {
-	document.find("#calculator #calculator-search").focus();
+	document.find("#calculator .search").focus();
 }
 
 async function setupStocksOverview() {
