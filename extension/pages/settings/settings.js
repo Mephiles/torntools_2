@@ -989,6 +989,51 @@ function setupAbout() {
 
 	// disk space
 	ttStorage.getSize().then((size) => (about.find(".disk-space").innerText = formatBytes(size)));
+
+	showTeam();
+
+	function showTeam() {
+		const ourTeam = about.find(".our-team");
+
+		for (const member of TEAM.filter((member) => member.core)) {
+			const title = Array.isArray(member.title) ? member.title.join(" + ") : member.title;
+
+			const card = document.newElement({
+				type: "div",
+				class: "member-card",
+				children: [
+					document.newElement({
+						type: "a",
+						class: "name",
+						text: member.name,
+						href: `https://www.torn.com/profiles.php?XID=${member.torn}`,
+						attributes: { target: "_blank" },
+					}),
+					document.newElement({ type: "span", class: "title", text: title }),
+				],
+			});
+
+			if (member.donations) {
+				const donations = document.newElement({ type: "div", class: "donations" });
+
+				for (const method of member.donations) {
+					donations.appendChild(
+						document.newElement({
+							type: "a",
+							text: method.name,
+							href: method.link,
+							attributes: { target: "_blank" },
+						})
+					);
+				}
+
+				card.appendChild(document.newElement("hr"));
+				card.appendChild(donations);
+			}
+
+			ourTeam.appendChild(card);
+		}
+	}
 }
 
 function formatBytes(bytes, options = {}) {
