@@ -4,11 +4,12 @@ const SETUP_PAGES = {
 	initialize: setupInitialize,
 	dashboard: setupDashboard,
 	market: setupMarketSearch,
+	calculator: setupCalculator,
 	stocks: setupStocksOverview,
 };
 const LOAD_PAGES = {
 	market: loadMarketSearch,
-	// stocks: setupStocksOverview,
+	calculator: loadCalculator,
 };
 
 let initiatedPages = {};
@@ -596,6 +597,131 @@ async function setupMarketSearch() {
 
 async function loadMarketSearch() {
 	document.find("#market #search-bar").focus();
+}
+
+async function setupCalculator() {
+	// setup itemlist
+	const itemSelection = document.find("#market .item-list");
+
+	for (const id in torndata.items) {
+		const name = torndata.items[id].name;
+
+		const div = document.newElement({ type: "li", class: "item", id: name.toLowerCase().replace(/\s+/g, "").replace(":", "_"), text: name });
+
+		itemSelection.appendChild(div);
+
+		// display item if clicked on it
+		div.addEventListener("click", async () => {
+			itemSelection.classList.add("hidden");
+
+			showMarketInfo(id);
+		});
+	}
+
+	// setup searchbar
+	document.find("#market #search-bar").addEventListener("keyup", (event) => {
+		const keyword = event.target.value.toLowerCase();
+
+		if (!keyword) {
+			itemSelection.classList.add("hidden");
+			return;
+		}
+
+		for (const item of document.findAll("#market .item-list li")) {
+			if (item.textContent.toLowerCase().includes(keyword)) {
+				item.classList.remove("hidden");
+				itemSelection.classList.remove("hidden");
+			} else {
+				item.classList.add("hidden");
+			}
+		}
+	});
+	document.find("#market #search-bar").addEventListener("click", (event) => {
+		event.target.value = "";
+
+		document.find("#market .item-list").classList.add("hidden");
+		document.find("#market #item-information").classList.add("hidden");
+	});
+
+	function showMarketInfo(id) {
+		const viewItem = document.find("#market #item-information");
+		viewItem.find(".market").classList.add("hidden");
+
+		if (ttCache.hasValue("livePrice", id)) {
+			handleMarket(ttCache.get("livePrice", id));
+		} else {
+			fetchData("torn", { section: "market", id, selections: ["bazaar", "itemmarket"] })
+				.then((result) => {
+					handleMarket(result);
+
+					ttCache.set({ [id]: result }, TO_MILLIS.SECONDS * 30, "livePrice");
+				})
+				.catch((error) => {
+					document.find(".error").classList.remove("hidden");
+					document.find(".error").innerText = error.error;
+				});
+		}
+
+		const item = torndata.items[id];
+		viewItem.find(".circulation").innerText = formatNumber(item.circulation);
+		viewItem.find(".value").innerText = `$${formatNumber(item.market_value)}`;
+		viewItem.find(".name").innerText = item.name;
+		viewItem.find(".name").href = `https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=${item.name}`;
+		viewItem.find(".image").src = item.image;
+
+		viewItem.classList.remove("hidden");
+
+		function handleMarket(result) {
+			const list = viewItem.find(".market");
+			list.innerHTML = "";
+
+			let found = false;
+
+			for (const type of Object.keys(result)) {
+				let text;
+				if (type === "itemmarket") text = "Item Market";
+				else text = capitalizeText(type);
+
+				const wrap = document.newElement({ type: "div" });
+
+				wrap.appendChild(document.newElement({ type: "h4", text }));
+
+				if (result[type]) {
+					found = true;
+
+					for (const item of result[type].slice(0, 3)) {
+						wrap.appendChild(
+							document.newElement({
+								type: "div",
+								class: "price",
+								text: `${item.quantity}x | $${formatNumber(item.cost)}`,
+							})
+						);
+					}
+				} else {
+					wrap.appendChild(
+						document.newElement({
+							type: "div",
+							class: "price no-price",
+							text: "No price found.",
+						})
+					);
+				}
+
+				list.appendChild(wrap);
+			}
+
+			if (!isSellable(id) && !found) {
+				list.classList.add("untradable");
+				list.innerHTML = "Item is not sellable!";
+			}
+			viewItem.find(".market").classList.remove("hidden");
+		}
+	}
+}
+
+async function loadCalculator() {
+	document.find("#calculator #calculator-search").focus();
 }
 
 async function setupStocksOverview() {
