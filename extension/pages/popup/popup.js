@@ -605,23 +605,55 @@ async function setupCalculator() {
 	// setup itemlist
 	const itemSelection = calculator.find(".item-list");
 
+	let selectedItems = localdata.popup.calculatorItems;
+
 	for (const id in torndata.items) {
 		const name = torndata.items[id].name;
 
-		const div = document.newElement({ type: "li", class: "item", id: name.toLowerCase().replace(/\s+/g, "").replace(":", "_"), text: name });
+		const identifier = `calculator-${id}`;
 
-		itemSelection.appendChild(div);
+		itemSelection.appendChild(
+			document.newElement({
+				type: "li",
+				class: "item",
+				id: name.toLowerCase().replace(/\s+/g, "").replace(":", "_"),
+				children: [
+					document.newElement({ type: "label", text: name, attributes: { for: identifier } }),
+					document.newElement({
+						type: "input",
+						id: identifier,
+						attributes: { type: "number" },
+						events: {
+							input(event) {
+								let item = selectedItems.find((i) => i.id === id);
 
-		// display item if clicked on it
-		div.addEventListener("click", async () => {
-			itemSelection.classList.add("hidden");
+								const amount = event.target.value;
+								if (amount === "") {
+									if (item) {
+										selectedItems = selectedItems.filter((i) => i.id !== id);
+										updateSelection();
+									}
 
-			// showMarketInfo(id);
-		});
+									return;
+								}
+
+								if (!item) {
+									item = { id };
+									selectedItems.push(item);
+								}
+								item.amount = parseInt(amount);
+								updateSelection();
+							},
+						},
+					}),
+				],
+			})
+		);
 	}
 
 	// setup searchbar
-	calculator.find(".search").addEventListener("keyup", (event) => {
+	const search = calculator.find(".search");
+	search.addEventListener("keyup", (event) => {
 		const keyword = event.target.value.toLowerCase();
 
 		if (!keyword) {
@@ -638,87 +670,57 @@ async function setupCalculator() {
 			}
 		}
 	});
-	calculator.find(".search").addEventListener("click", (event) => {
+	search.addEventListener("click", (event) => {
 		event.target.value = "";
 
 		calculator.find(".item-list").classList.add("hidden");
-		// calculator.find("#market #item-information").classList.add("hidden");
 	});
 
-	function showMarketInfo(id) {
-		const viewItem = document.find("#market #item-information");
-		viewItem.find(".market").classList.add("hidden");
+	const clear = calculator.find(".clear");
+	clear.addEventListener("click", () => {
+		selectedItems = [];
 
-		if (ttCache.hasValue("livePrice", id)) {
-			handleMarket(ttCache.get("livePrice", id));
-		} else {
-			fetchData("torn", { section: "market", id, selections: ["bazaar", "itemmarket"] })
-				.then((result) => {
-					handleMarket(result);
+		updateSelection();
+	});
 
-					ttCache.set({ [id]: result }, TO_MILLIS.SECONDS * 30, "livePrice");
+	updateSelection();
+
+	function updateSelection() {
+		const receipt = calculator.find(".receipt");
+		receipt.innerHTML = "";
+
+		if (!selectedItems.length) {
+			clear.classList.add("hidden");
+			return;
+		}
+		clear.classList.remove("hidden");
+
+		const items = document.newElement({ type: "ul" });
+
+		let totalValue = 0;
+		for (const { id, amount } of selectedItems) {
+			const { market_value: value, name } = torndata.items[id];
+			const price = amount * value;
+
+			items.appendChild(
+				document.newElement({
+					type: "li",
+					children: [
+						document.newElement({ type: "span", class: "amount", text: `${formatNumber(amount)}x` }),
+						document.newElement({ type: "span", class: "item", text: name }),
+						document.createTextNode("="),
+						document.newElement({ type: "span", class: "price", text: formatNumber(price, { currency: true, decimals: 0 }) }),
+					],
 				})
-				.catch((error) => {
-					document.find(".error").classList.remove("hidden");
-					document.find(".error").innerText = error.error;
-				});
+			);
+
+			totalValue += price;
 		}
 
-		const item = torndata.items[id];
-		viewItem.find(".circulation").innerText = formatNumber(item.circulation);
-		viewItem.find(".value").innerText = `$${formatNumber(item.market_value)}`;
-		viewItem.find(".name").innerText = item.name;
-		viewItem.find(".name").href = `https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=${item.name}`;
-		viewItem.find(".image").src = item.image;
+		receipt.appendChild(items);
+		receipt.appendChild(document.newElement({ type: "div", class: "total", text: `Total: ${formatNumber(totalValue, { currency: true, decimals: 0 })}` }));
 
-		viewItem.classList.remove("hidden");
-
-		function handleMarket(result) {
-			const list = viewItem.find(".market");
-			list.innerHTML = "";
-
-			let found = false;
-
-			for (const type of Object.keys(result)) {
-				let text;
-				if (type === "itemmarket") text = "Item Market";
-				else text = capitalizeText(type);
-
-				const wrap = document.newElement({ type: "div" });
-
-				wrap.appendChild(document.newElement({ type: "h4", text }));
-
-				if (result[type]) {
-					found = true;
-
-					for (const item of result[type].slice(0, 3)) {
-						wrap.appendChild(
-							document.newElement({
-								type: "div",
-								class: "price",
-								text: `${item.quantity}x | $${formatNumber(item.cost)}`,
-							})
-						);
-					}
-				} else {
-					wrap.appendChild(
-						document.newElement({
-							type: "div",
-							class: "price no-price",
-							text: "No price found.",
-						})
-					);
-				}
-
-				list.appendChild(wrap);
-			}
-
-			if (!isSellable(id) && !found) {
-				list.classList.add("untradable");
-				list.innerHTML = "Item is not sellable!";
-			}
-			viewItem.find(".market").classList.remove("hidden");
-		}
+		ttStorage.change({ localdata: { popup: { calculatorItems: selectedItems } } });
 	}
 }
 
