@@ -30,7 +30,7 @@
 	}
 
 	async function loadCrimes() {
-		await requireElement("form[name='crimes']");
+		await requireElement(".specials-cont-wrap form[name='crimes'], #defaultCountdown");
 
 		const { content, options } = createContainer("Quick Crimes", {
 			previousElement: document.find(".content-title"),
@@ -50,25 +50,36 @@
 
 						const enabled = options.find("#edit-items-button").classList.toggle("tt-overlay-item");
 
-						// FIXME - Show quick crimes as overlay items.
-						// FIXME - Show normal crimes as overlay items.
+						for (const crime of content.findAll(".quick-item")) {
+							const item = crime.find(".forced-item");
+							if (enabled) {
+								crime.classList.add("tt-overlay-item", "removable");
+								item.classList.remove("item");
+							} else {
+								crime.classList.remove("tt-overlay-item", "removable");
+								item.classList.add("item");
+							}
+						}
 
-						if (enabled) document.find(".tt-overlay").classList.remove("hidden");
-						else document.find(".tt-overlay").classList.add("hidden");
-
-						// FIXME - Remove items when clicking them.
 						if (enabled) {
-							// for (const item of document.findAll("ul.items-cont[aria-expanded='true'] > li")) {
-							// 	if (!allowQuickItem(parseInt(item.dataset.item), item.dataset.category)) continue;
-							//
-							// 	item.addEventListener("click", onItemClickQuickEdit);
-							// }
+							document.find(".tt-overlay").classList.remove("hidden");
+
+							if (document.find(".specials-cont-wrap form[name=crimes] .item[draggable='true']")) {
+								document.find(".specials-cont-wrap form[name='crimes']").classList.add("tt-overlay-item");
+
+								for (const crime of document.findAll(".specials-cont-wrap form[name='crimes'] .item[draggable='true']")) {
+									crime.addEventListener("click", onCrimeClick);
+									crime.setAttribute("draggable", "false");
+								}
+							}
 						} else {
-							// for (const item of document.findAll("ul.items-cont[aria-expanded='true'] > li")) {
-							// 	if (!allowQuickItem(parseInt(item.dataset.item), item.dataset.category)) continue;
-							//
-							// 	item.removeEventListener("click", onItemClickQuickEdit);
-							// }
+							document.find(".tt-overlay").classList.add("hidden");
+							document.find(".specials-cont-wrap form[name='crimes']").classList.remove("tt-overlay-item");
+
+							for (const crime of document.findAll(".specials-cont-wrap form[name='crimes'] .item[draggable='false']")) {
+								crime.removeEventListener("click", onCrimeClick);
+								crime.setAttribute("draggable", "true");
+							}
 						}
 					},
 				},
@@ -82,7 +93,7 @@
 		makeDraggable();
 
 		function makeDraggable() {
-			const form = document.find("form[name='crimes']");
+			const form = document.find(".specials-cont-wrap form[name='crimes']");
 			if (!form || !form.hasAttribute("action")) return;
 
 			const action = `${location.origin}/${form.getAttribute("action")}`;
@@ -105,7 +116,7 @@
 				document.find("#quickCrimes > main").classList.add("drag-progress");
 				if (document.find("#quickCrimes .temp.quick-item")) return;
 
-				const form = document.find("form[name='crimes']");
+				const form = document.find(".specials-cont-wrap form[name='crimes']");
 				const nerve = parseInt(form.find("input[name='nervetake']").value);
 
 				const action = `${location.origin}/${form.getAttribute("action")}`;
@@ -157,14 +168,14 @@
 
 			const itemWrap = document.newElement({
 				type: "form",
-				class: temporary ? "temp quick-item" : "quick-item",
+				class: `quick-item ${temporary ? "temp" : ""}`,
 				dataset: data,
 				children: [
 					document.newElement({ type: "input", attributes: { name: "nervetake", type: "hidden", value: nerve } }),
 					document.newElement({ type: "input", attributes: { name: "crime", type: "hidden", value: name } }),
 					document.newElement({
 						type: "ul",
-						class: "item",
+						class: "item forced-item",
 						children: [
 							document.newElement({ type: "div", class: "pic", attributes: { style: `background-image: url(${icon})` } }),
 							document.newElement({ type: "div", class: "text", text: `${text} (-${nerve} nerve)` }),
@@ -172,6 +183,14 @@
 					}),
 					closeIcon,
 				],
+				events: {
+					async click() {
+						if (itemWrap.classList.contains("removable")) {
+							itemWrap.remove();
+							await saveCrimes();
+						}
+					},
+				},
 				attributes: {
 					action: `crimes.php?step=${step}`,
 					method: "post",
@@ -179,6 +198,8 @@
 				},
 			});
 			innerContent.appendChild(itemWrap);
+
+			return itemWrap;
 		}
 
 		async function saveCrimes() {
@@ -195,6 +216,34 @@
 					})),
 				},
 			});
+		}
+
+		async function onCrimeClick(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			const item = event.target.closest(".item");
+
+			const form = document.find(".specials-cont-wrap form[name='crimes']");
+			const nerve = parseInt(form.find("input[name='nervetake']").value);
+
+			const action = `${location.origin}/${form.getAttribute("action")}`;
+			const step = getSearchParameters(action).get("step");
+
+			const data = {
+				step,
+				nerve,
+				name: item.find(".choice-container input").value,
+				icon: item.find(".title img").src,
+				text: item.find(".bonus").innerText.trim(),
+			};
+
+			const quick = addQuickCrime(data, false);
+
+			quick.classList.add("removable", "tt-overlay-item");
+			quick.find(".item").classList.remove("item");
+
+			await saveCrimes();
 		}
 	}
 

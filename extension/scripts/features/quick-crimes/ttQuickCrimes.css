@@ -74,17 +74,11 @@ body.dark-mode #quickCrimes .inner-content .quick-item {
 	font-size: 10px;
 	color: gray;
 }
+
 #quickCrimes #edit-items-button i {
 	margin-right: 4px;
 }
 
-.tt-overlay-item li.tt-overlay-ignore[data-item] {
-	/* FIXME - Verify style. */
-	border-top: 1px solid #00000059;
-	border-bottom: 1px solid #00000059;
-}
-
-#quickCrimes .inner-content .item.removable {
-	/* FIXME - Verify style. */
+#quickCrimes .inner-content .quick-item.removable {
 	background-color: #ffd5d5 !important;
 }
