@@ -284,21 +284,22 @@
 		} else {
 			itemWrap.appendChild(document.newElement({ type: "div", class: "text", text: id }));
 		}
-		itemWrap.appendChild(
-			document.newElement({
-				type: "i",
-				class: "fas fa-times tt-close-icon",
-				attributes: { title: "Remove quick access." },
-				events: {
-					click: async (event) => {
-						event.stopPropagation();
-						itemWrap.remove();
 
-						await saveQuickItems();
-					},
+		const closeIcon = document.newElement({
+			type: "i",
+			class: "fas fa-times tt-close-icon",
+			attributes: { title: "Remove quick access." },
+			events: {
+				click: async (event) => {
+					event.stopPropagation();
+					closeIcon.dispatchEvent(new Event("mouseout"));
+					itemWrap.remove();
+
+					await saveQuickItems();
 				},
-			})
-		);
+			},
+		});
+		itemWrap.appendChild(closeIcon);
 		innerContent.appendChild(itemWrap);
 		return itemWrap;
 	}
