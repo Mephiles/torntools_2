@@ -16,6 +16,8 @@
 		null
 	);
 
+	let movingElement;
+
 	function initialiseQuickItems() {
 		document.addEventListener("click", (event) => {
 			if (event.target.classList.contains("close-act")) {
@@ -230,6 +232,38 @@
 						}
 					});
 				},
+				dragstart(event) {
+					event.dataTransfer.effectAllowed = "move";
+					event.dataTransfer.setDragImage(event.currentTarget, 0, 0);
+
+					movingElement = event.currentTarget;
+				},
+				async dragend() {
+					movingElement.classList.remove("temp");
+					movingElement = undefined;
+
+					await saveQuickItems();
+				},
+				dragover(event) {
+					event.preventDefault();
+				},
+				dragenter(event) {
+					if (movingElement !== event.currentTarget) {
+						const children = [...innerContent.children];
+
+						if (children.indexOf(movingElement) > children.indexOf(event.currentTarget))
+							innerContent.insertBefore(movingElement, event.currentTarget);
+						else if (event.currentTarget.nextElementSibling) {
+							innerContent.insertBefore(movingElement, event.currentTarget.nextElementSibling);
+						} else {
+							innerContent.appendChild(movingElement);
+						}
+						movingElement.classList.add("temp");
+					}
+				},
+			},
+			attributes: {
+				draggable: true,
 			},
 		});
 		itemWrap.appendChild(
@@ -254,7 +288,7 @@
 			document.newElement({
 				type: "i",
 				class: "fas fa-times tt-close-icon",
-				attributes: { title: "Remove quick access. " },
+				attributes: { title: "Remove quick access." },
 				events: {
 					click: async (event) => {
 						event.stopPropagation();
