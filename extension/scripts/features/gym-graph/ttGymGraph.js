@@ -21,8 +21,14 @@
 		}
 	);
 
-	function showGraph() {
-		const { content } = createContainer("Graph");
+	async function showGraph() {
+		const { content } = createContainer("Graph", { class: "mt10" });
+
+		showLoadingPlaceholder(content, true);
+
+		await sleep(30000);
+
+		showLoadingPlaceholder(content, false);
 	}
 
 	function removeGraph() {
