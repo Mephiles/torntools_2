@@ -3,10 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	const params = getSearchParameters();
-	if (params.get("step") !== "your") return;
-
-	const feature = featureManager.registerFeature(
+	featureManager.registerFeature(
 		"Graph",
 		"gym",
 		() => settings.pages.gym.graph,
