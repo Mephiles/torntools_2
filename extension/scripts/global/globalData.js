@@ -334,6 +334,7 @@ const DEFAULT_STORAGE = {
 				inventory: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				merits: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				perks: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				icons: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -822,6 +823,10 @@ const API_USAGE = {
 		city_bank: {
 			time_left: true,
 		},
+		icons: {
+			icon85: true,
+			icon86: true,
+		},
 	},
 	properties: {},
 	faction: {
@@ -895,6 +900,7 @@ const API_SELECTIONS = {
 		"display", // target
 		"education",
 		"events",
+		"icons",
 		"inventory",
 		"merits",
 		"messages",
