@@ -464,6 +464,7 @@
 				"scripts/features/gym-graph/ttGymGraph.css"
 			],
 			"js": [
+				"vendor/chartjs/chart.min.js",
 				"scripts/content/gym/ttGym.js",
 				"scripts/features/specialist-gyms/ttSpecialistGyms.js",
 				"scripts/features/gym-disable-stats/ttGymDisableStats.js",

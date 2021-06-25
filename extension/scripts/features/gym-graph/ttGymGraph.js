@@ -61,7 +61,7 @@
 		}
 
 		async function loadGraph() {
-			const wrapper = document.newElement({ type: "div", class: "tornstats-graph" });
+			const wrapper = document.newElement({ type: "div", class: "tornstats-graph-wrapper" });
 			content.appendChild(wrapper);
 
 			showLoadingPlaceholder(wrapper, true);
@@ -101,13 +101,12 @@
 
 			const width = mobile ? "312" : "784";
 			const height = mobile ? "200" : "250";
-			const canvas = document.newElement({ type: "canvas", id: "tt-gym-graph", attributes: { width, height } });
-			// graph_area.appendChild(canvas);
+			const canvas = document.newElement({ type: "canvas", attributes: { width, height } });
+			wrapper.appendChild(canvas);
 
 			const context = canvas.getContext("2d");
 
-			// FIXME - Show graph.
-			console.log("DKK loadGraph", result, context);
+			createChart();
 
 			showLoadingPlaceholder(wrapper, false);
 
@@ -115,6 +114,57 @@
 				wrapper.appendChild(document.newElement({ type: "div", class: "tornstats-response error", text: message }));
 
 				showLoadingPlaceholder(wrapper, false);
+			}
+
+			function createChart() {
+				return new Chart(context, {
+					type: "line",
+					data: {
+						labels: result.data.map((x) => formatDate({ seconds: x.timestamp })),
+						datasets: [
+							getDataset("Strength", "#3366cc", false),
+							getDataset("Defense", "#dc3912", false),
+							getDataset("Speed", "#ff9901", false),
+							getDataset("Dexterity", "#109618", false),
+							getDataset("Total", "#990199", true),
+						],
+					},
+					options: {
+						interaction: {
+							mode: "index",
+							intersect: false,
+						},
+						plugins: {
+							legend: {
+								position: mobile ? "down" : "right",
+								labels: {
+									boxWidth: 10,
+									usePointStyle: true,
+									pointStyle: "circle",
+								},
+							},
+							tooltip: {
+								callbacks: {
+									label: (context) => `${context.dataset.label}: ${formatNumber(context.parsed.y)}`,
+								},
+							},
+						},
+					},
+				});
+
+				function getDataset(stat, color, hidden) {
+					const field = stat.toLowerCase();
+
+					return {
+						label: stat,
+						data: result.data.map((x) => x[field]),
+						borderColor: [color],
+						pointRadius: 0,
+						pointBackgroundColor: color,
+						pointHoverRadius: 5,
+						hidden,
+					};
+				}
 			}
 		}
 	}
