@@ -580,7 +580,6 @@ const DEFAULT_STORAGE = {
 	factiondata: new DefaultSetting({ type: "object", defaultValue: {} }),
 	localdata: {
 		tradeMessage: new DefaultSetting({ type: "number", defaultValue: 0 }),
-		userCrime: new DefaultSetting({ type: "number", defaultValue: 0 }),
 		popup: {
 			calculatorItems: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
