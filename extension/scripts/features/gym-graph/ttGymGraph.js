@@ -74,7 +74,7 @@
 					result = await fetchData("tornstats", { section: "battlestats/graph" });
 
 					if (result.status) {
-						// ttCache.set({ graph: result }, TO_MILLIS.HOURS, "gym").then(() => {});
+						ttCache.set({ graph: result }, TO_MILLIS.HOURS, "gym").then(() => {});
 					}
 				} catch (error) {
 					result = {
@@ -84,7 +84,7 @@
 				}
 			}
 
-			if (!result.status || true) {
+			if (!result.status) {
 				let text = result.message;
 
 				// FIXME - Properly handle error message.
