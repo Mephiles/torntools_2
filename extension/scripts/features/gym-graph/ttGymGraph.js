@@ -43,13 +43,33 @@
 
 				const { message, status } = await fetchData("tornstats", { section: "battlestats/record" })
 					.then((response) => {
-						// FIXME - Improve message.
-						console.log("DKK TS", response);
+						if (!response.status) {
+							let message = response.message;
 
-						return response;
+							if (message.includes("User not found")) {
+								message = "Can't update stats because no TornStats account was found. Please register an account @ www.tornstats.com";
+							}
+
+							return { message, status: false };
+						}
+
+						let gains = [];
+						for (const stat of ["Strength", "Defense", "Speed", "Dexterity"]) {
+							const value = response[`delta${stat}`];
+							if (!value) continue;
+
+							gains.push(`${formatNumber(value)} ${stat}`);
+						}
+
+						const message = gains.length
+							? `You have gained ${gains.join(", ")} since your last update ${response.age}.`
+							: `You have not gained any stats since your last update ${response.age}.`;
+
+						return { message, status: true };
 					})
 					.catch((error) => ({ message: error.error, status: false }));
 
+				console.log("DKK ts2", message);
 				responseElement.innerText = message;
 				responseElement.classList.add(status ? "success" : "error");
 
@@ -85,17 +105,16 @@
 			}
 
 			if (!result.status) {
-				let text = result.message;
+				let message = result.message;
 
-				// FIXME - Properly handle error message.
-				// if (err.indexOf("Not enough data found") > -1) {
-				// 	text = "Not enough data found on TornStats.";
-				// } else if (err.indexOf("User not found") > -1) {
-				// 	text = "Can't display graph because no TornStats account was found. Please register an account @ www.tornstats.com";
-				// }
+				if (message.includes("Not enough data found")) {
+					message = "Not enough data found on TornStats.";
+				} else if (message.includes("User not found")) {
+					message = "Can't display graph because no TornStats account was found. Please register an account @ www.tornstats.com";
+				}
 
 				console.log("TT - Couldn't load graph data from TornStats.", result);
-				showError(text);
+				showError(message);
 				return;
 			}
 
