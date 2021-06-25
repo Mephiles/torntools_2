@@ -53,16 +53,20 @@
 							return { message, status: false };
 						}
 
+						let total = 0;
 						let gains = [];
 						for (const stat of ["Strength", "Defense", "Speed", "Dexterity"]) {
 							const value = response[`delta${stat}`];
 							if (!value) continue;
 
+							total += value;
 							gains.push(`${formatNumber(value)} ${stat}`);
 						}
 
 						const message = gains.length
-							? `You have gained ${gains.join(", ")} since your last update ${response.age}.`
+							? gains.length > 1
+								? `You have gained ${gains.join(", ")} for a total of ${formatNumber(total)} since your last update ${response.age}.`
+								: `You have gained ${gains.join(", ")} since your last update ${response.age}.`
 							: `You have not gained any stats since your last update ${response.age}.`;
 
 						return { message, status: true };
