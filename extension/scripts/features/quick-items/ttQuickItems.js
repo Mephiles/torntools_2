@@ -145,6 +145,8 @@
 				click: async () => {
 					if (itemWrap.classList.contains("removable")) {
 						itemWrap.remove();
+						itemWrap.dispatchEvent(new Event("mouseout"));
+						closeIcon.dispatchEvent(new Event("mouseout"));
 						await saveQuickItems();
 						return;
 					}
@@ -283,6 +285,7 @@
 			events: {
 				click: async (event) => {
 					event.stopPropagation();
+					itemWrap.dispatchEvent(new Event("mouseout"));
 					closeIcon.dispatchEvent(new Event("mouseout"));
 					itemWrap.remove();
 
