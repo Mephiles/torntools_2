@@ -89,7 +89,7 @@
 						}
 
 						for (const category of document.findAll("#categoriesItem:not(.no-items)")) {
-							if (!["Temporary", "Medical", "Drugs", "Energy Drink", "Alcohol", "Candy", "Booster", "Other"].includes(category.dataset.type))
+							if (!["Temporary", "Medical", "Drug", "Energy Drink", "Alcohol", "Candy", "Booster", "Other"].includes(category.dataset.type))
 								continue;
 
 							if (enabled) category.classList.add("tt-overlay-item");
