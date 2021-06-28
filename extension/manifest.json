@@ -332,7 +332,8 @@
 				"scripts/features/book-effect/ttBookEffect.js",
 				"scripts/features/can-energy/ttCanEnergy.js",
 				"scripts/features/alcohol-nerve/ttAlcoholNerve.js",
-				"scripts/features/candy-happy/ttCandyHappy.js"
+				"scripts/features/candy-happy/ttCandyHappy.js",
+				"scripts/features/no-confirm/ttItemNoConfirm.js"
 			],
 			"run_at": "document_end"
 		},
