@@ -414,9 +414,11 @@
 				"scripts/features/trade-open-chat/ttTradeOpenChat.css"
 			],
 			"js": [
+				"scripts/content/trade/ttTrade.js",
 				"scripts/features/item-values/ttItemValues.js",
 				"scripts/features/trade-values/ttTradeValues.js",
-				"scripts/features/trade-open-chat/ttTradeOpenChat.js"
+				"scripts/features/trade-open-chat/ttTradeOpenChat.js",
+				"scripts/features/no-confirm/ttTradeNoConfirm.js"
 			],
 			"run_at": "document_end"
 		},
