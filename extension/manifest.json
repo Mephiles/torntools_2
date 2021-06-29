@@ -273,7 +273,11 @@
 		{
 			"matches": ["https://www.torn.com/imarket.php*"],
 			"css": ["scripts/features/drug-details/ttDrugDetails.css"],
-			"js": ["scripts/features/drug-details/ttDrugDetails.js", "scripts/features/item-redirect/ttItemMarketRedirect.js"],
+			"js": [
+				"scripts/features/drug-details/ttDrugDetails.js",
+				"scripts/features/item-redirect/ttItemMarketRedirect.js",
+				"scripts/features/no-confirm/ttItemMarketNoConfirm.js"
+			],
 			"run_at": "document_end"
 		},
 		{

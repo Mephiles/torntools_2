@@ -513,6 +513,7 @@ const DEFAULT_STORAGE = {
 			noConfirm: {
 				itemEquip: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				tradeAccept: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				marketBuy: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 		},
 		external: {
