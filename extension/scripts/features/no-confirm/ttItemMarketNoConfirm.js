@@ -54,6 +54,7 @@
 
 		for (const item of source.findAll(".items > li:not(.clear):not(.private-bazaar)")) {
 			const icon = item.find(".buy .buy-link");
+			if (!icon) continue;
 
 			icon.dataset.action = "buyItemConfirm";
 			icon.classList.add("yes-buy", "tt-modified");
