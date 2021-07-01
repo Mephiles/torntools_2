@@ -13,13 +13,12 @@
 	featureManager.registerFeature(
 		"Weapon Bonus Information",
 		"attack log",
-		// () => settings.pages.missions.hints,
-		() => true,
+		() => settings.pages.attack.bonusInformation,
 		null,
 		showInformation,
 		null,
 		{
-			// storage: ["settings.pages.missions.hints"],
+			storage: ["settings.pages.attack.bonusInformation"],
 		},
 		null
 	);
