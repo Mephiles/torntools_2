@@ -512,6 +512,11 @@ const DEFAULT_STORAGE = {
 			attack: {
 				bonusInformation: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			city: {
+				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				onlyOpenContainer: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				itemImages: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
 		},
 		scripts: {
 			noConfirm: {
