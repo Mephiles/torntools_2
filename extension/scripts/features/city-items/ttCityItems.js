@@ -32,7 +32,7 @@
 		const items = getAllItems();
 		handleContainer();
 
-		// FIXME - Show items in container.
+		// FIXME - Show items in container. On hover, highlight the first found item of this type.
 		// FIXME - Show value in container.
 
 		function getAllItems() {
