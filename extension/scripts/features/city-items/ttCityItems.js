@@ -3,7 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	const feature = featureManager.registerFeature(
+	featureManager.registerFeature(
 		"City Items",
 		"city",
 		() => settings.pages.city.items,
