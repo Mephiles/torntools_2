@@ -49,11 +49,12 @@
 	margin: auto;
 }
 
+.tt-container.rounding.always-content .title,
 .tt-container.rounding .title:not(.collapsed) {
 	border-radius: 5px 5px 0 0;
 }
 
-.tt-container.rounding .title.collapsed {
+.tt-container.rounding:not(.always-content) .title.collapsed {
 	border-radius: 5px;
 }
 
@@ -61,7 +62,8 @@
 	transform: rotate(-90deg);
 }
 
-.tt-container .title.collapsed + main {
+.tt-container:not(.always-content) .title.collapsed + main,
+.tt-container.always-content .title.collapsed + main .hide-collapse {
 	display: none;
 }
 

@@ -26,14 +26,12 @@
 		hasContainer = true;
 
 		// Show container
-		const { content, options } = createContainer("City Items", { class: "mt10", nextElement: document.find("#tab-menu") });
+		const { content, options } = createContainer("City Items", { class: "mt10", alwaysContent: true, nextElement: document.find("#tab-menu") });
 
 		const items = getAllItems();
 		handleHighlight();
-		showValue();
-
-		// FIXME - Show items in container. On hover, highlight the first found item of this type.
-		// FIXME - Show value in container.
+		if (hasAPIData()) showValue();
+		showItemList();
 
 		function getAllItems() {
 			const items = [];
@@ -74,11 +72,13 @@
 		}
 
 		function showValue() {
-			// FIXME - Show value in container.
-
-			// TODO - Calculate value and item count.
-			let totalValue = 1000000;
-			let itemCount = 1;
+			const totalValue = items
+				.map((id) => torndata.items[id])
+				.filter((item) => !!item)
+				.map((item) => item.market_value)
+				.filter((value) => !!value)
+				.totalSum();
+			const itemCount = items.length;
 
 			content.appendChild(
 				document.newElement({
@@ -90,6 +90,16 @@
 					],
 				})
 			);
+		}
+
+		function showItemList() {
+			const listElement = document.newElement({ type: "div", class: "tt-city-items hide-collapse" });
+
+			// FIXME - Show items in container. On hover, highlight the first found item of this type.
+			for (const id of items) {
+			}
+
+			content.appendChild(listElement);
 		}
 	}
 

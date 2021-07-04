@@ -15,6 +15,7 @@ function createContainer(title, options = {}) {
 		allowDragging: false,
 		flexContainer: false,
 		compact: false,
+		alwaysContent: false,
 		...options,
 	};
 	if (options.onlyHeader) options.collapsible = false;
@@ -41,6 +42,7 @@ function createContainer(title, options = {}) {
 		if (options.applyRounding) containerClasses.push("rounding");
 		if (options.spacer) containerClasses.push("spacer");
 		if (options.compact) containerClasses.push("compact");
+		if (options.alwaysContent) containerClasses.push("always-content");
 		if (options.class) containerClasses.push(options.class.split(" "));
 
 		const mainClasses = [];

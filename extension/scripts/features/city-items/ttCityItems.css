@@ -35,13 +35,8 @@
 	background: black;
 }
 
-#cityItems main {
-	display: block;
-}
-
 .tt-city-total {
 	font-size: 14px;
-	line-height: 25px;
 }
 
 .tt-city-total-text {
