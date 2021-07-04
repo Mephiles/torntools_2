@@ -46,3 +46,7 @@
 .tt-city-total-value {
 	color: var(--tt-color-item-text);
 }
+
+.city-table {
+	display: flex;
+}

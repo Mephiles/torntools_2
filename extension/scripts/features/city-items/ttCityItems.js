@@ -40,7 +40,7 @@
 				const id = marker.src.split("items/")[1].split("/")[0];
 
 				marker.classList.add("city-item");
-				marker.setAttribute("item-id", id);
+				marker.dataset.id = id;
 
 				items.push(id);
 			}
@@ -95,11 +95,30 @@
 		function showItemList() {
 			const listElement = document.newElement({ type: "div", class: "tt-city-items hide-collapse" });
 
-			// FIXME - Show items in container. On hover, highlight the first found item of this type.
-			for (const id of items) {
+			switch (settings.pages.city.itemListType) {
+				case "text":
+					generateText();
+					break;
 			}
 
 			content.appendChild(listElement);
+
+			function generateText() {
+				const elements = items.map((id) => torndata.items[id].name);
+
+				let elementText;
+				if (items.length > 1) {
+					const last = elements.splice(-1);
+
+					elementText = `${elements.join(", ")} and ${last}`;
+				} else {
+					elementText = elements.join(", ");
+				}
+
+				const text = `There are <strong>${items.length}</strong> items in the city: ${elementText}.`;
+
+				listElement.appendChild(document.newElement({ type: "p", html: text }));
+			}
 		}
 	}
 
@@ -108,7 +127,8 @@
 
 		for (const item of document.findAll(".city-item")) {
 			item.classList.remove("city-item");
-			item.removeAttribute("item-id");
+
+			delete item.dataset.id;
 		}
 
 		const map = document.find("#map");
