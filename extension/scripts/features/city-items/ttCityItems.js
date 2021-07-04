@@ -17,7 +17,6 @@
 	);
 
 	let hasContainer = false;
-	let containerObserver;
 
 	async function showHighlight() {
 		if (hasContainer) return;
@@ -27,10 +26,10 @@
 		hasContainer = true;
 
 		// Show container
-		const { content, collapsed, container } = createContainer("City Items", { class: "mt10", nextElement: document.find("#tab-menu") });
+		const { content, options } = createContainer("City Items", { class: "mt10", nextElement: document.find("#tab-menu") });
 
 		const items = getAllItems();
-		handleContainer();
+		handleHighlight();
 
 		// FIXME - Show items in container. On hover, highlight the first found item of this type.
 		// FIXME - Show value in container.
@@ -50,18 +49,26 @@
 			return items;
 		}
 
-		function handleContainer() {
-			const map = document.find("#map");
-			if (settings.pages.city.onlyOpenContainer) {
-				if (!collapsed) map.classList.add("highlight-items");
+		function handleHighlight() {
+			const checkbox = createCheckbox("Highlight items");
 
-				containerObserver = new MutationObserver((mutations) => {
-					if (mutations[0].target.classList.contains("collapsed")) map.classList.remove("highlight-items");
-					else map.classList.add("highlight-items");
-				});
-				containerObserver.observe(container.find(".title"), { attributes: true, attributeFilter: ["class"] });
-			} else {
-				map.classList.add("highlight-items");
+			highlight(filters.city.highlightItems);
+
+			checkbox.setChecked(filters.city.highlightItems);
+			checkbox.onChange(() => {
+				const state = checkbox.isChecked();
+
+				highlight(state);
+				ttStorage.change({ filters: { city: { highlightItems: state } } });
+			});
+
+			options.appendChild(checkbox.element);
+
+			function highlight(state) {
+				const map = document.find("#map");
+
+				if (state) map.classList.add("highlight-items");
+				else map.classList.remove("highlight-items");
 			}
 		}
 	}
@@ -76,11 +83,6 @@
 
 		const map = document.find("#map");
 		if (map) map.classList.remove("highlight-items");
-
-		if (containerObserver) {
-			containerObserver.disconnect();
-			containerObserver = undefined;
-		}
 
 		hasContainer = false;
 	}

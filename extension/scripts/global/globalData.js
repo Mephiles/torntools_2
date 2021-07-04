@@ -514,7 +514,6 @@ const DEFAULT_STORAGE = {
 			},
 			city: {
 				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
-				onlyOpenContainer: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				itemImages: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 		},
@@ -590,6 +589,9 @@ const DEFAULT_STORAGE = {
 			speed: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			defense: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			dexterity: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		},
+		city: {
+			highlightItems: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
