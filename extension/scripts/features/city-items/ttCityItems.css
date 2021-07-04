@@ -34,3 +34,20 @@
 	padding: 37.5px 0;
 	background: black;
 }
+
+#cityItems main {
+	display: block;
+}
+
+.tt-city-total {
+	font-size: 14px;
+	line-height: 25px;
+}
+
+.tt-city-total-text {
+	font-weight: bold;
+}
+
+.tt-city-total-value {
+	color: var(--tt-color-item-text);
+}

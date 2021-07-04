@@ -30,6 +30,7 @@
 
 		const items = getAllItems();
 		handleHighlight();
+		showValue();
 
 		// FIXME - Show items in container. On hover, highlight the first found item of this type.
 		// FIXME - Show value in container.
@@ -70,6 +71,25 @@
 				if (state) map.classList.add("highlight-items");
 				else map.classList.remove("highlight-items");
 			}
+		}
+
+		function showValue() {
+			// FIXME - Show value in container.
+
+			// TODO - Calculate value and item count.
+			let totalValue = 1000000;
+			let itemCount = 1;
+
+			content.appendChild(
+				document.newElement({
+					type: "div",
+					class: "tt-city-total",
+					children: [
+						document.newElement({ type: "span", class: "tt-city-total-text", text: `Item Value (${itemCount}): ` }),
+						document.newElement({ type: "span", class: "tt-city-total-value", text: formatNumber(totalValue, { currency: true }) }),
+					],
+				})
+			);
 		}
 	}
 
