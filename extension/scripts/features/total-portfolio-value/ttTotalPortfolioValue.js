@@ -20,7 +20,7 @@
 		await requireElement("#stockmarketroot [class*='stock___']");
 		const totalValue = [...document.findAll("[class*='stockOwned__'] [class*='value__']")]
 			.map((x) => parseInt(x.innerText.replace(/[$,]/g, "").trim()))
-			.reduce((a, b) => (a += b), 0);
+			.totalSum();
 		const profits = [...document.findAll("#stockmarketroot [class*='stockMarket__'] > ul[id]")]
 			.map((x) => {
 				const stockID = x.id;
@@ -33,11 +33,11 @@
 
 				return Math.floor((data.current_price - boughtPrice) * userStockData.total_shares);
 			})
-			.reduce((a, b) => (a += b), 0);
+			.totalSum();
 
 		document.find("#stockmarketroot h4").appendChild(
 			document.newElement({
-				type: "div",
+				type: "span",
 				class: "tt-total-stock-value",
 				children: [
 					"Value: ",

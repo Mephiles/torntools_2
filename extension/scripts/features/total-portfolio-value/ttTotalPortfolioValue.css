@@ -1,7 +1,5 @@
 .tt-total-stock-value {
-	display: inline-block;
-    margin: 0 0 0 9px;
-	color: var(--default-content-title-color);
+	margin: 0 0 0 9px;
 	font-size: 17px;
 	font-weight: normal;
 }
