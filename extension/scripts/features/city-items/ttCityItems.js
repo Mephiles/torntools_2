@@ -113,7 +113,7 @@
 					if (items.length === 1) {
 						element.appendChild(createItemElement(_items[0]));
 					} else {
-						const last = _items.splice(-1);
+						const last = _items.splice(-1)[0];
 
 						for (const item of _items) {
 							element.appendChild(createItemElement(item));
@@ -122,8 +122,7 @@
 						element.lastChild.remove();
 
 						element.appendChild(document.createTextNode(" and "));
-						console.log("DKK city last", last);
-						// element.appendChild(createItemElement(last));
+						element.appendChild(createItemElement(last));
 					}
 
 					element.appendChild(document.createTextNode("."));
