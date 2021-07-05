@@ -3,7 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Challenge Contributions to CSV",
 		"faction",
 		() => settings.pages.faction.csvChallengeContributions,
@@ -19,7 +19,7 @@
 	function addListener() {
 		addXHRListener(({ detail: { page, xhr, json } }) => {
 			if (!json || !json.contributors || page !== "factions") return;
-			addCSVContainer();
+			if (feature.enabled()) addCSVContainer();
 		});
 	}
 
