@@ -515,7 +515,6 @@ const DEFAULT_STORAGE = {
 			},
 			city: {
 				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
-				itemListType: new DefaultSetting({ type: "string", defaultValue: "table" }),
 			},
 		},
 		scripts: {

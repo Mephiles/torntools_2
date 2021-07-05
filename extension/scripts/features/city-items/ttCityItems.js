@@ -95,7 +95,9 @@
 		function showItemList() {
 			const listElement = document.newElement({ type: "div", class: "tt-city-items hide-collapse" });
 
-			switch (settings.pages.city.itemListType) {
+			// const type = settings.pages.city.itemListType;
+			const type = "text";
+			switch (type) {
 				case "text":
 					generateText();
 					break;
