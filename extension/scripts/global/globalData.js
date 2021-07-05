@@ -482,6 +482,7 @@ const DEFAULT_STORAGE = {
 			},
 			casino: {
 				netTotal: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				blackjack: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			racing: {
 				winPercentage: new DefaultSetting({ type: "boolean", defaultValue: true }),

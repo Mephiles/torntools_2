@@ -495,6 +495,12 @@
 			"css": ["scripts/features/weapon-bonus-information/ttWeaponBonusInformation.css"],
 			"js": ["scripts/features/weapon-bonus-information/ttWeaponBonusInformation.js"],
 			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/loader.php?sid=blackjack*"],
+			"css": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.css"],
+			"js": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.js"],
+			"run_at": "document_end"
 		}
 	]
 }
