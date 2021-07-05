@@ -513,6 +513,9 @@ const DEFAULT_STORAGE = {
 			attack: {
 				bonusInformation: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			bounties: {
+				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
 		},
 		scripts: {
 			noConfirm: {
@@ -586,6 +589,10 @@ const DEFAULT_STORAGE = {
 			speed: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			defense: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			dexterity: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		},
+		bounties: {
+			maxLevel: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			hideUnavailable: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
