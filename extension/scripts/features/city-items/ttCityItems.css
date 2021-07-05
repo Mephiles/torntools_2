@@ -1,7 +1,8 @@
 /*
  * Credits to Mauk / DoctorN.
  */
-.highlight-items .city-item {
+.highlight-items .city-item,
+.city-item.force-hover {
 	box-sizing: border-box;
 	box-shadow: rgb(0, 0, 0) 0 0 20px 10px;
 	display: block !important;
@@ -25,7 +26,8 @@
 /*
  * Credits to Mauk / DoctorN.
  */
-.highlight-items .city-item:hover {
+.highlight-items .city-item:hover,
+.city-item.force-hover {
 	width: 150px !important;
 	height: 150px !important;
 	left: -60px !important;

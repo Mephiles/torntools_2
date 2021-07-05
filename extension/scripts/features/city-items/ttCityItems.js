@@ -95,7 +95,6 @@
 		function showItemList() {
 			const listElement = document.newElement({ type: "div", class: "tt-city-items hide-collapse" });
 
-			// const type = settings.pages.city.itemListType;
 			const type = "text";
 			switch (type) {
 				case "text":
@@ -106,20 +105,52 @@
 			content.appendChild(listElement);
 
 			function generateText() {
-				const elements = items.map((id) => torndata.items[id].name);
+				let element;
+				if (items.length > 0) {
+					element = document.newElement({ type: "p", html: `There are <strong>${items.length}</strong> items in the city: ` });
 
-				let elementText;
-				if (items.length > 1) {
-					const last = elements.splice(-1);
+					const _items = items.map((id) => ({ id, name: torndata.items[id].name }));
+					if (items.length === 1) {
+						element.appendChild(createItemElement(_items[0]));
+					} else {
+						const last = _items.splice(-1);
 
-					elementText = `${elements.join(", ")} and ${last}`;
+						for (const item of _items) {
+							element.appendChild(createItemElement(item));
+							element.appendChild(document.createTextNode(", "));
+						}
+						element.lastChild.remove();
+
+						element.appendChild(document.createTextNode(" and "));
+						console.log("DKK city last", last);
+						// element.appendChild(createItemElement(last));
+					}
+
+					element.appendChild(document.createTextNode("."));
 				} else {
-					elementText = elements.join(", ");
+					element = document.newElement({ type: "p", text: "There are no items in the city." });
 				}
+				listElement.appendChild(element);
 
-				const text = `There are <strong>${items.length}</strong> items in the city: ${elementText}.`;
-
-				listElement.appendChild(document.newElement({ type: "p", html: text }));
+				function createItemElement({ id, name }) {
+					// noinspection JSUnusedGlobalSymbols
+					return document.newElement({
+						type: "span",
+						text: name,
+						events: {
+							mouseenter() {
+								for (const item of document.findAll(`.city-item[data-id="${id}"]`)) {
+									item.classList.add("force-hover");
+								}
+							},
+							mouseleave() {
+								for (const item of document.findAll(`.city-item[data-id="${id}"].force-hover`)) {
+									item.classList.remove("force-hover");
+								}
+							},
+						},
+					});
+				}
 			}
 		}
 	}
