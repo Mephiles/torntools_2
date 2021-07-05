@@ -55,6 +55,7 @@
 			"css": [
 				"scripts/global/globalVariables.css",
 				"scripts/global/globalStyle.css",
+				"scripts/global/functions/containers.css",
 				"scripts/global/functions/dom.css",
 				"scripts/global/elements/checkbox/ttCheckbox.css",
 				"scripts/global/elements/checkbox-list/ttCheckboxList.css",
@@ -245,7 +246,8 @@
 				"scripts/features/oc-nnb/ttOCNNB.css",
 				"scripts/features/oc-times/ttOCTimes.css",
 				"scripts/features/full-faction-infobox/ttFullFactionInfobox.css",
-				"scripts/features/fold-faction-infobox/ttFoldFactionInfobox.css"
+				"scripts/features/fold-faction-infobox/ttFoldFactionInfobox.css",
+				"scripts/features/csv-challenge-contributions/ttCSVChallengeContributions.css"
 			],
 			"js": [
 				"scripts/content/factions/ttFactions.js",
@@ -260,7 +262,8 @@
 				"scripts/features/oc-times/ttOCTimes.js",
 				"scripts/features/faction-banker/ttFactionBanker.js",
 				"scripts/features/full-faction-infobox/ttFullFactionInfobox.js",
-				"scripts/features/fold-faction-infobox/ttFoldFactionInfobox.js"
+				"scripts/features/fold-faction-infobox/ttFoldFactionInfobox.js",
+				"scripts/features/csv-challenge-contributions/ttCSVChallengeContributions.js"
 			],
 			"run_at": "document_end"
 		},
@@ -289,7 +292,8 @@
 				"scripts/features/travel-table/ttTravelTable.css",
 				"scripts/features/travel-item-profits/ttTravelItemProfits.css",
 				"scripts/features/travel-fill-max/ttTravelFillMax.css",
-				"scripts/features/sort-travel-market/ttSortTravelMarket.css"
+				"scripts/features/sort-travel-market/ttSortTravelMarket.css",
+				"scripts/features/landing-time/ttLandingTime.css"
 			],
 			"js": [
 				"scripts/features/effective-stats/ttEffectiveStats.js",
@@ -300,7 +304,8 @@
 				"scripts/features/clean-flight/ttCleanFlight.js",
 				"scripts/features/travel-item-profits/ttTravelItemProfits.js",
 				"scripts/features/travel-fill-max/ttTravelFillMax.js",
-				"scripts/features/sort-travel-market/ttSortTravelMarket.js"
+				"scripts/features/sort-travel-market/ttSortTravelMarket.js",
+				"scripts/features/landing-time/ttLandingTime.js"
 			],
 			"run_at": "document_end"
 		},
@@ -494,6 +499,12 @@
 			"matches": ["https://www.torn.com/loader.php?sid=attackLog*"],
 			"css": ["scripts/features/weapon-bonus-information/ttWeaponBonusInformation.css"],
 			"js": ["scripts/features/weapon-bonus-information/ttWeaponBonusInformation.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/city.php*"],
+			"css": ["scripts/features/city-items/ttCityItems.css"],
+			"js": ["scripts/features/city-items/ttCityItems.js"],
 			"run_at": "document_end"
 		}
 	]
