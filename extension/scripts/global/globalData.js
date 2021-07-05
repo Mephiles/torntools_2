@@ -441,6 +441,7 @@ const DEFAULT_STORAGE = {
 				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				sortable: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				peopleFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				landingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				acronyms: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -490,6 +491,7 @@ const DEFAULT_STORAGE = {
 			faction: {
 				csvWarReport: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				csvChainReport: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				csvChallengeContributions: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				openOc: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				highlightOwn: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				availablePlayers: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -513,6 +515,9 @@ const DEFAULT_STORAGE = {
 			},
 			attack: {
 				bonusInformation: new DefaultSetting({ type: "boolean", defaultValue: true }),
+			},
+			city: {
+				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		scripts: {
@@ -587,6 +592,9 @@ const DEFAULT_STORAGE = {
 			speed: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			defense: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			dexterity: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		},
+		city: {
+			highlightItems: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
