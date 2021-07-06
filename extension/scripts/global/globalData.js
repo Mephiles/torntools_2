@@ -336,6 +336,7 @@ const DEFAULT_STORAGE = {
 				merits: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				perks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				icons: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				ammo: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -646,6 +647,13 @@ const HIGHLIGHT_PLACEHOLDERS = [{ name: "$player", value: () => userdata.name ||
 
 const API_USAGE = {
 	user: {
+		ammo: {
+			"*": {
+				size: true,
+				type: true,
+				quantity: true,
+			},
+		},
 		bazaar: {
 			"*": {
 				quantity: true, // target
@@ -917,6 +925,7 @@ const API_USAGE = {
 
 const API_SELECTIONS = {
 	user: [
+		"ammo",
 		"attacks",
 		"bars",
 		"bazaar", // target
