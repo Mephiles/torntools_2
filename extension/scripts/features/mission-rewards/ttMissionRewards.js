@@ -40,8 +40,10 @@
 			actionsWrap.classList.add("tt-mission-reward", credits < points ? "not-affordable" : "affordable");
 
 			if (type === "Ammo") {
-				// FIXME - Check owned ammo.
-				const owned = 0;
+				const { title: size, ammoType } = information;
+
+				const found = findItemsInList(userdata.ammo, { size, type: ammoType }, { single: true });
+				const owned = found ? found.quantity : 0;
 
 				actionsWrap.insertBefore(
 					document.newElement({
