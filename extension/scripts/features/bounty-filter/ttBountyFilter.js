@@ -1,11 +1,11 @@
 "use strict";
 
 (async () => {
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Hide Unavailable Bounties",
 		"bounties",
 		() => settings.pages.bounties.filter,
-		null,
+		initialiseListener,
 		addFilter,
 		removeFilter,
 		{
@@ -14,11 +14,19 @@
 		null
 	);
 
+	function initialiseListener() {
+		addXHRListener(({ detail: { page, json } }) => {
+			if (page !== "bounties") return;
+			if (feature.enabled()) addFilter();
+		});
+	}
+
 	async function addFilter() {
-		await requireElement(".bounties-wrap .gallery-wrapper.pagination");
-		const { options } = createContainer("Chain Report", {
+		await requireElement(".bounties-list > li > ul > li .reward");
+		const { options } = createContainer("Bounty Filter", {
 			previousElement: document.find(".bounties-wrap .bounties-total"),
 			onlyHeader: true,
+			applyRounding: false,
 		});
 		const maxLevelInput = document.newElement({
 			type: "input",
@@ -42,47 +50,44 @@
 				document.newElement({ type: "label", text: "Hide Unavailable", attributes: { for: "hideUnavailable" } })
 			],
 		}));
+
+		// Setup saved filters
+		maxLevelInput.value = filters.bounties.maxLevel;
+		cbHideUnavailable.checked = filters.bounties.hideUnavailable;
+
 		maxLevelInput.addEventListener("input", filterListing);
 		cbHideUnavailable.addEventListener("input", filterListing);
-		function filterListing() {
-			
-		}
+		async function filterListing() {
+			// Get the filters
+			const maxLevel = maxLevelInput.value;
+			const hideUnavailable = cbHideUnavailable.checked;
 
-		const { options } = createContainer("Chain Report", {
-			previousElement: document.find(".content-wrapper .content-title"),
-			onlyHeader: true,
-		});
-		const ttExportButton = document.newElement({
-			type: "div",
-			id: "ttExportButton",
-			html: `
-				<i class="fa fa-table"></i>
-				<span class="text">CSV</span>
-				<a id="ttExportLink"></a>`,
-		});
-		ttExportButton.addEventListener("click", () => {
-			let table = "data:text/csv;charset=utf-8,";
-			table += document.find(".report-title-faction-name").innerText + "\r\n";
-			table += "Members;Respect;Avg;Attacks;Leave;Mug;Hosp;War;Bonus;Assist;Retal;Overseas;Draw;Escape;Loss\r\n";
-			const members = document.findAll(".members-names-rows > *");
-			const info = document.findAll(".members-stats-rows > *");
-			members.forEach((member, index) => {
-				table += member.find(".user.name").dataset.placeholder + ";";
-				const memberInfo = info[index];
-				memberInfo.findAll(".members-stats-cols > *").forEach((infoItem) => (table += infoItem.innerText + ";"));
-				table += "\r\n";
+			// Save the filters
+			await ttStorage.change({
+				filters: {
+					bounties: {
+						maxLevel,
+						hideUnavailable,
+					},
+				},
 			});
-			const chainID = getSearchParameters().get("chainID");
-			const encodedUri = encodeURI(table);
-			const ttExportLink = options.find("#ttExportLink");
-			ttExportLink.setAttribute("href", encodedUri);
-			ttExportLink.setAttribute("download", `Chain Report [${chainID}].csv`);
-			ttExportLink.click();
-		});
-		options.insertAdjacentElement("afterbegin", ttExportButton);
+
+			document.findAll(".bounties-list > *").forEach((bounty) => {
+				if (maxLevel > 0 && parseInt(bounty.find(".level").lastChild.textContent)) hideBounty(bounty);
+				else showBounty(bounty);
+				if (hideUnavailable && bounty.find(".t-red")) hideBounty(bounty);
+				else showBounty(bounty);
+			});
+			function hideBounty(bounty) {
+				bounty.classList.add("hidden");
+			}
+			function showBounty() {
+				bounty.classList.remove("hidden");
+			}
+		}
 	}
 
 	function removeFilter() {
-		removeContainer("Chain Report");
+		removeContainer("Bounty Filter");
 	}
 })();
