@@ -981,7 +981,55 @@ async function setupAPIInfo() {
 	});
 }
 
-function setupExport() {}
+function setupExport() {
+	const exportSection = document.find("#export");
+
+	exportSection.find("#export-local-text").addEventListener("click", async () => {
+		const data = JSON.stringify(await getExportData());
+
+		toClipboard(data);
+		sendMessage("Copied database to your clipboard.", true);
+	});
+	exportSection.find("#import-local-text").addEventListener("click", () => {
+		// FIXME - Show import field.
+	});
+
+	// FIXME - Handle file export and import.
+
+	async function getExportData() {
+		const data = {
+			user: false,
+			client: {
+				version: chrome.runtime.getManifest().version,
+				space: await ttStorage.getSize(),
+			},
+			date: new Date().toString(),
+			database: await ttStorage.get([
+				"version",
+				"settings",
+				"filters",
+				"localdata",
+				"stakeouts",
+				"notes",
+				"quick",
+				// CHECK - Should probably be part of 'localdata'.
+				// "vault",
+				// CHECK - Should probably be part of 'settings'.
+				// "loot_alerts",
+				// CHECK - Should probably be part of 'settings'.
+				// "allies",
+				// CHECK - Should probably be part of 'settings'.
+				// "users_alias",
+			]),
+		};
+
+		if (hasAPIData()) {
+			data.user = { id: userdata.player_id, name: userdata.name };
+		}
+
+		return data;
+	}
+}
 
 function setupAbout() {
 	const about = document.find("#about");
