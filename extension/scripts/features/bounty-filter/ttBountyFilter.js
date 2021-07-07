@@ -95,6 +95,7 @@
 	}
 
 	function removeFilter() {
+		document.findAll(".bounties-list > .hidden:not(.clear)").forEach(x => x.classList.remove("hidden"));
 		removeContainer("Bounty Filter");
 	}
 })();
