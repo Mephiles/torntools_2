@@ -34,17 +34,15 @@
 				type: "number",
 				min: "0",
 				max: "100",
-			}
+			},
 		});
 		const cbHideUnavailable = createCheckbox("Hide Unavailable");
-		options.appendChild(document.newElement({
-			type: "span",
-			children: [
-				"Max Level",
-				maxLevelInput,
-				cbHideUnavailable.element,
-			],
-		}));
+		options.appendChild(
+			document.newElement({
+				type: "span",
+				children: ["Max Level", maxLevelInput, cbHideUnavailable.element],
+			})
+		);
 
 		// Setup saved filters
 		maxLevelInput.value = filters.bounties.maxLevel;
@@ -53,6 +51,7 @@
 		filterListing();
 		maxLevelInput.addEventListener("input", filterListing);
 		cbHideUnavailable.onChange(filterListing);
+
 		async function filterListing() {
 			// Get the set filters
 			const tempMaxLevel = parseInt(maxLevelInput.value);
@@ -80,9 +79,11 @@
 					continue;
 				} else showBounty(bounty);
 			}
+
 			function hideBounty(bounty) {
 				bounty.classList.add("hidden");
 			}
+
 			function showBounty(bounty) {
 				bounty.classList.remove("hidden");
 			}
@@ -90,7 +91,7 @@
 	}
 
 	function removeFilter() {
-		document.findAll(".bounties-list > .hidden:not(.clear)").forEach(x => x.classList.remove("hidden"));
+		document.findAll(".bounties-list > .hidden:not(.clear)").forEach((x) => x.classList.remove("hidden"));
 		removeContainer("Bounty Filter");
 	}
 })();
