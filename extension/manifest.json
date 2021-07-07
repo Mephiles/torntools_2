@@ -443,8 +443,12 @@
 		},
 		{
 			"matches": ["https://www.torn.com/travelagency.php*"],
-			"css": ["scripts/features/travel-table/ttTravelTable.css"],
-			"js": ["scripts/content/travelagency/ttTravelAgency.js", "scripts/features/travel-table/ttTravelTable.js"],
+			"css": ["scripts/features/travel-table/ttTravelTable.css", "scripts/features/flying-time/ttFlyingTime.css"],
+			"js": [
+				"scripts/content/travelagency/ttTravelAgency.js",
+				"scripts/features/travel-table/ttTravelTable.js",
+				"scripts/features/flying-time/ttFlyingTime.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -501,8 +505,12 @@
 		},
 		{
 			"matches": ["https://www.torn.com/loader.php?sid=missions"],
-			"css": ["scripts/features/mission-hints/ttMissionHints.css"],
-			"js": ["scripts/content/missions/ttMissions.js", "scripts/features/mission-hints/ttMissionHints.js"],
+			"css": ["scripts/features/mission-hints/ttMissionHints.css", "scripts/features/mission-rewards/ttMissionRewards.css"],
+			"js": [
+				"scripts/content/missions/ttMissions.js",
+				"scripts/features/mission-hints/ttMissionHints.js",
+				"scripts/features/mission-rewards/ttMissionRewards.js"
+			],
 			"run_at": "document_end"
 		},
 		{

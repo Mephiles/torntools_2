@@ -336,6 +336,7 @@ const DEFAULT_STORAGE = {
 				merits: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				perks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				icons: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				ammo: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -442,6 +443,7 @@ const DEFAULT_STORAGE = {
 				sortable: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				peopleFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				landingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				flyingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				acronyms: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -512,12 +514,14 @@ const DEFAULT_STORAGE = {
 			},
 			missions: {
 				hints: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				rewards: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			attack: {
 				bonusInformation: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			city: {
 				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				combineDuplicates: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			bounties: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -650,6 +654,13 @@ const HIGHLIGHT_PLACEHOLDERS = [{ name: "$player", value: () => userdata.name ||
 
 const API_USAGE = {
 	user: {
+		ammo: {
+			"*": {
+				size: true,
+				type: true,
+				quantity: true,
+			},
+		},
 		bazaar: {
 			"*": {
 				quantity: true, // target
@@ -921,6 +932,7 @@ const API_USAGE = {
 
 const API_SELECTIONS = {
 	user: [
+		"ammo",
 		"attacks",
 		"bars",
 		"bazaar", // target
