@@ -25,12 +25,10 @@
 		});
 
 		const companyType = document.find(".details-wrap ul.info .m-title .m-show:not(.arrow-left)").innerText.trim();
+		const companyInfo = COMPANY_INFORMATION[companyType];
 
 		for (const stars of [1, 3, 5, 7, 10]) {
-			const companyInfo = COMPANY_INFORMATION[companyType];
-			const name = companyInfo[stars].name;
-			const cost = companyInfo[stars].cost;
-			const effect = companyInfo[stars].effect;
+			const { name, cost, effect } = companyInfo[stars];
 
 			content.appendChild(
 				document.newElement({
