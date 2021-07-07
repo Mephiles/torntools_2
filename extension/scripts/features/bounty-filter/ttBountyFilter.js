@@ -36,34 +36,29 @@
 				max: "100",
 			}
 		});
-		const cbHideUnavailable = document.newElement({
-			type: "input",
-			id: "hideUnavailable",
-			attributes: { type: "checkbox" },
-		});
+		const cbHideUnavailable = createCheckbox("Hide Unavailable");
 		options.appendChild(document.newElement({
 			type: "span",
 			children: [
 				"Max Level",
 				maxLevelInput,
-				cbHideUnavailable,
-				document.newElement({ type: "label", text: "Hide Unavailable", attributes: { for: "hideUnavailable" } })
+				cbHideUnavailable.element,
 			],
 		}));
 
 		// Setup saved filters
 		maxLevelInput.value = filters.bounties.maxLevel;
-		cbHideUnavailable.checked = filters.bounties.hideUnavailable;
+		cbHideUnavailable.setChecked(filters.bounties.hideUnavailable);
 
 		filterListing();
 		maxLevelInput.addEventListener("input", filterListing);
-		cbHideUnavailable.addEventListener("input", filterListing);
+		cbHideUnavailable.onChange(filterListing);
 		async function filterListing() {
 			// Get the set filters
 			const tempMaxLevel = parseInt(maxLevelInput.value);
 			const maxLevel = tempMaxLevel < 100 && tempMaxLevel > 0 ? tempMaxLevel : 100;
 			maxLevelInput.value = maxLevel;
-			const hideUnavailable = cbHideUnavailable.checked;
+			const hideUnavailable = cbHideUnavailable.isChecked();
 
 			// Save the filters
 			await ttStorage.change({
