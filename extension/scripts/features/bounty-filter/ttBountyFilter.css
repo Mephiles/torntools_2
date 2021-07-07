@@ -4,13 +4,3 @@
 	width: 50px;
 	border-radius: 5px;
 }
-
-#bountyFilter .options .tt-checkbox-wrapper {
-	display: inline-block;
-}
-
-#bountyFilter .options input[type="checkbox"] {
-	margin-top: -4px;
-    margin-right: 3px;
-    vertical-align: middle;
-}
