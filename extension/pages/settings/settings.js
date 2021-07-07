@@ -992,11 +992,51 @@ function setupExport() {
 	});
 	exportSection.find("#import-local-text").addEventListener("click", () => {
 		// FIXME - Show import field.
+		// FIXME - Read import field.
+		// FIXME - Handle imported data.
 	});
 
-	// FIXME - Handle file export and import.
+	exportSection.find("#export-local-file").addEventListener("click", async () => {
+		const data = JSON.stringify(await getExportData(), null, 4);
+
+		document
+			.newElement({
+				type: "a",
+				href: window.URL.createObjectURL(new Blob([data], { type: "octet/stream" })),
+				attributes: { download: "torntools.json" },
+			})
+			.click();
+	});
+	exportSection.find("#import-local-file").addEventListener("click", () => {
+		document.find("#import-local-file-origin").click();
+	});
+	exportSection.find("#import-local-file-origin").addEventListener("change", (event) => {
+		const reader = new FileReader();
+		reader.addEventListener("load", (event) => {
+			if (event.target.result.length > 5242880) {
+				sendMessage("Maximum file size exceeded. (5MB)", false);
+				return;
+			}
+
+			let data;
+			try {
+				// noinspection JSCheckFunctionSignatures
+				data = JSON.parse(event.target.result);
+			} catch (error) {
+				console.error("DKK import file", error);
+				sendMessage("Maximum file size exceeded. (5MB)", false);
+				return;
+			}
+
+			// FIXME - Handle imported data.
+			console.log("DKK import file", data);
+		});
+		reader.readAsText(event.target.files[0]);
+	});
 
 	async function getExportData() {
+		const exportedKeys = ["version", "settings", "filters", "localdata", "stakeouts", "notes", "quick"];
+
 		const data = {
 			user: false,
 			client: {
@@ -1004,23 +1044,10 @@ function setupExport() {
 				space: await ttStorage.getSize(),
 			},
 			date: new Date().toString(),
-			database: await ttStorage.get([
-				"version",
-				"settings",
-				"filters",
-				"localdata",
-				"stakeouts",
-				"notes",
-				"quick",
-				// CHECK - Should probably be part of 'localdata'.
-				// "vault",
-				// CHECK - Should probably be part of 'settings'.
-				// "loot_alerts",
-				// CHECK - Should probably be part of 'settings'.
-				// "allies",
-				// CHECK - Should probably be part of 'settings'.
-				// "users_alias",
-			]),
+			database: (await ttStorage.get(exportedKeys)).reduce((object, value, index) => {
+				object[exportedKeys[index]] = value;
+				return object;
+			}, {}),
 		};
 
 		if (hasAPIData()) {
