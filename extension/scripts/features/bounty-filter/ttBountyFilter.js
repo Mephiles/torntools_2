@@ -2,7 +2,7 @@
 
 (async () => {
 	const feature = featureManager.registerFeature(
-		"Hide Unavailable Bounties",
+		"Bounty Filter",
 		"bounties",
 		() => settings.pages.bounties.filter,
 		initialiseListener,
@@ -15,13 +15,13 @@
 	);
 
 	function initialiseListener() {
-		addXHRListener(({ detail: { page, json } }) => {
-			if (page !== "bounties") return;
+		new MutationObserver(() => {
 			if (feature.enabled()) addFilter();
-		});
+		}).observe(document.find(".content-wrapper"), { childList: true });
 	}
 
 	async function addFilter() {
+		if (findContainer("Bounty Filter")) return;
 		await requireElement(".bounties-list > li > ul > li .reward");
 		const { options } = createContainer("Bounty Filter", {
 			previousElement: document.find(".bounties-wrap .bounties-total"),
@@ -55,11 +55,14 @@
 		maxLevelInput.value = filters.bounties.maxLevel;
 		cbHideUnavailable.checked = filters.bounties.hideUnavailable;
 
+		filterListing();
 		maxLevelInput.addEventListener("input", filterListing);
 		cbHideUnavailable.addEventListener("input", filterListing);
 		async function filterListing() {
-			// Get the filters
-			const maxLevel = maxLevelInput.value;
+			// Get the set filters
+			const tempMaxLevel = parseInt(maxLevelInput.value);
+			const maxLevel = tempMaxLevel < 100 && tempMaxLevel > 0 ? tempMaxLevel : 100;
+			maxLevelInput.value = maxLevel;
 			const hideUnavailable = cbHideUnavailable.checked;
 
 			// Save the filters
@@ -72,16 +75,20 @@
 				},
 			});
 
-			document.findAll(".bounties-list > *").forEach((bounty) => {
-				if (maxLevel > 0 && parseInt(bounty.find(".level").lastChild.textContent)) hideBounty(bounty);
-				else showBounty(bounty);
-				if (hideUnavailable && bounty.find(".t-red")) hideBounty(bounty);
-				else showBounty(bounty);
-			});
+			for (const bounty of [...document.findAll(".bounties-list > *:not(.clear)")]) {
+				if (maxLevel > 0 && parseInt(bounty.find(".level").lastChild.textContent) > maxLevel) {
+					hideBounty(bounty);
+					continue;
+				} else showBounty(bounty);
+				if (hideUnavailable && bounty.find(".t-red")) {
+					hideBounty(bounty);
+					continue;
+				} else showBounty(bounty);
+			}
 			function hideBounty(bounty) {
 				bounty.classList.add("hidden");
 			}
-			function showBounty() {
+			function showBounty(bounty) {
 				bounty.classList.remove("hidden");
 			}
 		}
