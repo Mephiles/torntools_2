@@ -30,7 +30,7 @@ async function showPage(name) {
 		changelog: setupChangelog,
 		preferences: setupPreferences,
 		api: setupAPIInfo,
-		remote: setupRemote,
+		export: setupExport,
 		about: setupAbout,
 	};
 
@@ -981,7 +981,7 @@ async function setupAPIInfo() {
 	});
 }
 
-function setupRemote() {}
+function setupExport() {}
 
 function setupAbout() {
 	const about = document.find("#about");
