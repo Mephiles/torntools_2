@@ -1,27 +1,27 @@
-#jobSpecials .tt-comp-info-wrap {
-    width: 20%;
-    text-align: center;
-    padding: 10px;
+#jobSpecials .tt-company-info-wrap {
+	width: 20%;
+	text-align: center;
+	padding: 10px;
 }
 
-#jobSpecials .tt-comp-info-wrap .heading {
+#jobSpecials .tt-company-info-wrap .heading {
 	font-weight: 600;
 }
 
-#jobSpecials .tt-comp-info-wrap hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
+#jobSpecials .tt-company-info-wrap hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
 	border: 1px solid grey;
 }
 
-#jobSpecials .tt-comp-info-wrap hr:nth-of-type(1) {
-    width: 80%;
+#jobSpecials .tt-company-info-wrap hr:nth-of-type(1) {
+	width: 80%;
 }
 
-#jobSpecials .tt-comp-info-wrap hr:nth-of-type(2) {
-    width: 20%;
+#jobSpecials .tt-company-info-wrap hr:nth-of-type(2) {
+	width: 20%;
 }
 
 #jobSpecials main {
-    display: flex;
+	display: flex;
 }

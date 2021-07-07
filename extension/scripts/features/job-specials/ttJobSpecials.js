@@ -33,7 +33,7 @@
 			content.appendChild(
 				document.newElement({
 					type: "div",
-					class: "tt-comp-info-wrap",
+					class: "tt-company-info-wrap",
 					children: [
 						document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
 						document.newElement({ type: "hr" }),
