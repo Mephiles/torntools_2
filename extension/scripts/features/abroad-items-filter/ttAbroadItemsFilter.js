@@ -20,81 +20,71 @@
 		const { content } = createContainer("Item Filters", {
 			nextElement: document.find(".travel-agency-market"),
 		});
+		// Create all checkboxes beforehand
+		const cbProfitOnly = createCheckbox("Only Profit");
+		cbProfitOnly.onChange(applyFilters);
+		const profitOnlyFilter = document.newElement({
+			type: "div",
+			class: "profitOnlyFilter",
+			children: [
+				document.newElement({ type: "strong", text: "Profit" }),
+				cbProfitOnly.element,
+			],
+		});
+		const cbsCategories = createCheckboxList(
+			[
+				{ id: "plushie", description: "Plushies" },
+				{ id: "flower", description: "Flowers" },
+				{ id: "drug", description: "Drugs" },
+				{ id: "weapon", description: "Weapons" },
+				{ id: "armor", description: "Armor" },
+				{ id: "other", description: "Other" },
+			],
+			"column"
+		);
+		cbsCategories.onSelectionChange(applyFilters);
+		const categoryFilter = document.newElement({
+			type: "div",
+			class: "categoryFilter",
+			children: [
+				document.newElement({ type: "strong", text: "Categories" }),
+				cbsCategories.element,
+			],
+		});
+		// Append them ALL
+		content.appendChild(document.newElement({
+			type: "div",
+			class: "statistics",
+			children: [
+				"Showing ",
+				document.newElement({ type: "strong", class: "count", text: "X" }),
+				" of ",
+				document.newElement({ type: "strong", class: "total", text: "Y" }),
+				" items",
+			],
+		}));
+		content.appendChild(document.newElement({
+			type: "div",
+			class: "content",
+			children: [
+				profitOnlyFilter,
+				categoryFilter
+			],
+		}));
 
-		content.innerHTML = `
-				<div class="filter-header">
-					<div class="statistic">Showing <span class="filter-count">X</span> of <span class="filter-total">Y</span> items</div>
-				</div>
-				<div class="filter-content">
-					${
-						settings.pages.travel.travelProfits
-							? `
-					<div class="filter-wrap" id="profit-filter">
-						<div class="filter-heading">Profit</div>
-						<div class="filter-multi-wrap">
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" name="profit" id="only_profit">
-								<label for="only_profit">Only Profit</label>
-							</div>
-						</div>
-					</div>
-					`
-							: ""
-					}
-					<div class="filter-wrap" id="category-filter">
-						<div class="filter-heading">Categories</div>
-						<div class="filter-multi-wrap">
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="plushie" value="plushie">
-								<label for="plushie">Plushies</label>
-							</div>
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="flower" value="flower">
-								<label for="flower">Flowers</label>
-							</div>
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="drug" value="drug">
-								<label for="drug">Drugs</label>
-							</div>
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="weapon" value="weapon">
-								<label for="weapon">Weapons</label>
-							</div>
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="armor" value="armor">
-								<label for="armor">Armor</label>
-							</div>
-							<div class="tt-checkbox-wrap">
-								<input type="checkbox" id="other" value="other">
-								<label for="other">Other</label>
-							</div>
-						</div>
-					</div>
-				</div>
-			`;
-
-		content.find("#only_profit").checked = filters.abroadItems.profitOnly;
-		for (const category of filters.abroadItems.categories) {
-			content.find(`#category-filter input[value="${category}"]`).checked = true;
-		}
-
-		// Event listeners
-		for (const checkbox of content.findAll(".tt-checkbox-wrap input")) {
-			checkbox.onclick = applyFilters;
-		}
+		cbProfitOnly.setChecked(filters.abroadItems.profitOnly);
+		cbsCategories.setSelections(filters.abroadItems.categories);
 
 		applyFilters();
 
 		async function applyFilters() {
-			const profitOnly = settings.pages.travel.travelProfits && content.find("#only_profit").checked;
-			const categories = [];
+			const profitOnly = settings.pages.travel.travelProfits && cbProfitOnly.isChecked();
+			const categories = cbsCategories.getSelections();
 			const categoriesExtra = [];
 
 			// Categories
-			for (const checkbox of [...content.findAll("#category-filter .tt-checkbox-wrap input:checked")]) {
-				const value = checkbox.getAttribute("value");
-
-				switch (value) {
+			for (const category of categories) {
+				switch (category) {
 					case "weapon":
 						categoriesExtra.push("primary");
 						categoriesExtra.push("secondary");
@@ -103,13 +93,11 @@
 						categoriesExtra.push("temporary");
 						break;
 					case "other":
+						categoriesExtra.push("other");
 						categoriesExtra.push("enhancer");
 						categoriesExtra.push("clothing");
 						categoriesExtra.push("alcohol");
-						// FIXME - Add more missing categories.
 						break;
-					default:
-						categories.push(value);
 				}
 			}
 
@@ -123,14 +111,8 @@
 				}
 
 				if (categories.length || categoriesExtra.length) {
-					const itemCategory = li
-						.find(".type")
-						.innerText.split("\n")
-						.filter((x) => !!x)[1]
-						.toLowerCase();
-
+					const itemCategory = li.find(".type").lastChild.textContent.trim().toLowerCase();
 					const matchesCategory = [...categories, ...categoriesExtra].some((category) => itemCategory === category);
-
 					if (!matchesCategory) {
 						hideRow(li);
 						continue;
@@ -159,12 +141,13 @@
 		}
 
 		function updateStatistics() {
-			content.find(".statistic .filter-count").innerText = document.findAll(".users-list > li:not(.hidden)").length;
-			content.find(".statistic .filter-total").innerText = document.findAll(".users-list > li").length;
+			content.find(".count").innerText = document.findAll(".users-list > li:not(.hidden)").length;
+			content.find(".total").innerText = document.findAll(".users-list > li").length;
 		}
 	}
 
 	function removeFilter() {
 		removeContainer("Item Filters");
+		document.findAll(".users-list > li.hidden").forEach(x => x.classList.remove("hidden"));
 	}
 })();
