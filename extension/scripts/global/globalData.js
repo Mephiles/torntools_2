@@ -444,6 +444,7 @@ const DEFAULT_STORAGE = {
 				peopleFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				landingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				flyingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				itemFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				acronyms: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -573,7 +574,7 @@ const DEFAULT_STORAGE = {
 			countries: new DefaultSetting({ type: "array", defaultValue: [] }),
 			hideOutOfStock: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
-		abroad: {
+		abroadPeople: {
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
 			status: new DefaultSetting({ type: "array", defaultValue: [] }),
 			levelStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
@@ -585,6 +586,10 @@ const DEFAULT_STORAGE = {
 				infaction: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				isdonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
+		},
+		abroadItems: {
+			categories: new DefaultSetting({ type: "array", defaultValue: [] }),
+			profitOnly: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 		trade: {
 			hideValues: new DefaultSetting({ type: "boolean", defaultValue: false }),

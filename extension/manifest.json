@@ -293,7 +293,9 @@
 				"scripts/features/travel-item-profits/ttTravelItemProfits.css",
 				"scripts/features/travel-fill-max/ttTravelFillMax.css",
 				"scripts/features/sort-travel-market/ttSortTravelMarket.css",
-				"scripts/features/landing-time/ttLandingTime.css"
+				"scripts/features/landing-time/ttLandingTime.css",
+				"scripts/features/abroad-items-filter/ttAbroadItemsFilter.css",
+				"scripts/global/functions/filters.css"
 			],
 			"js": [
 				"scripts/features/effective-stats/ttEffectiveStats.js",
@@ -305,7 +307,8 @@
 				"scripts/features/travel-item-profits/ttTravelItemProfits.js",
 				"scripts/features/travel-fill-max/ttTravelFillMax.js",
 				"scripts/features/sort-travel-market/ttSortTravelMarket.js",
-				"scripts/features/landing-time/ttLandingTime.js"
+				"scripts/features/landing-time/ttLandingTime.js",
+				"scripts/features/abroad-items-filter/ttAbroadItemsFilter.js"
 			],
 			"run_at": "document_end"
 		},
