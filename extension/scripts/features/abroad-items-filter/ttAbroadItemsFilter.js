@@ -37,7 +37,7 @@
 				{ id: "flower", description: "Flowers" },
 				{ id: "drug", description: "Drugs" },
 				{ id: "weapon", description: "Weapons" },
-				{ id: "armor", description: "Armor" },
+				{ id: "temporary", description: "Temporary" },
 				{ id: "other", description: "Other" },
 			],
 			"column"
@@ -80,26 +80,6 @@
 		async function applyFilters() {
 			const profitOnly = settings.pages.travel.travelProfits && cbProfitOnly.isChecked();
 			const categories = cbsCategories.getSelections();
-			const categoriesExtra = [];
-
-			// Categories
-			for (const category of categories) {
-				switch (category) {
-					case "weapon":
-						categoriesExtra.push("primary");
-						categoriesExtra.push("secondary");
-						categoriesExtra.push("defensive");
-						categoriesExtra.push("melee");
-						categoriesExtra.push("temporary");
-						break;
-					case "other":
-						categoriesExtra.push("other");
-						categoriesExtra.push("enhancer");
-						categoriesExtra.push("clothing");
-						categoriesExtra.push("alcohol");
-						break;
-				}
-			}
 
 			// Filtering
 			for (const li of document.findAll(".users-list > li")) {
@@ -110,12 +90,50 @@
 					continue;
 				}
 
-				if (categories.length || categoriesExtra.length) {
+				if (categories.length) {
 					const itemCategory = li.find(".type").lastChild.textContent.trim().toLowerCase();
-					const matchesCategory = [...categories, ...categoriesExtra].some((category) => itemCategory === category);
-					if (!matchesCategory) {
-						hideRow(li);
-						continue;
+					switch (itemCategory) {
+						case "plushie":
+							if (!categories.includes("plushie")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "flower":
+							if (!categories.includes("flower")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "drug":
+							if (!categories.includes("drug")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "melee":
+						case "primary":
+						case "secondary":
+							if (!categories.includes("weapon")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "temporary":
+							if (!categories.includes("temporary")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "alcohol":
+						case "clothing":
+						case "other":
+						default:
+							if (!categories.includes("other")) {
+								hideRow(li);
+								continue;
+							}
+							break;
 					}
 				}
 			}
