@@ -2,6 +2,7 @@
 
 (async () => {
 	if (!getPageStatus().access) return;
+	if (getSearchParameters().get("page")) return;
 
 	featureManager.registerFeature(
 		"Item Filter",

@@ -89,3 +89,39 @@
 .filter-header .statistic {
 	margin: 5px 10px 0 0;
 }
+
+/* New Filters CSS Model */
+.tt-filter .statistics {
+	float: right;
+	margin: 5px 5px 0 0;
+}
+
+.tt-filter .content {
+	display: flex;
+	width: 100%;
+    justify-content: space-evenly;
+	padding: 10px 0;
+}
+
+.tt-filter .content .special {
+	display: flex;
+	justify-content: space-around;
+	flex-flow: column;
+}
+
+.tt-filter .content .special > div {
+    display: flex;
+}
+
+.tt-filter .content .special label {
+    margin: 0 4px;
+}
+
+.tt-filter .content > * {
+	text-align: center;
+}
+
+.tt-filter .content strong {
+	display: block;
+	margin-bottom: 2px;
+}
