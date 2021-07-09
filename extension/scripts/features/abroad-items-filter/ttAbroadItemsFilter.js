@@ -1,6 +1,7 @@
 "use strict";
 
 (async () => {
+	if (!isAbroad()) return;
 	if (!getPageStatus().access) return;
 	if (getSearchParameters().get("page")) return;
 
