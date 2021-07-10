@@ -3,7 +3,7 @@
 (async () => {
 	if (!isAbroad()) return;
 	if (!getPageStatus().access) return;
-	if (getSearchParameters().get("page")) return;
+	if (getSearchParameters().has("page")) return;
 
 	featureManager.registerFeature(
 		"Item Filter",
