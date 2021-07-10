@@ -1012,7 +1012,7 @@ function setupExport() {
 	});
 	exportSection.find("#import-local-file-origin").addEventListener("change", (event) => {
 		const reader = new FileReader();
-		reader.addEventListener("load", (event) => {
+		reader.addEventListener("load", async (event) => {
 			if (event.target.result.length > 5242880) {
 				sendMessage("Maximum file size exceeded. (5MB)", false);
 				return;
@@ -1023,13 +1023,12 @@ function setupExport() {
 				// noinspection JSCheckFunctionSignatures
 				data = JSON.parse(event.target.result);
 			} catch (error) {
-				console.error("DKK import file", error);
-				sendMessage("Maximum file size exceeded. (5MB)", false);
+				console.error("Couldn't read the file!", error);
+				sendMessage("Couldn't read the file!", false);
 				return;
 			}
 
-			// FIXME - Handle imported data.
-			console.log("DKK import file", data);
+			await importData(data);
 		});
 		reader.readAsText(event.target.files[0]);
 	});
@@ -1055,6 +1054,18 @@ function setupExport() {
 		}
 
 		return data;
+	}
+
+	async function importData(data) {
+		try {
+			await ttStorage.change(data.database);
+		} catch (error) {
+			sendMessage("Couldn't save the imported database.", false);
+			return;
+		}
+
+		sendMessage("Imported file.", true);
+		await setupPreferences();
 	}
 }
 
