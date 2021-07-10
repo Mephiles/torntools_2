@@ -82,6 +82,7 @@
 				{ id: "okay", description: "Okay" },
 				{ id: "hospital", description: "Hospital" },
 			],
+			defaults: filters.abroadPeople.status,
 			callback: filtering,
 		});
 		filterContent.appendChild(statusFilter.element);
@@ -107,7 +108,7 @@
 			await requireElement(".users-list > li");
 			// Get the set filters
 			const activity = activityFilter.getSelections(content);
-			const faction = factionFilter.getSelected(content);
+			const faction = factionFilter.getSelected(content).trim();
 			const special = specialFilter.getSelections(content);
 			const status = statusFilter.getSelections(content);
 			const levels = levelFilter.getStartEnd();
@@ -155,10 +156,10 @@
 				const rowFaction = li.find(".faction");
 				if (
 					faction &&
-					((rowFaction.childElementCount === 0 && rowFaction.innerText.trim() !== faction.trim()) ||
+					((rowFaction.childElementCount === 0 && rowFaction.innerText.trim() !== faction) ||
 						(rowFaction.childElementCount !== 0 &&
 							rowFaction.find("img") &&
-							rowFaction.find("img").getAttribute("title").trim() !== faction.trim()))
+							rowFaction.find("img").getAttribute("alt").trim() !== faction))
 				) {
 					hideRow(li);
 					continue;
