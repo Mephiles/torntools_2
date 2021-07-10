@@ -1,5 +1,3 @@
-/* jshint esversion: 10 */
-/* globals createCheckbox, createCheckboxList, createSelect, DualRangeSlider */
 function createFilterSection(_options) {
 	const options = {
 		type: "",
