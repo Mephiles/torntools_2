@@ -103,12 +103,11 @@ function createFilterSection(_options) {
 	if (options.slider && Object.keys(options.slider).length) {
 		const rangeSlider = new DualRangeSlider(options.slider);
 		section.appendChild(rangeSlider.slider);
-		const counter = document.newElement({
+		section.appendChild(document.newElement({
 			type: "div",
 			class: "slider-counter",
 			text: "",
-		});
-		section.appendChild(counter);
+		}));
 		new MutationObserver(options.callback).observe(rangeSlider.slider, { attributes: true });
 
 		function getStartEnd(content) {
