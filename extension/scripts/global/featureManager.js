@@ -209,7 +209,7 @@ class FeatureManager {
 					scopeHeading.addEventListener("click", async (event) => {
 						const scopeElementLocal = event.target.closest("[id*='scope']");
 						const addedOrRemoved = scopeElementLocal.classList.toggle("collapsed");
-						const closedScopes = await ttStorage.get("closedScopes");
+						const closedScopes = (await ttStorage.get("filters")).closedScopes;
 						if (addedOrRemoved) closedScopes.push(scopeElementLocal.getAttribute("id").split("scope-")[1]);
 						else {
 							const index = closedScopes.indexOf(scopeElementLocal.getAttribute("id").split("scope-")[1]);
@@ -217,7 +217,7 @@ class FeatureManager {
 								closedScopes.splice(index, 1);
 							}
 						}
-						await ttStorage.set({ closedScopes: closedScopes });
+						await ttStorage.change({ filters: { closedScopes: closedScopes } });
 					});
 					document.find(".tt-page-status-content").appendChild(scopeElement);
 					scopeElement.appendChild(document.newElement({
@@ -317,7 +317,7 @@ class FeatureManager {
 
 		document.find("#tt-page-status").classList[hasContent ? "remove" : "add"]("no-content");
 
-		for (const scope of await ttStorage.get("closedScopes")) {
+		for (const scope of (await ttStorage.get("filters")).closedScopes) {
 			const scopeElement = document.find(`.tt-page-status-content > #scope-${scope}`);
 			if (!scopeElement.find(":scope > .features-list > .failed")) scopeElement.classList.add("collapsed");
 		}
