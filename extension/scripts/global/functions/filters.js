@@ -42,13 +42,13 @@ function createFilterSection(_options) {
 	}
 
 	if (options.checkboxes.length) {
-		const checkboxes = createCheckboxList(options.checkboxes, options.orientation);
+		const checkboxes = createCheckboxList(options.checkboxes, options.orientation, null, true);
 		checkboxes.onSelectionChange(options.callback);
 		checkboxes.setSelections(options.defaults);
 		section.appendChild(checkboxes.element);
 		return {
 			element: section, getSelections:
-			(content) => [...content.findAll(`.${ccTitle} input:checked + label`)].map(x => x.innerText.toLowerCase().trim())
+			(content) => [...content.findAll(`.${ccTitle} input:checked`)].map(x => x.getAttribute("id").toLowerCase().trim())
 		};
 	}
 

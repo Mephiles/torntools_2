@@ -3,7 +3,7 @@
 (async () => {
 	if (!isAbroad()) return;
 	if (!getPageStatus().access) return;
-	if (getSearchParameters().get("page")) return;
+	if (getSearchParameters().has("page")) return;
 
 	featureManager.registerFeature(
 		"Item Filter",
@@ -72,14 +72,48 @@
 
 				if (categories.length) {
 					const itemCategory = li.find(".type").lastChild.textContent.trim().toLowerCase();
-					if (
-						!categories.includes(itemCategory) ||
-						(["melee", "primary", "secondary"].includes(itemCategory) && !categories.includes("weapon")) ||
-						(["alcohol", "clothing", "other"].includes(itemCategory) && !categories.includes("other")) ||
-						!categories.includes("other")
-					) {
-						hideRow(li);
-						continue;
+					switch (itemCategory) {
+						case "plushie":
+							if (!categories.includes("plushie")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "flower":
+							if (!categories.includes("flower")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "drug":
+							if (!categories.includes("drug")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "melee":
+						case "primary":
+						case "secondary":
+							if (!categories.includes("weapon")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "temporary":
+							if (!categories.includes("temporary")) {
+								hideRow(li);
+								continue;
+							}
+							break;
+						case "alcohol":
+						case "clothing":
+						case "other":
+						default:
+							if (!categories.includes("other")) {
+								hideRow(li);
+								continue;
+							}
+							break;
 					}
 				}
 			}

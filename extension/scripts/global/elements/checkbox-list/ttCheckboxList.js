@@ -1,10 +1,10 @@
-function createCheckboxList(items, orientation) {
+function createCheckboxList(items, orientation, reverseLabel, useid) {
 	let selectedIds = {};
 	const checkboxes = {};
 	let selectionChangeCallback;
 
 	for (const item of items) {
-		const checkbox = createCheckbox(item.description);
+		const checkbox = useid ? createCheckbox(item.description, reverseLabel, item.id) : createCheckbox(item.description, reverseLabel);
 		checkbox.onChange(() => {
 			if (checkbox.isChecked()) {
 				selectedIds[item.id] = true;
