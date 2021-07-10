@@ -29,7 +29,7 @@ function createFilterSection(_options) {
 	if (!options.noTitle) section.appendChild(document.newElement({ type: "strong", text: options.title }));
 
 	if (options.checkbox) {
-		const checkbox = createCheckbox(options.checkbox);
+		const checkbox = createCheckbox({ description: options.checkbox });
 		checkbox.onChange(options.callback);
 		checkbox.setChecked(options.defaults);
 		section.appendChild(checkbox.element);
@@ -40,7 +40,7 @@ function createFilterSection(_options) {
 	}
 
 	if (options.checkboxes.length) {
-		const checkboxes = createCheckboxList(options.checkboxes, options.orientation, null, true);
+		const checkboxes = createCheckboxList({ items: options.checkboxes, orientation: options.orientation, useId: true });
 		checkboxes.onSelectionChange(options.callback);
 		checkboxes.setSelections(options.defaults);
 		section.appendChild(checkboxes.element);
@@ -54,8 +54,8 @@ function createFilterSection(_options) {
 		options.ynCheckboxes.forEach(key => {
 			const ccKey = key.camelCase(true);
 			const checkboxesDiv = document.newElement({ type: "div", class: ccKey });
-			const yCheckbox = createCheckbox("Y:", true);
-			const nCheckbox = createCheckbox("N:", true);
+			const yCheckbox = createCheckbox({ description: "Y:", reverseLabel: true });
+			const nCheckbox = createCheckbox({ description: "N:", reverseLabel: true });
 			const value = options.defaults[ccKey];
 			if (value === "yes" || value === "both") yCheckbox.setChecked(true);
 			if (value === "no" || value === "both") nCheckbox.setChecked(true);
