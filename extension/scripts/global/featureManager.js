@@ -321,7 +321,7 @@ class FeatureManager {
 
 		for (const scope of (await ttStorage.get("filters")).closedScopes) {
 			const scopeElement = document.find(`.tt-page-status-content > #scope-${scope}`);
-			if (!scopeElement.find(":scope > .features-list > .failed")) scopeElement.classList.add("collapsed");
+			if (scopeElement && !scopeElement.find(":scope > .features-list > .failed")) scopeElement.classList.add("collapsed");
 		}
 	}
 }
