@@ -217,7 +217,7 @@ class FeatureManager {
 								closedScopes.splice(index, 1);
 							}
 						}
-						await ttStorage.change({ filters: { closedScopes: closedScopes } });
+						await ttStorage.change({ filters: { closedScopes: [...new Set(closedScopes)] } });
 					});
 					document.find(".tt-page-status-content").appendChild(scopeElement);
 					scopeElement.appendChild(
