@@ -50,6 +50,9 @@ function loadConfirmationPopup(options = {}) {
 
 			document.body.classList.remove("tt-unscrollable");
 
+			for (const input of document.findAll("#tt-confirmation-popup textarea")) {
+			}
+
 			resolve();
 		};
 		document.find("#tt-confirmation-popup #popupCancel").onclick = () => {

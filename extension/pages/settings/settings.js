@@ -982,33 +982,103 @@ async function setupAPIInfo() {
 }
 
 function setupExport() {
+	const POPUP_TEMPLATES = {
+		EXPORT: {
+			title: "Export",
+			message: `
+				<h3>Following information will be exported:</h3>
+				<ul>
+					<li>User ID and username</li>
+					<li>Client version and database size</li>
+					<li>Exportation date and time</li>
+					<li>
+						Database
+						<ul>
+							<li>version notice</li>
+							<li>preferences</li>
+							<li>filter and sorting settings</li>
+							<li>stakeouts</li>
+							<li>notes</li>
+							<li>quick items, crimes and jail bust / bail</li>
+						</ul>
+					</li>
+				</ul>
+			`,
+		},
+		IMPORT: {
+			title: "Import",
+			message: `
+				<h3>Are you sure you want to overwrite following items?</h3>
+				<ul>
+					<li>version notice</li>
+					<li>preferences</li>
+					<li>filter and sorting settings</li>
+					<li>stakeouts</li>
+					<li>notes</li>
+					<li>quick items, crimes and jail bust / bail</li>
+				</ul>
+			`,
+		},
+		IMPORT_MANUAL: {
+			title: "Import",
+			message: `
+				<h3>Paste your database below. Be careful to use the exact copy provided.</h3>
+				<textarea name="import"></textarea>
+				
+				<h3>Are you sure you want to overwrite following items?</h3>
+				<ul>
+					<li>version notice</li>
+					<li>preferences</li>
+					<li>filter and sorting settings</li>
+					<li>stakeouts</li>
+					<li>notes</li>
+					<li>quick items, crimes and jail bust / bail</li>
+				</ul>
+			`,
+		},
+	};
+
 	const exportSection = document.find("#export");
 
 	exportSection.find("#export-local-text").addEventListener("click", async () => {
-		const data = JSON.stringify(await getExportData());
+		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+			.then(async () => {
+				const data = JSON.stringify(await getExportData());
 
-		toClipboard(data);
-		sendMessage("Copied database to your clipboard.", true);
+				toClipboard(data);
+				sendMessage("Copied database to your clipboard.", true);
+			})
+			.catch(() => {});
 	});
 	exportSection.find("#import-local-text").addEventListener("click", () => {
-		// FIXME - Show import field.
-		// FIXME - Read import field.
-		// FIXME - Handle imported data.
+		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT_MANUAL)
+			.then(() => {
+				// FIXME - Show import field.
+				// FIXME - Read import field.
+				// FIXME - Handle imported data.
+			})
+			.catch(() => {});
 	});
 
-	exportSection.find("#export-local-file").addEventListener("click", async () => {
-		const data = JSON.stringify(await getExportData(), null, 4);
+	exportSection.find("#export-local-file").addEventListener("click", () => {
+		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+			.then(async () => {
+				const data = JSON.stringify(await getExportData(), null, 4);
 
-		document
-			.newElement({
-				type: "a",
-				href: window.URL.createObjectURL(new Blob([data], { type: "octet/stream" })),
-				attributes: { download: "torntools.json" },
+				document
+					.newElement({
+						type: "a",
+						href: window.URL.createObjectURL(new Blob([data], { type: "octet/stream" })),
+						attributes: { download: "torntools.json" },
+					})
+					.click();
 			})
-			.click();
+			.catch(() => {});
 	});
 	exportSection.find("#import-local-file").addEventListener("click", () => {
-		document.find("#import-local-file-origin").click();
+		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+			.then(() => document.find("#import-local-file-origin").click())
+			.catch(() => {});
 	});
 	exportSection.find("#import-local-file-origin").addEventListener("change", (event) => {
 		const reader = new FileReader();
@@ -1034,7 +1104,7 @@ function setupExport() {
 	});
 
 	async function getExportData() {
-		const exportedKeys = ["version", "settings", "filters", "localdata", "stakeouts", "notes", "quick"];
+		const exportedKeys = ["version", "settings", "filters", "stakeouts", "notes", "quick"];
 
 		const data = {
 			user: false,
