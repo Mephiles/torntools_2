@@ -140,3 +140,23 @@ function createStatistics() {
 	}
 	return { element: statistics, updateStatistics };
 }
+
+const defaultFactionsItems = [
+	{
+		value: "",
+		description: "All",
+	},
+	...(hasAPIData() && !!userdata.faction.faction_id
+		? [
+				{
+					value: userdata.faction.faction_tag,
+					description: userdata.faction.faction_tag,
+				},
+		  ]
+		: []),
+	{
+		value: "------",
+		description: "------",
+		disabled: true,
+	},
+];

@@ -41,25 +41,6 @@
 		});
 		filterContent.appendChild(activityFilter.element);
 
-		const defaultFactionsItems = [
-			{
-				value: "",
-				description: "All",
-			},
-			...(hasAPIData() && !!userdata.faction.faction_id
-				? [
-						{
-							value: userdata.faction.faction_tag,
-							description: userdata.faction.faction_tag,
-						},
-				  ]
-				: []),
-			{
-				value: "------",
-				description: "------",
-				disabled: true,
-			},
-		];
 		const factionFilter = createFilterSection({
 			title: "Faction",
 			select: [...defaultFactionsItems, ...getFactions()],
