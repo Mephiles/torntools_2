@@ -1116,6 +1116,40 @@ function setupExport() {
 		reader.readAsText(event.target.files[0]);
 	});
 
+	exportSection.find("#export-remote-sync").addEventListener("click", async () => {
+		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+			.then(() => {
+				// FIXME - Store data in `sync`.
+				console.log("DKK TODO - Store data in `sync`.");
+			})
+			.catch(() => {});
+	});
+	exportSection.find("#import-remote-sync").addEventListener("click", () => {
+		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+			.then(() => {
+				// FIXME - Load data from `sync`.
+				console.log("DKK TODO - Load data from `sync`.");
+			})
+			.catch(() => {});
+	});
+
+	exportSection.find("#export-remote-server").addEventListener("click", () => {
+		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+			.then(() => {
+				// FIXME - Store data in remote server.
+				console.log("DKK TODO - Store data in remote server.");
+			})
+			.catch(() => {});
+	});
+	exportSection.find("#import-remote-server").addEventListener("click", () => {
+		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+			.then(() => {
+				// FIXME - Load data from remote server.
+				console.log("DKK TODO - Load data from remote server.");
+			})
+			.catch(() => {});
+	});
+
 	async function getExportData() {
 		const exportedKeys = ["version", "settings", "filters", "stakeouts", "notes", "quick"];
 

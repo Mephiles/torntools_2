@@ -1,12 +1,15 @@
-.export-locally {
+.export-locally,
+.export-remote {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 }
 
-.export-locally .description {
+.export-locally .description,
+.export-remote .description {
 	max-width: 45ch;
 }
 
-.export-locally .actions {
+.export-locally .actions,
+.export-remote .actions {
 	grid-row-start: 2;
 }
