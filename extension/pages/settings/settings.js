@@ -1023,7 +1023,7 @@ function setupExport() {
 			title: "Import",
 			message: `
 				<h3>Paste your database below. Be careful to use the exact copy provided.</h3>
-				<textarea name="import"></textarea>
+				<textarea name="importtext"></textarea>
 				
 				<h3>Are you sure you want to overwrite following items?</h3>
 				<ul>
@@ -1052,10 +1052,23 @@ function setupExport() {
 	});
 	exportSection.find("#import-local-text").addEventListener("click", () => {
 		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT_MANUAL)
-			.then(() => {
-				// FIXME - Show import field.
-				// FIXME - Read import field.
-				// FIXME - Handle imported data.
+			.then(async ({ importtext }) => {
+				if (importtext > 5242880) {
+					sendMessage("Maximum size exceeded. (5MB)", false);
+					return;
+				}
+
+				let data;
+				try {
+					// noinspection JSCheckFunctionSignatures
+					data = JSON.parse(importtext);
+				} catch (error) {
+					console.error("Couldn't read the file!", error);
+					sendMessage("Couldn't read the file!", false);
+					return;
+				}
+
+				await importData(data);
 			})
 			.catch(() => {});
 	});
