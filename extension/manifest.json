@@ -106,6 +106,7 @@
 				"scripts/features/hide-areas/ttHideAreas.entry.js",
 				"scripts/features/hide-icons/ttHideIcons.entry.js",
 				"scripts/features/block-zalgo/ttBlockZalgo.entry.js",
+				"scripts/features/achievements/achievements.js",
 				"scripts/features/achievements/ttAchievements.js"
 			],
 			"run_at": "document_start"
