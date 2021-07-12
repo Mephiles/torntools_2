@@ -50,7 +50,14 @@
 						type: "tr",
 						class: "tt-company-info-wrap",
 						children: [
-							document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
+							document.newElement({
+								type: "div",
+								class: "heading",
+								children: [
+									document.newElement({ type: "div", text: name }),
+									document.newElement({ type: "div", text: `(${stars}★)` }),
+								],
+							}),
 							document.newElement({ type: "div", text: `${cost} ${cost === "Passive" ? "" : cost === "1" ? "job point" : "job points"}` }),
 							document.newElement({ type: "div", text: effect }),
 						],
