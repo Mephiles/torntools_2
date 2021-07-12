@@ -103,7 +103,9 @@
 
 		async function filtering(pageChange) {
 			await requireElement(".users-list > li");
-			const content = findContainer("Hospital Filter").find("main");
+			const container = findContainer("Hospital Filter");
+			if (!container) return;
+			const content = container.find("main");
 			const activity = localFilters["Activity"].getSelections(content);
 			const revivesOn = localFilters["Revives"].isChecked(content);
 			const faction = localFilters["Faction"].getSelected(content).trim();
@@ -204,7 +206,7 @@
 	function getFactions() {
 		const rows = [...document.findAll(".users-list > li .user.faction")];
 		const _factions = new Set(
-			rows[0].find("img")
+			document.findAll(".users-list > li .user.faction img").length 
 				? rows
 						.map((row) => row.find("img"))
 						.filter((img) => !!img)
