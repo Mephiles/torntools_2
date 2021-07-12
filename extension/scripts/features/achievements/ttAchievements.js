@@ -67,25 +67,25 @@
 		{
 			name: "Energy refills",
 			stats: () => userdata.personalstats.refills,
-			detection: { keyword: "refill", include: "energy" },
+			detection: { keyword: "refill", include: ["energy"] },
 			requirements: { pages: ["home"] },
 		},
 		{
 			name: "Nerve refills",
 			stats: () => userdata.personalstats.nerverefills,
-			detection: { keyword: "refill", include: "nerve" },
+			detection: { keyword: "refill", include: ["nerve"] },
 			requirements: { pages: ["home"] },
 		},
 		{
 			name: "Casino refills",
 			stats: () => userdata.personalstats.tokenrefills,
-			detection: { keyword: "refill", include: "casino" },
+			detection: { keyword: "refill", include: ["casino"] },
 			requirements: { pages: ["home"] },
 		},
 		{
 			name: "Networth",
 			stats: () => userdata.personalstats.networth,
-			keyword: "networth",
+			detection: { keyword: "networth" },
 			requirements: { pages: ["home"] },
 		},
 	];
@@ -149,13 +149,14 @@
 						const description = merits[id].description.toLowerCase();
 						if (!description.includes(keyword)) continue;
 
-						if (include.length && !include.all((incl) => description.includes(incl))) continue;
+						if (include.length && !include.every((incl) => description.includes(incl))) continue;
 						if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
 
 						achievement.active.goals.push({
 							type,
 							id,
-							description,
+							name: merits[id].name,
+							description: merits[id].description,
 							completed: userdata[`${type}_awarded`].includes(id),
 						});
 					}
