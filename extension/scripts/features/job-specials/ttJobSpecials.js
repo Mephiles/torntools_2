@@ -13,7 +13,9 @@
 		{
 			storage: ["settings.pages.joblist.specials"],
 		},
-		null
+		async () => {
+			await checkMobile();
+		}
 	);
 
 	async function showSpecials() {
