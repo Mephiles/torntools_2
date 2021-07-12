@@ -1205,6 +1205,23 @@ async function setupExport() {
 				})
 				.catch(() => {});
 		});
+		importRemoteSync.addEventListener("click", () => {
+			loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+				.then(async () => await importData(data))
+				.catch(() => {});
+		});
+		clearRemoteSync.addEventListener("click", () => {
+			loadConfirmationPopup(POPUP_TEMPLATES.CLEAR)
+				.then(async () => {
+					await new Promise((resolve) => {
+						chrome.storage.sync.clear(() => resolve());
+					});
+
+					sendMessage("Cleared sync data.", true);
+					handleSyncData({ error: true, message: "No exported data." });
+				})
+				.catch(() => {});
+		});
 
 		new Promise(async (resolve) => {
 			chrome.storage.sync.get(null, (data) => {
@@ -1215,9 +1232,6 @@ async function setupExport() {
 
 		function handleSyncData(data) {
 			if (!data.error) {
-				importRemoteSync.addEventListener("click", handleImport);
-				clearRemoteSync.addEventListener("click", handleClear);
-
 				importRemoteSync.removeAttribute("disabled");
 				importRemoteSync.classList.remove("tooltip");
 				importRemoteSync.find(".tooltip-text").innerText = "";
@@ -1229,9 +1243,6 @@ async function setupExport() {
 				version.innerText = data.client.version;
 				version.parentElement.classList.remove("hidden");
 			} else {
-				importRemoteSync.removeEventListener("click", handleImport);
-				clearRemoteSync.removeEventListener("click", handleClear);
-
 				importRemoteSync.setAttribute("disabled", "");
 				importRemoteSync.classList.add("tooltip");
 				importRemoteSync.find(".tooltip-text").innerText = data.message;
@@ -1242,25 +1253,6 @@ async function setupExport() {
 				version.innerText = "";
 				version.parentElement.classList.add("hidden");
 			}
-		}
-
-		function handleImport() {
-			loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
-				.then(async () => await importData(data))
-				.catch(() => {});
-		}
-
-		function handleClear() {
-			loadConfirmationPopup(POPUP_TEMPLATES.CLEAR)
-				.then(async () => {
-					await new Promise((resolve) => {
-						chrome.storage.sync.clear(() => resolve());
-					});
-
-					sendMessage("Cleared sync data.", true);
-					handleSyncData({ error: true, message: "No exported data." });
-				})
-				.catch(() => {});
 		}
 	}
 }
