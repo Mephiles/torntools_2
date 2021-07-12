@@ -17,7 +17,9 @@
 	);
 
 	function initialiseFilters() {
-		CUSTOM_LISTENERS[EVENT_CHANNELS.HOSPITAL_SWITCH_PAGE].push(filtering);
+		CUSTOM_LISTENERS[EVENT_CHANNELS.HOSPITAL_SWITCH_PAGE].push(() => {
+			if (feature.enabled()) filtering();
+		});
 	}
 
 	const localFilters = {};
@@ -102,7 +104,6 @@
 	}
 
 		async function filtering(pageChange) {
-			if (!feature.enabled()) return;
 			await requireElement(".users-list > li");
 			const content = findContainer("Hospital Filter").find("main");
 			const activity = localFilters["Activity"].getSelections(content);
