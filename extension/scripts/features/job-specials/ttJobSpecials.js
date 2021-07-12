@@ -30,19 +30,33 @@
 		for (const stars of [1, 3, 5, 7, 10]) {
 			const { name, cost, effect } = companyInfo[stars];
 
-			content.appendChild(
-				document.newElement({
-					type: "div",
-					class: "tt-company-info-wrap",
-					children: [
-						document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
-						document.newElement({ type: "hr" }),
-						document.newElement({ type: "div", text: `${cost} ${cost === "Passive" ? "" : cost === "1" ? "job point" : "job points"}` }),
-						document.newElement({ type: "hr" }),
-						document.newElement({ type: "div", text: effect }),
-					],
-				})
-			);
+			if (!mobile) {
+				content.appendChild(
+					document.newElement({
+						type: "div",
+						class: "tt-company-info-wrap",
+						children: [
+							document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
+							document.newElement({ type: "hr" }),
+							document.newElement({ type: "div", text: `${cost} ${cost === "Passive" ? "" : cost === "1" ? "job point" : "job points"}` }),
+							document.newElement({ type: "hr" }),
+							document.newElement({ type: "div", text: effect }),
+						],
+					})
+				);
+			} else {
+				content.appendChild(
+					document.newElement({
+						type: "tr",
+						class: "tt-company-info-wrap",
+						children: [
+							document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
+							document.newElement({ type: "div", text: `${cost} ${cost === "Passive" ? "" : cost === "1" ? "job point" : "job points"}` }),
+							document.newElement({ type: "div", text: effect }),
+						],
+					})
+				);
+			}
 		}
 	}
 
