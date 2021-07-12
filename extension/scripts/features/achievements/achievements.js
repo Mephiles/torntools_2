@@ -44,36 +44,42 @@ const ACHIEVEMENTS = [
 		name: "Bazaar buyers",
 		stats: () => userdata.personalstats.bazaarcustomers,
 		detection: { keyword: "customers buy from your bazaar" },
+		// FIXME - Load on the bazaars?
 		requirements: { pages: ["home"] },
 	},
 	{
 		name: "Stock payouts",
 		stats: () => userdata.personalstats.stockpayouts,
 		detection: { keyword: "payouts" },
+		// FIXME - Load on the stock market?
 		requirements: { pages: ["home"] },
 	},
 	{
 		name: "Donator (days)",
 		stats: () => userdata.personalstats.daysbeendonator,
 		detection: { keyword: "donator" },
+		// FIXME - Load on the donator page?
 		requirements: { pages: ["home"] },
 	},
 	{
 		name: "Energy refills",
 		stats: () => userdata.personalstats.refills,
 		detection: { keyword: "refill", include: ["energy"] },
+		// FIXME - Load on the point usage?
 		requirements: { pages: ["home"] },
 	},
 	{
 		name: "Nerve refills",
 		stats: () => userdata.personalstats.nerverefills,
 		detection: { keyword: "refill", include: ["nerve"] },
+		// FIXME - Load on the point usage?
 		requirements: { pages: ["home"] },
 	},
 	{
 		name: "Casino refills",
 		stats: () => userdata.personalstats.tokenrefills,
 		detection: { keyword: "refill", include: ["casino"] },
+		// FIXME - Load on the point usage?
 		requirements: { pages: ["home"] },
 	},
 	{
