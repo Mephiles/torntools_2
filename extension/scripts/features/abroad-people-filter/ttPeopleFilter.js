@@ -22,7 +22,6 @@
 		const { content } = createContainer("People Filter", {
 			class: "mt10",
 			nextElement: document.find(".users-list-title"),
-			compact: true,
 			filter: true,
 		});
 
@@ -83,7 +82,7 @@
 		filterContent.appendChild(levelFilter.element);
 		content.appendChild(filterContent);
 
-		filtering();
+		await filtering();
 
 		async function filtering() {
 			await requireElement(".users-list > li");
@@ -160,6 +159,7 @@
 
 						if (!matchesOneIcon) {
 							hideRow(li);
+							// noinspection UnnecessaryContinueJS
 							continue;
 						}
 					} else if (value === "no") {
@@ -173,6 +173,7 @@
 
 						if (matchesOneIcon) {
 							hideRow(li);
+							// noinspection UnnecessaryContinueJS
 							continue;
 						}
 					}
@@ -195,6 +196,7 @@
 				const level = parseInt(li.find(".level").innerText.replace(/\D+/g, ""));
 				if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
 					hideRow(li);
+					// noinspection UnnecessaryContinueJS
 					continue;
 				}
 			}

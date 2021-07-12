@@ -1,25 +1,19 @@
-function createCheckbox(description, reverseLabel = false) {
-	const id = getUUID();
-	const checkbox = document.newElement({
-		type: "input",
-		id,
-		attributes: {
-			type: "checkbox",
-		},
-	});
+function createCheckbox(options = {}) {
+	options = {
+		description: "",
+		reverseLabel: false,
+		id: getUUID(),
+		...options,
+	};
+
+	const checkbox = document.newElement({ type: "input", id: options.id, attributes: { type: "checkbox" } });
 	const checkboxWrapper = document.newElement({
 		type: "div",
 		class: "tt-checkbox-wrapper",
 		children: [
-			...(!reverseLabel ? [checkbox] : []),
-			document.newElement({
-				type: "label",
-				attributes: {
-					for: id,
-				},
-				text: description,
-			}),
-			...(reverseLabel ? [checkbox] : []),
+			...(!options.reverseLabel ? [checkbox] : []),
+			document.newElement({ type: "label", text: options.description, attributes: { for: options.id } }),
+			...(options.reverseLabel ? [checkbox] : []),
 		],
 		events: {
 			click(event) {
