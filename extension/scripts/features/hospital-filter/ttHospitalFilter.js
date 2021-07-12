@@ -21,13 +21,8 @@
 	}
 
 	const localFilters = {};
-	async function addFilters(justFilter) {
+	async function addFilters() {
 		await requireElement(".userlist-wrapper.hospital-list-wrapper .users-list .time");
-
-		if (justFilter) {
-			filtering();
-			return;
-		}
 
 		const { content } = createContainer("Hospital Filter", {
 			class: "mt10",
@@ -38,7 +33,7 @@
 
 		const statistics = createStatistics();
 		content.appendChild(statistics.element);
-		localFilters["Statistics"] = statistics.updateStatistics;
+		localFilters["Statistics"] = { updateStatistics: statistics.updateStatistics };
 
 		const filterContent = document.newElement({
 			type: "div",
@@ -51,7 +46,7 @@
 			callback: filtering,
 		});
 		filterContent.appendChild(activityFilter.element);
-		localFilters["Activity"] = activityFilter.getSelections;
+		localFilters["Activity"] = { getSelections: activityFilter.getSelections };
 
 		const reviveFilter = createFilterSection({
 			title: "Revives",
@@ -60,16 +55,16 @@
 			callback: filtering,
 		});
 		filterContent.appendChild(reviveFilter.element);
-		localFilters["Revives"] = reviveFilter.isChecked;
+		localFilters["Revives"] = { isChecked: reviveFilter.isChecked };
 
 		const factionFilter = createFilterSection({
 			title: "Faction",
-			select: [...defaultFactionsItems, ...getFactions()],
+			select: [ ...defaultFactionsItems, ...getFactions() ],
 			defaults: "",
 			callback: filtering,
 		});
 		filterContent.appendChild(factionFilter.element);
-		localFilters["Faction"] = factionFilter.getSelected;
+		localFilters["Faction"] = { getSelected: factionFilter.getSelected, updateOptions: factionFilter.updateOptions };
 
 		const timeFilter = createFilterSection({
 			title: "Time Filter",
@@ -106,18 +101,21 @@
 		filtering();
 	}
 
-		async function filtering() {
+		async function filtering(pageChange) {
 			await requireElement(".users-list > li");
 			const content = findContainer("Hospital Filter").find("main");
-			const activity = localFilters["Activity"](content);
-			const revivesOn = localFilters["Revives"](content);
-			const faction = localFilters["Faction"](content).trim();
+			const activity = localFilters["Activity"].getSelections(content);
+			const revivesOn = localFilters["Revives"].isChecked(content);
+			const faction = localFilters["Faction"].getSelected(content).trim();
 			const times = localFilters["Time Filter"].getStartEnd(content);
 			const timeStart = parseInt(times.start);
 			const timeEnd = parseInt(times.end);
 			const levels = localFilters["Level Filter"].getStartEnd(content);
 			const levelStart = parseInt(levels.start);
 			const levelEnd = parseInt(levels.end);
+			if (pageChange) {
+				localFilters["Faction"].updateOptions([ ...defaultFactionsItems, ...getFactions() ], content);
+			}
 
 			// Update level and time slider counters
 			localFilters["Time Filter"].updateCounter(`Time ${timeStart}h - ${timeEnd}h`, content);
@@ -200,7 +198,7 @@
 				li.classList.add("hidden");
 			}
 
-			localFilters["Statistics"](document.findAll(".users-list > li:not(.hidden)").length, document.findAll(".users-list > li").length, content);
+			localFilters["Statistics"].updateStatistics(document.findAll(".users-list > li:not(.hidden)").length, document.findAll(".users-list > li").length, content);
 		}
 
 	function getFactions() {

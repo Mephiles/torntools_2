@@ -98,6 +98,7 @@ function createFilterSection(options) {
 		return {
 			element: section,
 			getSelected: (content) => content.find(`.${ccTitle} select`).value,
+			updateOptions: (newOptions, content) => select.updateOptionsList(newOptions, content.find(`.${ccTitle} select`)),
 		};
 	}
 
