@@ -1126,22 +1126,22 @@ async function setupExport() {
 	loadSync();
 
 	// Remote Server
-	exportSection.find("#export-remote-server").addEventListener("click", () => {
-		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
-			.then(() => {
-				// FIXME - Store data in remote server.
-				console.log("DKK TODO - Store data in remote server.");
-			})
-			.catch(() => {});
-	});
-	exportSection.find("#import-remote-server").addEventListener("click", () => {
-		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
-			.then(() => {
-				// FIXME - Load data from remote server.
-				console.log("DKK TODO - Load data from remote server.");
-			})
-			.catch(() => {});
-	});
+	// exportSection.find("#export-remote-server").addEventListener("click", () => {
+	// 	loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+	// 		.then(() => {
+	// 			// FIXME - Store data in remote server.
+	// 			console.log("DKK TODO - Store data in remote server.");
+	// 		})
+	// 		.catch(() => {});
+	// });
+	// exportSection.find("#import-remote-server").addEventListener("click", () => {
+	// 	loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+	// 		.then(() => {
+	// 			// FIXME - Load data from remote server.
+	// 			console.log("DKK TODO - Load data from remote server.");
+	// 		})
+	// 		.catch(() => {});
+	// });
 
 	async function getExportData() {
 		const exportedKeys = ["version", "settings", "filters", "stakeouts", "notes", "quick"];
