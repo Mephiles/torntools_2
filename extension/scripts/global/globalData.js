@@ -321,6 +321,8 @@ const DEFAULT_STORAGE = {
 				perks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				icons: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				ammo: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				honors: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				medals: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -847,6 +849,10 @@ const API_USAGE = {
 		job_perks: true,
 		faction_perks: true,
 		company_perks: true,
+		education_perks: true,
+		merit_perks: true,
+		property_perks: true,
+		stock_perks: true,
 		book_perk: true,
 		faction: {
 			faction_id: true,
