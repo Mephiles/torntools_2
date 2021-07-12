@@ -518,6 +518,10 @@ const DEFAULT_STORAGE = {
 				tradeAccept: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				marketBuy: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
+			achievements: {
+				show: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				completed: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
 		},
 		external: {
 			tornstats: new DefaultSetting({ type: "boolean", defaultValue: false }),
