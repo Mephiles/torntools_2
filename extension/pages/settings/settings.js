@@ -981,7 +981,7 @@ async function setupAPIInfo() {
 	});
 }
 
-function setupExport() {
+async function setupExport() {
 	const POPUP_TEMPLATES = {
 		EXPORT: {
 			title: "Export",
@@ -1036,10 +1036,15 @@ function setupExport() {
 				</ul>
 			`,
 		},
+		CLEAR: {
+			title: "Clear",
+			message: "<h3>Are you sure you want to clear the remote storage?</h3>",
+		},
 	};
 
 	const exportSection = document.find("#export");
 
+	// Local Text
 	exportSection.find("#export-local-text").addEventListener("click", async () => {
 		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
 			.then(async () => {
@@ -1073,6 +1078,7 @@ function setupExport() {
 			.catch(() => {});
 	});
 
+	// Local File
 	exportSection.find("#export-local-file").addEventListener("click", () => {
 		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
 			.then(async () => {
@@ -1116,23 +1122,10 @@ function setupExport() {
 		reader.readAsText(event.target.files[0]);
 	});
 
-	exportSection.find("#export-remote-sync").addEventListener("click", async () => {
-		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
-			.then(() => {
-				// FIXME - Store data in `sync`.
-				console.log("DKK TODO - Store data in `sync`.");
-			})
-			.catch(() => {});
-	});
-	exportSection.find("#import-remote-sync").addEventListener("click", () => {
-		loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
-			.then(() => {
-				// FIXME - Load data from `sync`.
-				console.log("DKK TODO - Load data from `sync`.");
-			})
-			.catch(() => {});
-	});
+	// Remote Sync
+	loadSync();
 
+	// Remote Server
 	exportSection.find("#export-remote-server").addEventListener("click", () => {
 		loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
 			.then(() => {
@@ -1183,6 +1176,92 @@ function setupExport() {
 
 		sendMessage("Imported file.", true);
 		await setupPreferences();
+	}
+
+	function loadSync() {
+		const importRemoteSync = exportSection.find("#import-remote-sync");
+		const clearRemoteSync = exportSection.find("#clear-remote-sync");
+
+		const lastUpdate = exportSection.find(".sync .last-update");
+		const version = exportSection.find(".sync .version");
+
+		exportSection.find("#export-remote-sync").addEventListener("click", async () => {
+			loadConfirmationPopup(POPUP_TEMPLATES.EXPORT)
+				.then(async () => {
+					const data = await getExportData();
+
+					try {
+						await new Promise((resolve) => {
+							chrome.storage.sync.set(data, () => resolve());
+						});
+					} catch (error) {
+						console.error("Failed to save data!", error);
+						sendMessage("Failed to save data!", false);
+						return;
+					}
+
+					sendMessage("Saved data in your browser synchronized storage.", true);
+					handleSyncData(data);
+				})
+				.catch(() => {});
+		});
+
+		new Promise(async (resolve) => {
+			chrome.storage.sync.get(null, (data) => {
+				if (Object.keys(data).length && "database" in data) resolve(data);
+				else resolve({ error: true, message: "No exported data." });
+			});
+		}).then((data) => handleSyncData(data));
+
+		function handleSyncData(data) {
+			if (!data.error) {
+				importRemoteSync.addEventListener("click", handleImport);
+				clearRemoteSync.addEventListener("click", handleClear);
+
+				importRemoteSync.removeAttribute("disabled");
+				importRemoteSync.classList.remove("tooltip");
+				importRemoteSync.find(".tooltip-text").innerText = "";
+				clearRemoteSync.removeAttribute("disabled");
+
+				const updated = new Date(data.date);
+				lastUpdate.innerText = `${formatTime(updated)} ${formatDate(updated, { showYear: true })}`;
+				lastUpdate.parentElement.classList.remove("hidden");
+				version.innerText = data.client.version;
+				version.parentElement.classList.remove("hidden");
+			} else {
+				importRemoteSync.removeEventListener("click", handleImport);
+				clearRemoteSync.removeEventListener("click", handleClear);
+
+				importRemoteSync.setAttribute("disabled", "");
+				importRemoteSync.classList.add("tooltip");
+				importRemoteSync.find(".tooltip-text").innerText = data.message;
+				clearRemoteSync.setAttribute("disabled", "");
+
+				lastUpdate.innerText = "";
+				lastUpdate.parentElement.classList.add("hidden");
+				version.innerText = "";
+				version.parentElement.classList.add("hidden");
+			}
+		}
+
+		function handleImport() {
+			loadConfirmationPopup(POPUP_TEMPLATES.IMPORT)
+				.then(async () => await importData(data))
+				.catch(() => {});
+		}
+
+		function handleClear() {
+			loadConfirmationPopup(POPUP_TEMPLATES.CLEAR)
+				.then(async () => {
+					await new Promise((resolve) => {
+						chrome.storage.sync.clear(() => resolve());
+					});
+
+					sendMessage("Cleared sync data.", true);
+					handleSyncData({ error: true, message: "No exported data." });
+				})
+				.catch(() => {});
+		}
 	}
 }
 

@@ -1229,10 +1229,16 @@
 
 				<div class="export-remote">
 					<!-- FIXME - Improve description. -->
-					<p class="description">sync storage</p>
+					<p class="description">Store the database in the browser sync storage. Exporting relies on your browser account.</p>
+					<p class="sync last-update-wrap">Last update: <span class="last-update"></span></p>
+					<p class="sync version-wrap">Version: <span class="version"></span></p>
 					<div class="actions">
 						<button id="export-remote-sync" class="fancy-button">Export</button>
-						<button id="import-remote-sync" class="fancy-button">Import</button>
+						<button id="import-remote-sync" class="fancy-button">
+							Import
+							<span class="tooltip-text"></span>
+						</button>
+						<button id="clear-remote-sync" class="fancy-button">Clear</button>
 					</div>
 
 					<!-- FIXME - Handle remote storage. -->
