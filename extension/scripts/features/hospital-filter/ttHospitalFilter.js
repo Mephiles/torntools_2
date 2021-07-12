@@ -3,7 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Hospital Filter",
 		"hospital",
 		() => settings.pages.hospital.filter,
@@ -102,10 +102,9 @@
 	}
 
 		async function filtering(pageChange) {
+			if (!feature.enabled()) return;
 			await requireElement(".users-list > li");
-			const container = findContainer("Hospital Filter");
-			if (!container) return;
-			const content = container.find("main");
+			const content = findContainer("Hospital Filter").find("main");
 			const activity = localFilters["Activity"].getSelections(content);
 			const revivesOn = localFilters["Revives"].isChecked(content);
 			const faction = localFilters["Faction"].getSelected(content).trim();
