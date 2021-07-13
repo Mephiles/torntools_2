@@ -92,14 +92,7 @@
 							continue;
 						}
 
-						achievement.goals.push({
-							type,
-							id,
-							score,
-							name: merits[id].name,
-							description: merits[id].description,
-							completed: userdata[`${type}_awarded`].includes(id),
-						});
+						achievement.goals.push({ name: merits[id].name, completed: userdata[`${type}_awarded`].includes(id) });
 					}
 				}
 
