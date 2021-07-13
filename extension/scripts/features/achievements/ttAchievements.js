@@ -78,11 +78,17 @@
 						if (include.length && !include.every((incl) => description.includes(incl))) continue;
 						if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
 
-						// FIXME - Get goal from description.
+						let desc = description;
+						desc = desc.split("for at least")[0]; // remove 'day' numbers from networth
+						desc = desc.replace(/\D/g, ""); // replace all non-numbers
+
+						const score = parseInt(desc) || "none";
+						if (isNaN(score)) continue;
 
 						achievement.goals.push({
 							type,
 							id,
+							score,
 							name: merits[id].name,
 							description: merits[id].description,
 							completed: userdata[`${type}_awarded`].includes(id),
@@ -129,7 +135,7 @@
 								achievement.completed
 									? "Completed!"
 									: `${formatNumber(achievement.current, { shorten: true })}/${formatNumber(
-											achievement.goals.find((goal) => !goal.completed).id, // FIXME - Show goal.
+											achievement.goals.find((goal) => !goal.completed).score,
 											{ shorten: true }
 									  )}`
 							}`,
@@ -137,7 +143,7 @@
 					],
 					attributes: { tabindex: "-1" },
 					dataset: {
-						goals: achievement.goals.map((goal) => goal.id), // FIXME - Show goal.
+						goals: achievement.goals.map((goal) => goal.score),
 						score: achievement.current,
 					},
 				});
