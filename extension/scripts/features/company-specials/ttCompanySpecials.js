@@ -142,15 +142,13 @@
 				.map(([stat, value]) => (stat === "total" ? value : -value))
 				.totalSum();
 
-			const position = stats.indexOf(missingStat) + 1;
-			const element = specialContext.find(`ul.job-info > li:nth-child(${position})`);
+			const element = [...specialContext.findAll("ul.job-info > li")].find((element) => element.innerText.toLowerCase().startsWith(missingStat));
 
 			element.classList.add("missing");
 			element.innerText = `${element.innerText.split(" ")[0]} ${formatNumber(result[missingStat])}`;
 		}
 		for (const stat of remembered) {
-			const position = stats.indexOf(stat) + 1;
-			const element = specialContext.find(`ul.job-info > li:nth-child(${position})`);
+			const element = [...specialContext.findAll("ul.job-info > li")].find((element) => element.innerText.toLowerCase().startsWith(stat));
 
 			element.classList.add("remembered");
 			element.innerText = `${element.innerText.split(" ")[0]} ${formatNumber(result[stat])}`;
