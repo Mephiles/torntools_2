@@ -78,6 +78,8 @@
 						if (include.length && !include.every((incl) => description.includes(incl))) continue;
 						if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
 
+						// FIXME - Get goal from description.
+
 						achievement.goals.push({
 							type,
 							id,
@@ -127,13 +129,17 @@
 								achievement.completed
 									? "Completed!"
 									: `${formatNumber(achievement.current, { shorten: true })}/${formatNumber(
-											achievement.goals.find((goal) => !goal.completed).id,
+											achievement.goals.find((goal) => !goal.completed).id, // FIXME - Show goal.
 											{ shorten: true }
 									  )}`
 							}`,
 						}),
 					],
 					attributes: { tabindex: "-1" },
+					dataset: {
+						goals: achievement.goals.map((goal) => goal.id), // FIXME - Show goal.
+						score: achievement.current,
+					},
 				});
 
 				pill.addEventListener("mouseenter", showTooltip);
