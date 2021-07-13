@@ -85,6 +85,13 @@
 						const score = parseInt(desc) || "none";
 						if (isNaN(score)) continue;
 
+						// Remove duplicates.
+						const duplicate = achievement.goals.find((goal) => goal.score === score);
+						if (duplicate) {
+							duplicate.count = duplicate.count ? duplicate.count + 1 : 2;
+							continue;
+						}
+
 						achievement.goals.push({
 							type,
 							id,
