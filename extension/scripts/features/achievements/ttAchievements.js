@@ -133,7 +133,7 @@
 				options.appendChild(
 					document.newElement({
 						type: "span",
-						class: "TEMPORARY count automatic",
+						class: "tt-awards-time-ago count automatic",
 						text: formatTime({ milliseconds: userdata.dateBasic }, { type: "ago", short: true }),
 						attributes: { reverse: "" },
 						dataset: {
