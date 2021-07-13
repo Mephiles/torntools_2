@@ -107,6 +107,8 @@
 			showTimer();
 
 			for (const achievement of achievements) {
+				if (!settings.scripts.achievements.completed && achievement.completed) continue;
+
 				content.appendChild(
 					document.newElement({
 						type: "div",
@@ -124,7 +126,6 @@
 								}`,
 							}),
 						],
-						dataset: { achievement: JSON.stringify(achievement) },
 					})
 				);
 			}
