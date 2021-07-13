@@ -101,7 +101,7 @@
 
 		content.appendChild(filterContent);
 
-		filtering();
+		await filtering();
 	}
 
 	async function filtering(pageChange) {
@@ -187,6 +187,7 @@
 			const level = parseInt(li.find(".info-wrap .level").innerText.replace(/\D+/g, ""));
 			if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
 				hideRow(li);
+				// noinspection UnnecessaryContinueJS
 				continue;
 			}
 		}
