@@ -43,6 +43,7 @@
 			else if (upperA < upperB) return -1;
 			else return 0;
 		});
+		if (!achievements.length) return;
 
 		fillGoals();
 		displayContainer();
