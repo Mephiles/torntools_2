@@ -27,13 +27,13 @@
 	height: 0;
 	border-top: 7px solid transparent;
 	border-bottom: 7px solid transparent;
-	border-right: 7px solid white;
+	border-right: 7px solid var(--default-bg-panel-color);
 }
 
 .tt-achievement-tooltip-content {
-	border: 1px solid lightgrey;
+	border: 1px solid var(--default-bg-panel-color);
 	border-radius: 5px;
-	background-color: white;
+	background-color: var(--default-bg-panel-color);
 	padding: 5px;
 	line-height: 16px;
 }
