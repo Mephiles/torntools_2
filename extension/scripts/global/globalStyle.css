@@ -409,7 +409,8 @@ body[data-layout="hospital"] #sidebarroot .pill {
 	margin-bottom: 1px;
 }
 
-#sidebarroot .pill a {
+#sidebarroot .pill > a,
+#sidebarroot .pill > span {
 	overflow: hidden;
 	color: var(--default-font-color);
 	text-decoration: none;

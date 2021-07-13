@@ -45,6 +45,7 @@
 		});
 
 		fillGoals();
+		displayContainer();
 
 		console.log("DKK showAchievements", { page, achievements });
 
@@ -82,6 +83,26 @@
 					else return 0;
 				});
 			});
+		}
+
+		function displayContainer() {
+			const { content } = createContainer("Awards", {
+				applyRounding: false,
+				contentBackground: false,
+				compact: true,
+				previousElement: document.find("h2=Areas").closest("[class*='sidebar-block_']"),
+			});
+
+			for (const achievement of achievements) {
+				content.appendChild(
+					document.newElement({
+						type: "div",
+						class: "pill",
+						children: [document.newElement({ type: "span", text: achievement.name })],
+						dataset: { achievement: JSON.stringify(achievement) },
+					})
+				);
+			}
 		}
 	}
 
