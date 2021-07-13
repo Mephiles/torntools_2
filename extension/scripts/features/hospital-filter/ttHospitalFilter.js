@@ -23,6 +23,7 @@
 	}
 
 	const localFilters = {};
+
 	async function addFilters() {
 		await requireElement(".userlist-wrapper.hospital-list-wrapper .users-list .time");
 
@@ -61,7 +62,7 @@
 
 		const factionFilter = createFilterSection({
 			title: "Faction",
-			select: [ ...defaultFactionsItems, ...getFactions() ],
+			select: [...defaultFactionsItems, ...getFactions()],
 			defaults: "",
 			callback: filtering,
 		});
@@ -76,7 +77,7 @@
 				max: 100,
 				step: 1,
 				valueLow: filters.hospital.timeStart,
-				valueHigh: filters.hospital.timeEnd
+				valueHigh: filters.hospital.timeEnd,
 			},
 			callback: filtering,
 		});
@@ -91,7 +92,7 @@
 				max: 100,
 				step: 1,
 				valueLow: filters.hospital.levelStart,
-				valueHigh: filters.hospital.levelEnd
+				valueHigh: filters.hospital.levelEnd,
 			},
 			callback: filtering,
 		});
@@ -103,110 +104,112 @@
 		filtering();
 	}
 
-		async function filtering(pageChange) {
-			await requireElement(".users-list > li");
-			const content = findContainer("Hospital Filter").find("main");
-			const activity = localFilters["Activity"].getSelections(content);
-			const revivesOn = localFilters["Revives"].isChecked(content);
-			const faction = localFilters["Faction"].getSelected(content).trim();
-			const times = localFilters["Time Filter"].getStartEnd(content);
-			const timeStart = parseInt(times.start);
-			const timeEnd = parseInt(times.end);
-			const levels = localFilters["Level Filter"].getStartEnd(content);
-			const levelStart = parseInt(levels.start);
-			const levelEnd = parseInt(levels.end);
-			if (pageChange) {
-				localFilters["Faction"].updateOptions([ ...defaultFactionsItems, ...getFactions() ], content);
-			}
-
-			// Update level and time slider counters
-			localFilters["Time Filter"].updateCounter(`Time ${timeStart}h - ${timeEnd}h`, content);
-			localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
-
-			// Save filters
-			await ttStorage.change({
-				filters: {
-					hospital: {
-						activity: activity,
-						revivesOn: revivesOn,
-						faction: faction,
-						timeStart: timeStart,
-						timeEnd: timeEnd,
-						levelStart: levelStart,
-						levelEnd: levelEnd,
-					},
-				},
-			});
-
-			// Actual Filtering
-			for (const li of document.findAll(".users-list > li")) {
-				showRow(li);
-
-				// Activity
-				if (
-					activity.length &&
-					!activity.some(
-						(x) =>
-							x.trim() ===
-							li
-								.find("#iconTray li")
-								.getAttribute("title")
-								.match(/(?<=<b>).*(?=<\/b>)/g)[0]
-								.toLowerCase()
-								.trim()
-					)
-				) {
-					hideRow(li);
-					continue;
-				}
-
-				// Revives On
-				if (revivesOn && li.find(".revive").classList.contains("reviveNotAvailable")) {
-					hideRow(li);
-					continue;
-				}
-
-				// Faction
-				const rowFaction = li.find(".user.faction");
-				if (
-					faction &&
-					((rowFaction.childElementCount === 0 && rowFaction.innerText.trim() !== faction.trim()) ||
-						(rowFaction.childElementCount !== 0 &&
-							rowFaction.find("img") &&
-							rowFaction.find("img").getAttribute("title").trim() !== faction.trim()))
-				) {
-					hideRow(li);
-					continue;
-				}
-				// Time
-				const timeLeftHrs = li.find(".info-wrap .time").lastChild.textContent.trim().split(" ")[0].replace(/[hs]/g, "");
-				if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
-					hideRow(li);
-					continue;
-				}
-				// Level
-				const level = parseInt(li.find(".info-wrap .level").innerText.replace(/\D+/g, ""));
-				if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
-					hideRow(li);
-					continue;
-				}
-			}
-
-			function showRow(li) {
-				li.classList.remove("hidden");
-			}
-
-			function hideRow(li) {
-				li.classList.add("hidden");
-			}
-
-			localFilters["Statistics"].updateStatistics(document.findAll(".users-list > li:not(.hidden)").length, document.findAll(".users-list > li").length, content);
+	async function filtering(pageChange) {
+		await requireElement(".users-list > li");
+		const content = findContainer("Hospital Filter").find("main");
+		const activity = localFilters["Activity"].getSelections(content);
+		const revivesOn = localFilters["Revives"].isChecked(content);
+		const faction = localFilters["Faction"].getSelected(content).trim();
+		const times = localFilters["Time Filter"].getStartEnd(content);
+		const timeStart = parseInt(times.start);
+		const timeEnd = parseInt(times.end);
+		const levels = localFilters["Level Filter"].getStartEnd(content);
+		const levelStart = parseInt(levels.start);
+		const levelEnd = parseInt(levels.end);
+		if (pageChange) {
+			localFilters["Faction"].updateOptions([...defaultFactionsItems, ...getFactions()], content);
 		}
+
+		// Update level and time slider counters
+		localFilters["Time Filter"].updateCounter(`Time ${timeStart}h - ${timeEnd}h`, content);
+		localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
+
+		// Save filters
+		await ttStorage.change({
+			filters: {
+				hospital: {
+					activity: activity,
+					revivesOn: revivesOn,
+					faction: faction,
+					timeStart: timeStart,
+					timeEnd: timeEnd,
+					levelStart: levelStart,
+					levelEnd: levelEnd,
+				},
+			},
+		});
+
+		// Actual Filtering
+		for (const li of document.findAll(".users-list > li")) {
+			showRow(li);
+
+			// Activity
+			if (
+				activity.length &&
+				!activity.some(
+					(x) =>
+						x.trim() ===
+						li
+							.find("#iconTray li")
+							.getAttribute("title")
+							.match(/(?<=<b>).*(?=<\/b>)/g)[0]
+							.toLowerCase()
+							.trim()
+				)
+			) {
+				hideRow(li);
+				continue;
+			}
+
+			// Revives On
+			if (revivesOn && li.find(".revive").classList.contains("reviveNotAvailable")) {
+				hideRow(li);
+				continue;
+			}
+
+			// Faction
+			const rowFaction = li.find(".user.faction");
+			if (
+				faction &&
+				((rowFaction.childElementCount === 0 && rowFaction.innerText.trim() !== faction.trim()) ||
+					(rowFaction.childElementCount !== 0 && rowFaction.find("img") && rowFaction.find("img").getAttribute("title").trim() !== faction.trim()))
+			) {
+				hideRow(li);
+				continue;
+			}
+			// Time
+			const timeLeftHrs = li.find(".info-wrap .time").lastChild.textContent.trim().split(" ")[0].replace(/[hs]/g, "");
+			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
+				hideRow(li);
+				continue;
+			}
+			// Level
+			const level = parseInt(li.find(".info-wrap .level").innerText.replace(/\D+/g, ""));
+			if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
+				hideRow(li);
+				continue;
+			}
+		}
+
+		function showRow(li) {
+			li.classList.remove("hidden");
+		}
+
+		function hideRow(li) {
+			li.classList.add("hidden");
+		}
+
+		localFilters["Statistics"].updateStatistics(
+			document.findAll(".users-list > li:not(.hidden)").length,
+			document.findAll(".users-list > li").length,
+			content
+		);
+	}
 
 	function getFactions() {
 		const rows = [...document.findAll(".users-list > li .user.faction")];
 		const _factions = new Set(
-			document.findAll(".users-list > li .user.faction img").length 
+			document.findAll(".users-list > li .user.faction img").length
 				? rows
 						.map((row) => row.find("img"))
 						.filter((img) => !!img)
