@@ -63,6 +63,7 @@ const ACHIEVEMENTS = [
 	},
 	{
 		name: "Energy refills",
+		group: "refills",
 		stats: () => userdata.personalstats.refills,
 		detection: { keyword: "refill", include: ["energy"] },
 		// FIXME - Load on the point usage?
@@ -70,6 +71,7 @@ const ACHIEVEMENTS = [
 	},
 	{
 		name: "Nerve refills",
+		group: "refills",
 		stats: () => userdata.personalstats.nerverefills,
 		detection: { keyword: "refill", include: ["nerve"] },
 		// FIXME - Load on the point usage?
@@ -77,6 +79,7 @@ const ACHIEVEMENTS = [
 	},
 	{
 		name: "Casino refills",
+		group: "refills",
 		stats: () => userdata.personalstats.tokenrefills,
 		detection: { keyword: "refill", include: ["casino"] },
 		// FIXME - Load on the point usage?

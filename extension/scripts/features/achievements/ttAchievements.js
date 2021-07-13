@@ -36,12 +36,19 @@
 			if (achievement.requirements.pages) return achievement.requirements.pages.includes(page);
 			else return false;
 		}).sort((a, b) => {
-			const upperA = a.name.toUpperCase();
-			const upperB = b.name.toUpperCase();
+			let upperA = a.group ? a.group.toUpperCase() : a.name.toUpperCase();
+			let upperB = b.group ? b.group.toUpperCase() : b.name.toUpperCase();
 
 			if (upperA > upperB) return 1;
 			else if (upperA < upperB) return -1;
-			else return 0;
+			else {
+				upperA = a.name.toUpperCase();
+				upperB = b.name.toUpperCase();
+
+				if (upperA > upperB) return 1;
+				else if (upperA < upperB) return -1;
+				else return 0;
+			}
 		});
 		if (!achievements.length) return;
 
