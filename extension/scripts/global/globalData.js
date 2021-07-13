@@ -614,6 +614,8 @@ const DEFAULT_STORAGE = {
 				inCompany: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				inFaction: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				isDonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				inHospital: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				inJail: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
 		},
 		closedScopes: new DefaultSetting({ type: "array", defaultValue: [] }),
