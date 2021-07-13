@@ -173,6 +173,10 @@
 
 			function showTooltip(event) {
 				if (event.target.classList.contains("active")) return;
+
+				const active = document.find(".tt-award.active");
+				if (active) active.classList.remove("active");
+
 				event.target.classList.add("active");
 
 				const position = event.target.getBoundingClientRect();
