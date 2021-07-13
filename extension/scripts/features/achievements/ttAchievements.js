@@ -97,8 +97,8 @@
 				}
 
 				achievement.goals = achievement.goals.sort((a, b) => {
-					if (a > b) return 1;
-					else if (a < b) return -1;
+					if (a.score > b.score) return 1;
+					else if (a.score < b.score) return -1;
 					else return 0;
 				});
 				achievement.completed = achievement.goals.every((goal) => goal.completed);
