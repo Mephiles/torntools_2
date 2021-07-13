@@ -2,6 +2,12 @@
 	margin-bottom: 2px;
 }
 
-#awards .tt-award.completed {
+.TEMPORARY {
+	margin-right: 0;
+	font-size: 10px;
+	color: #bfbfbf;
+}
+
+.tt-award.completed {
 	color: var(--tt-color-green);
 }

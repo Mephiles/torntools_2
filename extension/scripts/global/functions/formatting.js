@@ -148,7 +148,7 @@ function formatTime(time = {}, options = {}) {
 
 			return parts.join(" ");
 		case "ago":
-			let timeAgo = Date.now() - millis;
+			let timeAgo = Math.floor(Date.now() - millis);
 
 			let token = "ago";
 			if (timeAgo < 0) {

@@ -91,12 +91,13 @@
 		}
 
 		function displayContainer() {
-			const { content } = createContainer("Awards", {
+			const { content, options } = createContainer("Awards", {
 				applyRounding: false,
 				contentBackground: false,
 				compact: true,
 				previousElement: document.find("h2=Areas").closest("[class*='sidebar-block_']"),
 			});
+			showTimer();
 
 			for (const achievement of achievements) {
 				content.appendChild(
@@ -117,6 +118,21 @@
 							}),
 						],
 						dataset: { achievement: JSON.stringify(achievement) },
+					})
+				);
+			}
+
+			function showTimer() {
+				options.appendChild(
+					document.newElement({
+						type: "span",
+						class: "TEMPORARY count automatic",
+						text: formatTime({ milliseconds: userdata.dateBasic }, { type: "ago", short: true }),
+						attributes: { reverse: "" },
+						dataset: {
+							seconds: Math.floor(userdata.dateBasic / TO_MILLIS.SECONDS),
+							timeSettings: { type: "ago", short: true },
+						},
 					})
 				);
 			}
