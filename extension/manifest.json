@@ -278,8 +278,8 @@
 		},
 		{
 			"matches": ["https://www.torn.com/hospitalview.php*"],
-			"css": ["scripts/global/functions/filters.css", "scripts/features/hospital-filter/ttHospitalFilter.css"],
-			"js": ["scripts/content/hospital/ttHospital.js", "scripts/features/hospital-filter/ttHospitalFilter.js"],
+			"css": ["scripts/global/functions/filters.css"],
+			"js": ["scripts/global/functions/filters.js", "scripts/content/hospital/ttHospital.js", "scripts/features/hospital-filter/ttHospitalFilter.js"],
 			"run_at": "document_end"
 		},
 		{
@@ -369,6 +369,12 @@
 			"matches": ["https://www.torn.com/jailview.php*"],
 			"css": ["scripts/global/functions/filters.css", "scripts/features/jail-filter/ttJailFilter.css"],
 			"js": ["scripts/content/jail/ttJail.js", "scripts/features/jail-filter/ttJailFilter.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/joblist.php*"],
+			"css": ["scripts/features/job-specials/ttJobSpecials.css"],
+			"js": ["scripts/features/job-specials/ttJobSpecials.js"],
 			"run_at": "document_end"
 		},
 		{
