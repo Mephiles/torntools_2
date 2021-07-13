@@ -17,8 +17,10 @@
 	);
 
 	function initialiseFilters() {
-		CUSTOM_LISTENERS[EVENT_CHANNELS.HOSPITAL_SWITCH_PAGE].push(() => {
-			if (feature.enabled()) filtering();
+		CUSTOM_LISTENERS[EVENT_CHANNELS.USERLIST_SWITCH_PAGE].push(() => {
+			if (!feature.enabled()) return;
+
+			filtering();
 		});
 	}
 
@@ -79,7 +81,7 @@
 		filtering();
 	}
 
-	async function filtering(pageChange) {
+	async function filtering() {
 		await requireElement(".user-info-list-wrap > li #iconTray");
 		const content = findContainer("Userlist Filter").find("main");
 		const activity = localFilters["Activity"].getSelections(content);

@@ -428,7 +428,7 @@
 		{
 			"matches": ["https://www.torn.com/page.php?sid=UserList*"],
 			"css": ["scripts/global/functions/filters.css"],
-			"js": ["scripts/global/functions/filters.js", "scripts/features/userlist-filter/ttUserlistFilter.js"],
+			"js": ["scripts/global/functions/filters.js", "scripts/content/userlist/ttUserlist.js", "scripts/features/userlist-filter/ttUserlistFilter.js"],
 			"run_at": "document_end"
 		},
 		{

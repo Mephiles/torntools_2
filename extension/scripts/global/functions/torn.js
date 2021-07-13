@@ -1227,6 +1227,7 @@ const SPECIAL_FILTER_ICONS = {
 	inCompany: ["icon21", "icon22", "icon23", "icon24", "icon25", "icon26", "icon27", "icon73", "icon83"],
 	inFaction: ["icon9", "icon74", "icon81"],
 	isDonator: ["icon3", "icon4"],
+	inHospital: ["icon15"],
 };
 
 const CHAIN_BONUSES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
