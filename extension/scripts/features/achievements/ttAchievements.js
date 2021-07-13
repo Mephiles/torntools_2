@@ -143,7 +143,7 @@
 					],
 					attributes: { tabindex: "-1" },
 					dataset: {
-						goals: achievement.goals.map((goal) => goal.score),
+						goals: achievement.goals.map(({ score, completed }) => ({ score, completed })),
 						score: achievement.current,
 					},
 				});
@@ -186,9 +186,12 @@
 				tooltip.style.display = "block";
 				tooltipContent.innerHTML = "";
 
+				const score = parseInt(event.target.dataset.score);
+				const goals = JSON.parse(event.target.dataset.goals);
+
 				// FIXME - Show tooltip content.
 
-				console.log("DKK showTooltip", event);
+				console.log("DKK showTooltip", score, goals);
 			}
 
 			function hideTooltip(event) {
