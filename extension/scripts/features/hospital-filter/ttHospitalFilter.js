@@ -18,7 +18,9 @@
 
 	function initialiseFilters() {
 		CUSTOM_LISTENERS[EVENT_CHANNELS.HOSPITAL_SWITCH_PAGE].push(() => {
-			if (feature.enabled()) filtering();
+			if (!feature.enabled()) return;
+
+			filtering(true);
 		});
 	}
 
