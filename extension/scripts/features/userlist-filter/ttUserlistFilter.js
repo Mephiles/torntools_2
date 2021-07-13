@@ -69,7 +69,7 @@
 				max: 100,
 				step: 1,
 				valueLow: filters.userlist.levelStart,
-				valueHigh: filters.userlist.levelEnd
+				valueHigh: filters.userlist.levelEnd,
 			},
 			callback: filtering,
 		});
@@ -78,7 +78,7 @@
 
 		content.appendChild(filterContent);
 
-		filtering();
+		await filtering();
 	}
 
 	async function filtering() {
@@ -134,13 +134,15 @@
 				const foundIcons = getSpecialIcons(li);
 				const definedIcons = SPECIAL_FILTER_ICONS[key];
 				if (value === "yes") {
-					if (!foundIcons.some(foundIcon => definedIcons.includes(foundIcon))) {
+					if (!foundIcons.some((foundIcon) => definedIcons.includes(foundIcon))) {
 						hideRow(li);
+						// noinspection UnnecessaryContinueJS
 						continue;
 					}
 				} else if (value === "no") {
-					if (foundIcons.some(foundIcon => definedIcons.includes(foundIcon))) {
+					if (foundIcons.some((foundIcon) => definedIcons.includes(foundIcon))) {
 						hideRow(li);
+						// noinspection UnnecessaryContinueJS
 						continue;
 					}
 				}
@@ -150,6 +152,7 @@
 			const level = parseInt(li.find(".level .value").innerText);
 			if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
 				hideRow(li);
+				// noinspection UnnecessaryContinueJS
 				continue;
 			}
 		}
@@ -162,26 +165,11 @@
 			li.classList.add("hidden");
 		}
 
-		localFilters["Statistics"].updateStatistics(document.findAll(".user-info-list-wrap > li:not(.hidden)").length, document.findAll(".user-info-list-wrap > li").length, content);
-	}
-
-	function getFactions() {
-		const rows = [...document.findAll(".user-info-list-wrap > li .user.faction")];
-		const _factions = new Set(
-			document.findAll(".user-info-list-wrap > li .user.faction img").length 
-				? rows
-						.map((row) => row.find("img"))
-						.filter((img) => !!img)
-						.map((img) => img.getAttribute("title").trim())
-						.filter((tag) => !!tag)
-				: rows.map((row) => row.innerText.trim()).filter((tag) => !!tag)
+		localFilters["Statistics"].updateStatistics(
+			document.findAll(".user-info-list-wrap > li:not(.hidden)").length,
+			document.findAll(".user-info-list-wrap > li").length,
+			content
 		);
-
-		const factions = [];
-		for (const faction of _factions) {
-			factions.push({ value: faction, description: faction });
-		}
-		return factions;
 	}
 
 	function removeFilters() {
