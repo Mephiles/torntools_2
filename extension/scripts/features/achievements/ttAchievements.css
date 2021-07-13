@@ -1,3 +1,7 @@
 #awards {
 	margin-bottom: 2px;
 }
+
+#awards .tt-award.completed {
+	color: var(--tt-color-green);
+}

@@ -52,7 +52,8 @@
 
 		function fillGoals() {
 			achievements.forEach((achievement) => {
-				achievement.active = { current: achievement.stats(), goals: [] };
+				achievement.current = achievement.stats();
+				achievement.goals = [];
 
 				let { keyword, include, exclude } = achievement.detection;
 				if (!include) include = [];
@@ -61,14 +62,16 @@
 				for (const type of ["honors", "medals"]) {
 					const merits = torndata[type];
 
-					for (const id in merits) {
+					for (let id in merits) {
+						id = parseInt(id);
+
 						const description = merits[id].description.toLowerCase();
 						if (!description.includes(keyword)) continue;
 
 						if (include.length && !include.every((incl) => description.includes(incl))) continue;
 						if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
 
-						achievement.active.goals.push({
+						achievement.goals.push({
 							type,
 							id,
 							name: merits[id].name,
@@ -78,11 +81,12 @@
 					}
 				}
 
-				achievement.active.goals = achievement.active.goals.sort((a, b) => {
+				achievement.goals = achievement.goals.sort((a, b) => {
 					if (a > b) return 1;
 					else if (a < b) return -1;
 					else return 0;
 				});
+				achievement.completed = achievement.goals.every((goal) => goal.completed);
 			});
 		}
 
@@ -98,8 +102,20 @@
 				content.appendChild(
 					document.newElement({
 						type: "div",
-						class: "pill",
-						children: [document.newElement({ type: "span", text: achievement.name })],
+						class: `pill tt-award ${achievement.completed ? "completed" : ""}`,
+						children: [
+							document.newElement({
+								type: "span",
+								text: `${achievement.name}: ${
+									achievement.completed
+										? "Completed!"
+										: `${formatNumber(achievement.current, { shorten: true })}/${formatNumber(
+												achievement.goals.find((goal) => !goal.completed).id,
+												{ shorten: true }
+										  )}`
+								}`,
+							}),
+						],
 						dataset: { achievement: JSON.stringify(achievement) },
 					})
 				);
