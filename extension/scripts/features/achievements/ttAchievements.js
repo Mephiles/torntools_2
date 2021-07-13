@@ -106,28 +106,43 @@
 			});
 			showTimer();
 
+			const tooltipContent = document.newElement({ type: "div", class: "tt-achievement-tooltip-content" });
+			const tooltip = document.newElement({
+				type: "div",
+				class: "tt-achievement-tooltip",
+				children: [document.newElement({ type: "div", class: "tt-achievement-tooltip-arrow" }), tooltipContent],
+			});
+			document.body.appendChild(tooltip);
+
 			for (const achievement of achievements) {
 				if (!settings.scripts.achievements.completed && achievement.completed) continue;
 
-				content.appendChild(
-					document.newElement({
-						type: "div",
-						class: `pill tt-award ${achievement.completed ? "completed" : ""}`,
-						children: [
-							document.newElement({
-								type: "span",
-								text: `${achievement.name}: ${
-									achievement.completed
-										? "Completed!"
-										: `${formatNumber(achievement.current, { shorten: true })}/${formatNumber(
-												achievement.goals.find((goal) => !goal.completed).id,
-												{ shorten: true }
-										  )}`
-								}`,
-							}),
-						],
-					})
-				);
+				const pill = document.newElement({
+					type: "div",
+					class: `pill tt-award ${achievement.completed ? "completed" : ""}`,
+					children: [
+						document.newElement({
+							type: "span",
+							text: `${achievement.name}: ${
+								achievement.completed
+									? "Completed!"
+									: `${formatNumber(achievement.current, { shorten: true })}/${formatNumber(
+											achievement.goals.find((goal) => !goal.completed).id,
+											{ shorten: true }
+									  )}`
+							}`,
+						}),
+					],
+					attributes: { tabindex: "-1" },
+				});
+
+				pill.addEventListener("mouseenter", showTooltip);
+				pill.addEventListener("focus", showTooltip);
+
+				pill.addEventListener("mouseleave", hideTooltip);
+				pill.addEventListener("blur", hideTooltip);
+
+				content.appendChild(pill);
 			}
 
 			function showTimer() {
@@ -136,13 +151,35 @@
 						type: "span",
 						class: "tt-awards-time-ago count automatic",
 						text: formatTime({ milliseconds: userdata.dateBasic }, { type: "ago", short: true }),
-						attributes: { reverse: "" },
 						dataset: {
 							seconds: Math.floor(userdata.dateBasic / TO_MILLIS.SECONDS),
 							timeSettings: { type: "ago", short: true },
 						},
 					})
 				);
+			}
+
+			function showTooltip(event) {
+				if (event.target.classList.contains("active")) return;
+				event.target.classList.add("active");
+
+				const position = event.target.getBoundingClientRect();
+				const positionBody = document.body.getBoundingClientRect();
+				tooltip.style.left = `${position.x + 172 + 7}px`;
+				tooltip.style.top = `${position.y + Math.abs(positionBody.y) + 6}px`;
+				tooltip.style.display = "block";
+				tooltipContent.innerHTML = "";
+
+				// FIXME - Show tooltip content.
+
+				console.log("DKK showTooltip", event);
+			}
+
+			function hideTooltip(event) {
+				if (document.activeElement === event.target) return;
+				event.target.classList.remove("active");
+
+				tooltip.style.display = "none";
 			}
 		}
 	}
