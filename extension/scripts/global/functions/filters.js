@@ -1,3 +1,23 @@
+const defaultFactionsItems = [
+	{
+		value: "",
+		description: "All",
+	},
+	...(hasAPIData() && !!userdata.faction.faction_id
+		? [
+				{
+					value: userdata.faction.faction_tag,
+					description: userdata.faction.faction_tag,
+				},
+		  ]
+		: []),
+	{
+		value: "------",
+		description: "------",
+		disabled: true,
+	},
+];
+
 function createFilterSection(options) {
 	options = {
 		type: "",
@@ -98,6 +118,7 @@ function createFilterSection(options) {
 		return {
 			element: section,
 			getSelected: (content) => content.find(`.${ccTitle} select`).value,
+			updateOptions: (newOptions, content) => select.updateOptionsList(newOptions, content.find(`.${ccTitle} select`)),
 		};
 	}
 
