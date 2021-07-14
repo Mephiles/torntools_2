@@ -383,22 +383,27 @@ async function setupPreferences() {
 	}
 
 	const hideStocksParent = _preferences.find("#hide-stocks");
-	for (const stock in torndata.stocks) {
-		// noinspection JSCheckFunctionSignatures
-		if (isNaN(stock)) continue;
+	if (hasAPIData() && torndata && torndata.stocks) {
+		for (const stock in torndata.stocks) {
+			// noinspection JSCheckFunctionSignatures
+			if (isNaN(stock)) continue;
 
-		const stockName = torndata.stocks[stock].name;
-		hideStocksParent.appendChild(
-			document.newElement({
-				type: "span",
-				id: stock,
-				text: capitalizeText(stockName),
-			})
-		);
+			const stockName = torndata.stocks[stock].name;
+			hideStocksParent.appendChild(
+				document.newElement({
+					type: "span",
+					id: stock,
+					text: capitalizeText(stockName),
+				})
+			);
+		}
+		hideStocksParent.addEventListener("click", (event) => {
+			if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
+		});
+	} else {
+		hideStocksParent.classList.add("warning");
+		hideStocksParent.appendChild(document.createTextNode("Requires API data to be loaded."));
 	}
-	hideStocksParent.addEventListener("click", (event) => {
-		if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
-	});
 
 	for (const game of CASINO_GAMES) {
 		const casinoGame = document.newElement({ type: "span", text: capitalizeText(game), attributes: { name: game } });
