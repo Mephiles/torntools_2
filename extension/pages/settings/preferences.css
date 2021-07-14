@@ -165,7 +165,7 @@ body.dark #preferences a[href] {
 	cursor: pointer;
 }
 
-/* Hide Areas && Hide Casino Games */
+/* Hide Areas, Hide Casino Games */
 
 #preferences #hide-areas span,
 #preferences #hide-casino-games span,
@@ -176,6 +176,10 @@ body.dark #preferences a[href] {
 	position: relative;
 	display: inline-block;
 	margin-bottom: 4px;
+}
+
+#preferences #hide-stock-blocks span:not(:last-child) {
+    margin-right: 5px;
 }
 
 body.light #preferences #hide-areas span,

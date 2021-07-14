@@ -396,15 +396,6 @@ async function setupPreferences() {
 		if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
 	});
 
-	for (const game of CASINO_GAMES) {
-		const casinoGame = document.newElement({ type: "span", text: capitalizeText(game), attributes: { name: game } });
-
-		hideCasinoGamesParent.appendChild(casinoGame);
-		if (CASINO_GAMES.indexOf(game) + 1 !== CASINO_GAMES.length) hideCasinoGamesParent.appendChild(document.createTextNode("\n"));
-
-		casinoGame.addEventListener("click", (event) => event.target.classList.toggle("disabled"));
-	}
-
 	_preferences.find("#external-tornstats").addEventListener("click", (event) => {
 		requestOrigin("https://www.tornstats.com/", event);
 	});
