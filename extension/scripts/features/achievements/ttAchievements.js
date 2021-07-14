@@ -92,7 +92,7 @@
 							continue;
 						}
 
-						achievement.goals.push({ name: merits[id].name, completed: userdata[`${type}_awarded`].includes(id) });
+						achievement.goals.push({ score, completed: userdata[`${type}_awarded`].includes(id) });
 					}
 				}
 
@@ -186,7 +186,7 @@
 				tooltip.style.display = "block";
 				tooltipContent.innerHTML = "";
 
-				const line_progress = doc.new({ type: "div", class: "line-progress" });
+				const progress = document.newElement({ type: "ol", class: "progress-bar" });
 
 				const score = parseInt(event.target.dataset.score);
 				const goals = JSON.parse(event.target.dataset.goals);
@@ -194,13 +194,29 @@
 				let addedScore = false;
 				for (const goal of goals) {
 					if (goal.score > score && !addedScore) {
+						progress.appendChild(getNode(score, false, true));
 						addedScore = true;
 					}
+
+					if (goal.score !== score) {
+						progress.appendChild(getNode(goal.score, goal.completed, false));
+					}
+				}
+				if (!addedScore) {
+					progress.appendChild(getNode(score, false, true));
 				}
 
-				// FIXME - Show tooltip content.
+				tooltipContent.appendChild(progress);
 
 				console.log("DKK showTooltip", score, goals);
+
+				function getNode(score, isCompleted, isActive) {
+					return document.newElement({
+						type: "li",
+						class: `${isCompleted ? "is-complete" : ""} ${isActive ? "is-active" : ""}`,
+						children: [document.newElement({ type: "span", text: formatNumber(score, { shorten: true }) })],
+					});
+				}
 			}
 
 			function hideTooltip(event) {
