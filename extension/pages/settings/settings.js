@@ -382,19 +382,28 @@ async function setupPreferences() {
 		casinoGame.addEventListener("click", (event) => event.target.classList.toggle("disabled"));
 	}
 
-	const hideStockBlocksParent = _preferences.find("#hide-stock-blocks");
-	for (const stock in torndata.stocks) {
-		if (isNaN(stock)) continue;
-		const stockName = torndata.stocks[stock].name;
-		hideStockBlocksParent.appendChild(document.newElement({
-			type: "span",
-			id: stock,
-			text: capitalizeText(stockName),
-		}));
+	const hideStocksParent = _preferences.find("#hide-stocks");
+	if (hasAPIData() && torndata && torndata.stocks) {
+		for (const stock in torndata.stocks) {
+			// noinspection JSCheckFunctionSignatures
+			if (isNaN(stock)) continue;
+
+			const stockName = torndata.stocks[stock].name;
+			hideStocksParent.appendChild(
+				document.newElement({
+					type: "span",
+					id: stock,
+					text: capitalizeText(stockName),
+				})
+			);
+		}
+		hideStocksParent.addEventListener("click", (event) => {
+			if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
+		});
+	} else {
+		hideStocksParent.classList.add("warning");
+		hideStocksParent.appendChild(document.createTextNode("Requires API data to be loaded."));
 	}
-	hideStockBlocksParent.addEventListener("click", (event) => {
-		if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
-	});
 
 	_preferences.find("#external-tornstats").addEventListener("click", (event) => {
 		requestOrigin("https://www.tornstats.com/", event);
@@ -546,8 +555,8 @@ async function setupPreferences() {
 		for (const game of settings.hideCasinoGames) {
 			_preferences.find(`#hide-casino-games span[name="${game}"]`).classList.add("disabled");
 		}
-		for (const stockName of settings.hideStockBlocks) {
-			_preferences.find(`#hide-stock-blocks span[id="${stockName}"]`).classList.add("disabled");
+		for (const stockName of settings.hideStocks) {
+			_preferences.find(`#hide-stocks span[id="${stockName}"]`).classList.add("disabled");
 		}
 		for (const link of settings.customLinks) {
 			addCustomLink(link);
@@ -820,7 +829,7 @@ async function setupPreferences() {
 		settings.hideAreas = [..._preferences.findAll("#hide-areas span.disabled")].map((area) => area.getAttribute("name"));
 		settings.hideIcons = [..._preferences.findAll("#hide-icons .icon.disabled > div")].map((icon) => icon.getAttribute("class"));
 		settings.hideCasinoGames = [..._preferences.findAll("#hide-casino-games span.disabled")].map((game) => game.getAttribute("name"));
-		settings.hideStockBlocks = [..._preferences.findAll("#hide-stock-blocks span.disabled")].map((stock) => stock.getAttribute("id"));
+		settings.hideStocks = [..._preferences.findAll("#hide-stocks span.disabled")].map((stock) => stock.getAttribute("id"));
 
 		settings.apiUsage.comment = _preferences.find("#api_usage-comment").value;
 		settings.apiUsage.delayEssential = parseInt(_preferences.find("#api_usage-essential").value);
