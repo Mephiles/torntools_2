@@ -11,17 +11,18 @@
 		hideStocks,
 		unhideStocks,
 		{
-			storage: ["settings.hideStockBlocks.length"],
+			storage: ["settings.hideStockBlocks"],
 		},
 		null
 	);
 
 	async function hideStocks() {
 		await requireElement("#stockmarketroot [class*='stock___'][id]");
+		unhideStocks();
 		document.findAll("#stockmarketroot [class*='stock___'][id]").forEach(stockNode => {
 			if (settings.hideStockBlocks.some(x => x == stockNode.getAttribute("id"))) stockNode.classList.add("hidden");
 		});
-		if (!document.find(".tt-stocks-hidden")) document.find("#stockmarketroot [class*='appHeaderWrapper__']").insertAdjacentElement("afterend", await createMessageBox("Some stock blocks have been hidden.", { class: "tt-stocks-hidden" }));
+		document.find("#stockmarketroot [class*='appHeaderWrapper__']").insertAdjacentElement("afterend", await createMessageBox("Some stock blocks have been hidden.", { class: "tt-stocks-hidden" }));
 	}
 
 	function unhideStocks() {
