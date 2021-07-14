@@ -394,8 +394,6 @@ async function setupPreferences() {
 	storageListeners.settings.push(updateSettings);
 
 	function switchSection(link) {
-		console.log("DKK switchSection", link);
-
 		const params = new URL(location.href).searchParams;
 		params.set("page", "preferences");
 		params.set("section", link.getAttribute("name"));
@@ -406,6 +404,8 @@ async function setupPreferences() {
 
 		link.classList.add("active");
 		_preferences.find(`:scope > section > .sections > section[name="${link.getAttribute("name")}"]`).classList.add("active");
+
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
 	function showAdvanced(advanced) {
