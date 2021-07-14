@@ -4,14 +4,14 @@
 	if (!getPageStatus().access) return;
 
 	featureManager.registerFeature(
-		"Hide Stock Blocks",
+		"Hide Stocks",
 		"stocks",
-		() => settings.hideStockBlocks.length,
+		() => settings.hideStocks.length,
 		null,
 		hideStocks,
 		unhideStocks,
 		{
-			storage: ["settings.hideStockBlocks"],
+			storage: ["settings.hideStocks"],
 		},
 		null
 	);
@@ -20,11 +20,11 @@
 		await requireElement("#stockmarketroot [class*='stock___'][id]");
 		unhideStocks();
 		document.findAll("#stockmarketroot [class*='stock___'][id]").forEach((stockNode) => {
-			if (settings.hideStockBlocks.some((x) => x === stockNode.getAttribute("id"))) stockNode.classList.add("hidden");
+			if (settings.hideStocks.some((x) => x === stockNode.getAttribute("id"))) stockNode.classList.add("hidden");
 		});
 		document
 			.find("#stockmarketroot [class*='appHeaderWrapper__']")
-			.insertAdjacentElement("afterend", await createMessageBox("Some stock blocks have been hidden.", { class: "tt-stocks-hidden" }));
+			.insertAdjacentElement("afterend", await createMessageBox("Some stocks have been hidden.", { class: "tt-stocks-hidden" }));
 	}
 
 	function unhideStocks() {
