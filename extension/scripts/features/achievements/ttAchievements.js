@@ -186,8 +186,17 @@
 				tooltip.style.display = "block";
 				tooltipContent.innerHTML = "";
 
+				const line_progress = doc.new({ type: "div", class: "line-progress" });
+
 				const score = parseInt(event.target.dataset.score);
 				const goals = JSON.parse(event.target.dataset.goals);
+
+				let addedScore = false;
+				for (const goal of goals) {
+					if (goal.score > score && !addedScore) {
+						addedScore = true;
+					}
+				}
 
 				// FIXME - Show tooltip content.
 
