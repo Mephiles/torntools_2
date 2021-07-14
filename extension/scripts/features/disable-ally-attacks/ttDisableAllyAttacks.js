@@ -3,11 +3,11 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Disable Ally Attacks",
 		"profile",
 		() => settings.pages.profile.disableAllyAttacks,
-		null,
+		startObserver,
 		disableAttackButton,
 		enableButton,
 		{
@@ -15,6 +15,21 @@
 		},
 		null
 	);
+
+	async function startObserver() {
+		await requireElement(".profile-container");
+		new MutationObserver(() => {
+			if (feature.enabled()) disableAttackButton()
+		}).observe(document.find(".profile-container"), { childList: true });
+	}
+
+	function listenerFunction(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		if (confirm("Are you sure you want to attack this ally ?")) {
+			window.location = document.find(".profile-buttons .profile-button-attack").href;
+		}
+	}
 
 	async function disableAttackButton() {
 		await requireElement(".user-info-value [href*='/factions.php']");
@@ -32,16 +47,11 @@
 			const crossSvg = await fetch(chrome.runtime.getURL("resources/images/svg-icons/cross.svg")).then((x) => x.text());
 			const attackButton = document.find(".profile-buttons .profile-button-attack");
 			attackButton.insertAdjacentHTML("beforeend", crossSvg);
-			const attackSvg = attackButton.find(":scope > svg[class*='default__']");
-			if (hasDarkMode()) attackSvg.setAttribute("fill", "url(#linear-gradient-disable-dark-mode)");
-			else attackSvg.setAttribute("fill", "rgba(153, 153, 153, 0.4)");
+			attackButton.find(".tt-cross").addEventListener("click", listenerFunction, { capture: true });
 		}
 	}
 
-	function enableButton() {
+	async function enableButton() {
 		document.findAll(".tt-cross").forEach((x) => x.remove());
-		const attackSvg = document.find(".profile-buttons .profile-button-attack svg[class*='default__']");
-		if (hasDarkMode() && attackSvg) attackSvg.setAttribute("fill", "url(#linear-gradient-dark-mode)");
-		else if (attackSvg) attackSvg.setAttribute("fill", "url(#linear-gradient)");
 	}
 })();
