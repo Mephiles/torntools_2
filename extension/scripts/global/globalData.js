@@ -544,20 +544,14 @@ const DEFAULT_STORAGE = {
 			revivesOn: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
 		jail: {
-			time: {
-				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMin }),
-				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.timeMax }),
-			},
-			level: {
-				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMin }),
-				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.levelMax }),
-			},
-			score: {
-				from: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMin }),
-				to: new DefaultSetting({ type: "number", defaultValue: JAIL_CONSTANTS.scoreMax }),
-			},
-			faction: new DefaultSetting({ type: "string", defaultValue: JAIL_CONSTANTS.allFactions }),
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
+			faction: new DefaultSetting({ type: "string", defaultValue: "All" }),
+			timeStart: new DefaultSetting({ type: "string", defaultValue: 0 }),
+			timeEnd: new DefaultSetting({ type: "string", defaultValue: 100 }),
+			levelStart: new DefaultSetting({ type: "string", defaultValue: 1 }),
+			levelEnd: new DefaultSetting({ type: "string", defaultValue: 100 }),
+			scoreStart: new DefaultSetting({ type: "string", defaultValue: 0 }),
+			scoreEnd: new DefaultSetting({ type: "string", defaultValue: 5000 }),
 		},
 		containers: new DefaultSetting({ type: "object", defaultValue: {} }),
 		travel: {
