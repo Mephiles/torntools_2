@@ -20,7 +20,7 @@
 		await requireElement("#stockmarketroot [class*='stock___'][id]");
 		unhideStocks();
 		document.findAll("#stockmarketroot [class*='stock___'][id]").forEach((stockNode) => {
-			if (settings.hideStockBlocks.some((x) => x == stockNode.getAttribute("id"))) stockNode.classList.add("hidden");
+			if (settings.hideStockBlocks.some((x) => x === stockNode.getAttribute("id"))) stockNode.classList.add("hidden");
 		});
 		document
 			.find("#stockmarketroot [class*='appHeaderWrapper__']")
