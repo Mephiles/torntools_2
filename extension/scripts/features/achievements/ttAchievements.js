@@ -186,7 +186,7 @@
 				tooltip.style.display = "block";
 				tooltipContent.innerHTML = "";
 
-				const progress = document.newElement({ type: "ol", class: "progress-bar" });
+				const progress = document.newElement({ type: "ol", class: "awards-progress" });
 
 				const score = parseInt(event.target.dataset.score);
 				const goals = JSON.parse(event.target.dataset.goals);
@@ -213,8 +213,8 @@
 				function getNode(score, isCompleted, isActive) {
 					return document.newElement({
 						type: "li",
-						class: `${isCompleted ? "is-complete" : ""} ${isActive ? "is-active" : ""}`,
-						children: [document.newElement({ type: "span", text: formatNumber(score, { shorten: true }) })],
+						class: `${isCompleted ? "is-completed" : ""} ${isActive ? "is-current" : ""}`,
+						children: [document.newElement({ type: "span", text: formatNumber(score, { shorten: 3, decimals: 1 }) })],
 					});
 				}
 			}
