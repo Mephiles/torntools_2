@@ -323,6 +323,9 @@ const DEFAULT_STORAGE = {
 				ammo: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				honors: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				medals: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				battlestats: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				crimes: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				workstats: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -1055,8 +1058,10 @@ const API_SELECTIONS = {
 		"ammo",
 		"attacks",
 		"bars",
+		"battlestats",
 		"bazaar", // target
 		"cooldowns",
+		"crimes",
 		"display", // target
 		"education",
 		"events",
@@ -1073,6 +1078,7 @@ const API_SELECTIONS = {
 		"stocks",
 		"timestamp",
 		"travel",
+		"workstats",
 	],
 	properties: [],
 	faction: ["crimes"],
