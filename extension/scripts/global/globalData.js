@@ -845,6 +845,24 @@ const API_USAGE = {
 			// networthloan: true,
 			networthunpaidfees: true,
 			networth: true,
+			awards: true,
+			pointssold: true,
+			useractivity: true,
+			bazaarcustomers: true,
+			stockpayouts: true,
+			daysbeendonator: true,
+			refills: true,
+			nerverefills: true,
+			tokenrefills: true,
+			bountiescollected: true,
+			totalbountyreward: true,
+			cityfinds: true,
+			dumpfinds: true,
+			organisedcrimes: true,
+			respectforfaction: true,
+		},
+		married: {
+			duration: true,
 		},
 		stocks: {
 			"*": {
@@ -890,6 +908,8 @@ const API_USAGE = {
 			icon85: true,
 			icon86: true,
 		},
+		honors_awarded: true,
+		merits_awarded: true,
 	},
 	properties: {},
 	faction: {
@@ -950,6 +970,16 @@ const API_USAGE = {
 		},
 		bank: {
 			"*": true,
+		},
+		medals: {
+			"*": {
+				description: true,
+			},
+		},
+		honors: {
+			"*": {
+				description: true,
+			},
 		},
 	},
 };
