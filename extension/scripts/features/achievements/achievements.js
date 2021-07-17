@@ -573,4 +573,9 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "import", include: ["items"] },
 		requirements: { pages: ["travelagency"] },
 	},
+	{ name: "Strength", stats: () => userdata.strength, detection: { keyword: "strength", include: ["gain"] }, requirements: { pages: ["gym"] } },
+	{ name: "Speed", stats: () => userdata.speed, detection: { keyword: "speed", include: ["gain"] }, requirements: { pages: ["gym"] } },
+	{ name: "Defense", stats: () => userdata.defense, detection: { keyword: "defense", include: ["gain"] }, requirements: { pages: ["gym"] } },
+	{ name: "Dexterity", stats: () => userdata.dexterity, detection: { keyword: "dexterity", include: ["gain"] }, requirements: { pages: ["gym"] } },
+	{ name: "Total", stats: () => userdata.total, detection: { keyword: "total stats" }, requirements: { pages: ["gym"] } },
 ];

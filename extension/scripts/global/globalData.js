@@ -979,6 +979,11 @@ const API_USAGE = {
 		},
 		honors_awarded: true,
 		merits_awarded: true,
+		strength: true,
+		speed: true,
+		defense: true,
+		dexterity: true,
+		total: true,
 	},
 	properties: {},
 	faction: {
