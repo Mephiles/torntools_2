@@ -207,4 +207,16 @@ const ACHIEVEMENTS = [
 		detection: { goals: [{ score: 1, type: "honors", id: 64 }] },
 		requirements: { pages: ["education"] },
 	},
+	{
+		name: "Org. crimes",
+		stats: () => userdata.personalstats.organisedcrimes,
+		detection: { keyword: "organized crimes" },
+		requirements: { pages: ["factions"] },
+	},
+	{
+		name: "Respect",
+		stats: () => userdata.personalstats.respectforfaction,
+		detection: { keyword: "respect", include: ["earn"] },
+		requirements: { pages: ["factions"] },
+	},
 ];
