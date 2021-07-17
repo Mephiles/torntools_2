@@ -402,6 +402,7 @@ body.scrolled #tt-page-status.top-right {
 	border-top-right-radius: 5px;
 	background-color: var(--default-bg-panel-color);
 	margin-top: 2px;
+	min-height: 22px;
 }
 
 body[data-layout="hospital"] #sidebarroot .pill {
