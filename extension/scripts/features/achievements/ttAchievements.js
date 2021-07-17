@@ -62,39 +62,43 @@
 				achievement.current = achievement.stats();
 				achievement.goals = [];
 
-				let { keyword, include, exclude } = achievement.detection;
+				let { keyword, include, exclude, goals } = achievement.detection;
 				if (!include) include = [];
 				if (!exclude) exclude = [];
 
-				for (const type of ["honors", "medals"]) {
-					const merits = torndata[type];
+				if (keyword) {
+					for (const type of ["honors", "medals"]) {
+						const merits = torndata[type];
 
-					for (let id in merits) {
-						id = parseInt(id);
+						for (let id in merits) {
+							id = parseInt(id);
 
-						const description = merits[id].description.toLowerCase();
-						if (!description.includes(keyword)) continue;
+							const description = merits[id].description.toLowerCase();
+							if (!description.includes(keyword)) continue;
 
-						if (include.length && !include.every((incl) => description.includes(incl))) continue;
-						if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
+							if (include.length && !include.every((incl) => description.includes(incl))) continue;
+							if (exclude.length && exclude.some((excl) => description.includes(excl))) continue;
 
-						let desc = description;
-						desc = desc.split("for at least")[0]; // remove 'day' numbers from networth
-						desc = desc.replace(/\D/g, ""); // replace all non-numbers
+							let desc = description;
+							desc = desc.split("for at least")[0]; // remove 'day' numbers from networth
+							desc = desc.replace(/\D/g, ""); // replace all non-numbers
 
-						const score = parseInt(desc) || "none";
-						if (isNaN(score)) continue;
+							const score = parseInt(desc) || "none";
+							if (isNaN(score)) continue;
 
-						// Remove duplicates.
-						const duplicate = achievement.goals.find((goal) => goal.score === score);
-						if (duplicate) {
-							duplicate.count = duplicate.count ? duplicate.count + 1 : 2;
-							continue;
+							// Remove duplicates.
+							const duplicate = achievement.goals.find((goal) => goal.score === score);
+							if (duplicate) {
+								duplicate.count = duplicate.count ? duplicate.count + 1 : 2;
+								continue;
+							}
+
+							achievement.goals.push({ score, completed: userdata[`${type}_awarded`].includes(id) });
 						}
-
-						achievement.goals.push({ score, completed: userdata[`${type}_awarded`].includes(id) });
 					}
 				}
+				if (goals)
+					achievement.goals.push(...goals.map(({ score, type, id }) => ({ score: score, completed: userdata[`${type}_awarded`].includes(id) })));
 
 				achievement.goals = achievement.goals.sort((a, b) => {
 					if (a.score > b.score) return 1;
