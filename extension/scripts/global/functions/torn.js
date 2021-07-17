@@ -1310,6 +1310,9 @@ function getPage() {
 		case "index":
 			page = "home";
 			break;
+		case "page":
+			page = getSearchParameters().get("sid");
+			break;
 	}
 
 	return page;
