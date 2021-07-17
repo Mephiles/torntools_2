@@ -1316,6 +1316,21 @@ function getPage() {
 		case "hospitalview":
 			page = "hospital";
 			break;
+		case "jailview":
+			page = "jail";
+			break;
+		case "pmarket":
+			page = "points-market";
+			break;
+		case "loader":
+			const sid = getSearchParameters().get("sid");
+
+			switch (sid) {
+				case "missions":
+				case "racing":
+					page = sid;
+			}
+			break;
 	}
 
 	return page;
