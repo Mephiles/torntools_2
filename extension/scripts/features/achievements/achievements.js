@@ -314,19 +314,19 @@ const ACHIEVEMENTS = [
 		requirements: { pages: ["item"] },
 	},
 	{
-		name: "Alcohol",
+		name: "Alcohol used",
 		stats: () => userdata.personalstats.alcoholused,
 		detection: { keyword: "alcohol" },
 		requirements: { pages: ["item"] },
 	},
 	{
-		name: "Candy",
+		name: "Candy used",
 		stats: () => userdata.personalstats.candyused,
 		detection: { keyword: "candy" },
 		requirements: { pages: ["item"] },
 	},
 	{
-		name: "Medical items used",
+		name: "Medicals used",
 		stats: () => userdata.personalstats.medicalitemsused,
 		detection: { keyword: "medical items", include: ["use"] },
 		requirements: { pages: ["item"] },
