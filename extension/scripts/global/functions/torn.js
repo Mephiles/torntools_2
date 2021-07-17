@@ -1313,6 +1313,9 @@ function getPage() {
 		case "page":
 			page = getSearchParameters().get("sid");
 			break;
+		case "hospitalview":
+			page = "hospital";
+			break;
 	}
 
 	return page;
