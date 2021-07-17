@@ -68,6 +68,7 @@ body.dark-mode .awards-progress {
 	justify-content: space-between;
 	padding: 0 0 30px 0;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .awards-progress li {
@@ -81,7 +82,7 @@ body.dark-mode .awards-progress {
 	white-space: nowrap;
 	overflow: visible;
 	font-size: 13px;
-	min-width: 0;
+	min-width: fit-content;
 }
 
 .awards-progress li::before {
@@ -99,15 +100,25 @@ body.dark-mode .awards-progress {
 	bottom: -7px;
 }
 
-.awards-progress li:not(:first-child)::after {
+.awards-progress li::after {
 	content: "";
 	display: block;
 	width: 100%;
 	position: absolute;
 	bottom: -2px;
+	border-bottom: 2px solid transparent;
+}
+
+.awards-progress li:first-child::after {
+	left: calc(-50% - 5px);
+	z-index: 2;
+	border-bottom-color: var(--default-bg-panel-color);
+}
+
+.awards-progress li:not(:first-child)::after {
 	left: -50%;
 	z-index: 1;
-	border-bottom: 2px solid var(--color-line);
+	border-bottom-color: var(--color-line);
 }
 
 .awards-progress .is-completed:not(:first-child)::after,
@@ -123,6 +134,11 @@ body.dark-mode .awards-progress {
 .awards-progress .is-current::before {
 	background-color: var(--color-dot-current);
 	border-color: var(--color-dot-current-border);
+}
+
+.awards-progress li span {
+	display: block;
+	min-width: 15px;
 }
 
 .awards-progress li:nth-child(even) span:first-child {
