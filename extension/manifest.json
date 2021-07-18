@@ -376,8 +376,9 @@
 		},
 		{
 			"matches": ["https://www.torn.com/loader.php?sid=attack*"],
+			"css": ["scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css"],
 			"js": ["scripts/features/disable-ally-attacks/ttDisableAllyAttacksLoader.js"],
-			"run_at": "document_end"
+			"run_at": "document_start"
 		},
 		{
 			"matches": ["https://www.torn.com/loader.php?sid=view*", "https://www.torn.com/loader.php?sid=rouletteStatistics"],
