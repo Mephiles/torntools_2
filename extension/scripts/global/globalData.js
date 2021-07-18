@@ -330,6 +330,7 @@ const DEFAULT_STORAGE = {
 		hideAreas: new DefaultSetting({ type: "array", defaultValue: [] }),
 		hideIcons: new DefaultSetting({ type: "array", defaultValue: [] }),
 		hideCasinoGames: new DefaultSetting({ type: "array", defaultValue: [] }),
+		hideStocks: new DefaultSetting({ type: "array", defaultValue: [] }),
 		allyFactionsIDs: new DefaultSetting({ type: "array", defaultValue: [] }),
 		customLinks: new DefaultSetting({ type: "array", defaultValue: [] }),
 		pages: {
@@ -346,6 +347,7 @@ const DEFAULT_STORAGE = {
 				notes: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				showAllyWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				ageToWords: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				disableAllyAttacks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			chat: {
 				fontSize: new DefaultSetting({ type: "number", defaultValue: 12 }),

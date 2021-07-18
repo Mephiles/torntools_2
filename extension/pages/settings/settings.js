@@ -18,7 +18,10 @@ const initiatedPages = {};
 
 // noinspection DuplicatedCode
 async function showPage(name) {
-	window.history.replaceState("", "Title", "?page=" + name);
+	const params = new URL(location.href).searchParams;
+	params.set("page", name);
+	if (name !== "preferences") params.delete("section");
+	window.history.replaceState("", "Title", `?${params.toString()}`);
 
 	for (const active of document.findAll("header nav.on-page > ul > li.active")) active.classList.remove("active");
 	document.find(`header nav.on-page > ul > li[to="${name}"]`).classList.add("active");
@@ -179,14 +182,11 @@ async function setupPreferences() {
 
 	const showAdvancedIcon = _preferences.find("#preferences-show_advanced");
 
-	for (const link of _preferences.findAll(":scope > section > nav ul > li[name]")) {
-		link.addEventListener("click", () => {
-			_preferences.find(":scope > section > nav ul li[name].active").classList.remove("active");
-			_preferences.find(":scope > section > .sections > section.active").classList.remove("active");
+	if (getSearchParameters().has("section"))
+		switchSection(_preferences.find(`#preferences > section > nav ul > li[name="${getSearchParameters().get("section")}"]`));
 
-			link.classList.add("active");
-			_preferences.find(`:scope > section > .sections > section[name="${link.getAttribute("name")}"]`).classList.add("active");
-		});
+	for (const link of _preferences.findAll(":scope > section > nav ul > li[name]")) {
+		link.addEventListener("click", () => switchSection(link));
 	}
 
 	showAdvanced(filters.preferences.showAdvanced);
@@ -382,6 +382,29 @@ async function setupPreferences() {
 		casinoGame.addEventListener("click", (event) => event.target.classList.toggle("disabled"));
 	}
 
+	const hideStocksParent = _preferences.find("#hide-stocks");
+	if (hasAPIData() && torndata && torndata.stocks) {
+		for (const stock in torndata.stocks) {
+			// noinspection JSCheckFunctionSignatures
+			if (isNaN(stock)) continue;
+
+			const stockName = torndata.stocks[stock].name;
+			hideStocksParent.appendChild(
+				document.newElement({
+					type: "span",
+					id: stock,
+					text: capitalizeText(stockName),
+				})
+			);
+		}
+		hideStocksParent.addEventListener("click", (event) => {
+			if (!isNaN(event.target.getAttribute("id"))) event.target.classList.toggle("disabled");
+		});
+	} else {
+		hideStocksParent.classList.add("warning");
+		hideStocksParent.appendChild(document.createTextNode("Requires API data to be loaded."));
+	}
+
 	_preferences.find("#external-tornstats").addEventListener("click", (event) => {
 		requestOrigin("https://www.tornstats.com/", event);
 	});
@@ -392,6 +415,21 @@ async function setupPreferences() {
 	fillSettings();
 	searchPreferences();
 	storageListeners.settings.push(updateSettings);
+
+	function switchSection(link) {
+		const params = new URL(location.href).searchParams;
+		params.set("page", "preferences");
+		params.set("section", link.getAttribute("name"));
+		window.history.replaceState("", "Title", `?${params.toString()}`);
+
+		_preferences.find(":scope > section > nav ul li[name].active").classList.remove("active");
+		_preferences.find(":scope > section > .sections > section.active").classList.remove("active");
+
+		link.classList.add("active");
+		_preferences.find(`:scope > section > .sections > section[name="${link.getAttribute("name")}"]`).classList.add("active");
+
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
 
 	function showAdvanced(advanced) {
 		if (advanced) {
@@ -531,6 +569,9 @@ async function setupPreferences() {
 		}
 		for (const game of settings.hideCasinoGames) {
 			_preferences.find(`#hide-casino-games span[name="${game}"]`).classList.add("disabled");
+		}
+		for (const stockName of settings.hideStocks) {
+			_preferences.find(`#hide-stocks span[id="${stockName}"]`).classList.add("disabled");
 		}
 		for (const link of settings.customLinks) {
 			addCustomLink(link);
@@ -803,6 +844,7 @@ async function setupPreferences() {
 		settings.hideAreas = [..._preferences.findAll("#hide-areas span.disabled")].map((area) => area.getAttribute("name"));
 		settings.hideIcons = [..._preferences.findAll("#hide-icons .icon.disabled > div")].map((icon) => icon.getAttribute("class"));
 		settings.hideCasinoGames = [..._preferences.findAll("#hide-casino-games span.disabled")].map((game) => game.getAttribute("name"));
+		settings.hideStocks = [..._preferences.findAll("#hide-stocks span.disabled")].map((stock) => stock.getAttribute("id"));
 
 		settings.apiUsage.comment = _preferences.find("#api_usage-comment").value;
 		settings.apiUsage.delayEssential = parseInt(_preferences.find("#api_usage-essential").value);
