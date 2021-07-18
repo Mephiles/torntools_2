@@ -198,7 +198,7 @@
 			}
 
 			// Time
-			const timeLeftHrs = parseInt(li.find(".info-wrap .time").innerText.replace(/(?<=[0-9]*)h.*/, ""));
+			const timeLeftHrs = parseInt(li.find(".info-wrap .time").innerText.match(/[0-9]*(?=h)/g)[0]);
 			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
 				hideRow(li);
 				continue;
