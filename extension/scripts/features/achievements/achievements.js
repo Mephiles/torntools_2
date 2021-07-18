@@ -13,18 +13,8 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "personal perks" },
 		requirements: { pages: ["home"] },
 	},
-	{
-		name: "Awards",
-		stats: () => userdata.personalstats.awards,
-		detection: { keyword: "total awards" },
-		requirements: { pages: ["home", "awards"] },
-	},
-	{
-		name: "Married (days)",
-		stats: () => userdata.married.duration,
-		detection: { keyword: "stay married" },
-		requirements: { pages: ["home", "church"] },
-	},
+	{ name: "Awards", stats: () => userdata.personalstats.awards, detection: { keyword: "total awards" }, requirements: { pages: ["home", "awards"] } },
+	{ name: "Married (days)", stats: () => userdata.married.duration, detection: { keyword: "stay married" }, requirements: { pages: ["home", "church"] } },
 	{
 		name: "Points sold",
 		stats: () => userdata.personalstats.pointssold,
@@ -43,12 +33,7 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "customers buy from your bazaar" },
 		requirements: { pages: ["home", "bazaar"] },
 	},
-	{
-		name: "Stock payouts",
-		stats: () => userdata.personalstats.stockpayouts,
-		detection: { keyword: "payouts" },
-		requirements: { pages: ["home", "stocks"] },
-	},
+	{ name: "Stock payouts", stats: () => userdata.personalstats.stockpayouts, detection: { keyword: "payouts" }, requirements: { pages: ["home", "stocks"] } },
 	{
 		name: "Donator (days)",
 		stats: () => userdata.personalstats.daysbeendonator,
@@ -76,12 +61,7 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "refill", include: ["casino"] },
 		requirements: { pages: ["home", "points"] },
 	},
-	{
-		name: "Networth",
-		stats: () => userdata.personalstats.networth,
-		detection: { keyword: "networth" },
-		requirements: { pages: ["home"] },
-	},
+	{ name: "Networth", stats: () => userdata.personalstats.networth, detection: { keyword: "networth" }, requirements: { pages: ["home"] } },
 	{
 		name: "Bounties collected",
 		stats: () => userdata.personalstats.bountiescollected,
@@ -99,7 +79,6 @@ const ACHIEVEMENTS = [
 		stats: () => {
 			const description = document.find("#church-donate .desc > p:first-child > span");
 			if (!description) return -1;
-
 			return parseInt(description.innerText.substring(1).replaceAll(",", ""));
 		},
 		detection: { keyword: "church" },
@@ -111,12 +90,7 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "city", include: ["find", "items"] },
 		requirements: { pages: ["city"] },
 	},
-	{
-		name: "Dump finds",
-		stats: () => userdata.personalstats.dumpfinds,
-		detection: { keyword: "dump" },
-		requirements: { pages: ["dump"] },
-	},
+	{ name: "Dump finds", stats: () => userdata.personalstats.dumpfinds, detection: { keyword: "dump" }, requirements: { pages: ["dump"] } },
 	{
 		name: "Complete courses",
 		stats: () => userdata.education_completed.length,
@@ -232,41 +206,11 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "cannabis", include: ["use"] },
 		requirements: { pages: ["item"] },
 	},
-	{
-		name: "Ecstasy",
-		type: "drugs",
-		stats: () => userdata.personalstats.exttaken,
-		detection: { keyword: "ecstasy" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Ketamine",
-		type: "drugs",
-		stats: () => userdata.personalstats.kettaken,
-		detection: { keyword: "ketamine" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "LSD",
-		type: "drugs",
-		stats: () => userdata.personalstats.lsdtaken,
-		detection: { keyword: "lsd" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Opium",
-		type: "drugs",
-		stats: () => userdata.personalstats.opitaken,
-		detection: { keyword: "opium" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Shrooms",
-		type: "drugs",
-		stats: () => userdata.personalstats.shrtaken,
-		detection: { keyword: "shrooms" },
-		requirements: { pages: ["item"] },
-	},
+	{ name: "Ecstasy", type: "drugs", stats: () => userdata.personalstats.exttaken, detection: { keyword: "ecstasy" }, requirements: { pages: ["item"] } },
+	{ name: "Ketamine", type: "drugs", stats: () => userdata.personalstats.kettaken, detection: { keyword: "ketamine" }, requirements: { pages: ["item"] } },
+	{ name: "LSD", type: "drugs", stats: () => userdata.personalstats.lsdtaken, detection: { keyword: "lsd" }, requirements: { pages: ["item"] } },
+	{ name: "Opium", type: "drugs", stats: () => userdata.personalstats.opitaken, detection: { keyword: "opium" }, requirements: { pages: ["item"] } },
+	{ name: "Shrooms", type: "drugs", stats: () => userdata.personalstats.shrtaken, detection: { keyword: "shrooms" }, requirements: { pages: ["item"] } },
 	{
 		name: "Speed",
 		type: "drugs",
@@ -274,33 +218,10 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "speed", exclude: ["gain"] },
 		requirements: { pages: ["item"] },
 	},
-	{
-		name: "PCP",
-		type: "drugs",
-		stats: () => userdata.personalstats.pcptaken,
-		detection: { keyword: "pcp" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Xanax",
-		type: "drugs",
-		stats: () => userdata.personalstats.xantaken,
-		detection: { keyword: "xanax" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Vicodin",
-		type: "drugs",
-		stats: () => userdata.personalstats.victaken,
-		detection: { keyword: "vicodin" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Viruses",
-		stats: () => userdata.personalstats.virusescoded,
-		detection: { keyword: "viruses" },
-		requirements: { pages: ["item"] },
-	},
+	{ name: "PCP", type: "drugs", stats: () => userdata.personalstats.pcptaken, detection: { keyword: "pcp" }, requirements: { pages: ["item"] } },
+	{ name: "Xanax", type: "drugs", stats: () => userdata.personalstats.xantaken, detection: { keyword: "xanax" }, requirements: { pages: ["item"] } },
+	{ name: "Vicodin", type: "drugs", stats: () => userdata.personalstats.victaken, detection: { keyword: "vicodin" }, requirements: { pages: ["item"] } },
+	{ name: "Viruses", stats: () => userdata.personalstats.virusescoded, detection: { keyword: "viruses" }, requirements: { pages: ["item"] } },
 	{
 		name: "Fill blood",
 		stats: () => userdata.personalstats.bloodwithdrawn,
@@ -313,18 +234,8 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "items", include: ["trash"] },
 		requirements: { pages: ["item"] },
 	},
-	{
-		name: "Alcohol used",
-		stats: () => userdata.personalstats.alcoholused,
-		detection: { keyword: "alcohol" },
-		requirements: { pages: ["item"] },
-	},
-	{
-		name: "Candy used",
-		stats: () => userdata.personalstats.candyused,
-		detection: { keyword: "candy" },
-		requirements: { pages: ["item"] },
-	},
+	{ name: "Alcohol used", stats: () => userdata.personalstats.alcoholused, detection: { keyword: "alcohol" }, requirements: { pages: ["item"] } },
+	{ name: "Candy used", stats: () => userdata.personalstats.candyused, detection: { keyword: "candy" }, requirements: { pages: ["item"] } },
 	{
 		name: "Medicals used",
 		stats: () => userdata.personalstats.medicalitemsused,
@@ -337,18 +248,8 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "energy drink" },
 		requirements: { pages: ["item"] },
 	},
-	{
-		name: "Busts",
-		stats: () => userdata.personalstats.peoplebusted,
-		detection: { keyword: "bust" },
-		requirements: { pages: ["jail"] },
-	},
-	{
-		name: "Bails",
-		stats: () => userdata.personalstats.peoplebought,
-		detection: { keyword: "bails" },
-		requirements: { pages: ["jail"] },
-	},
+	{ name: "Busts", stats: () => userdata.personalstats.peoplebusted, detection: { keyword: "bust" }, requirements: { pages: ["jail"] } },
+	{ name: "Bails", stats: () => userdata.personalstats.peoplebought, detection: { keyword: "bails" }, requirements: { pages: ["jail"] } },
 	{
 		name: "Attacks won",
 		stats: () => userdata.personalstats.attackswon,
@@ -386,12 +287,7 @@ const ACHIEVEMENTS = [
 		requirements: { pages: ["missions"] },
 	},
 	{ name: "Unarmored wins", stats: () => userdata.personalstats.unarmoredwon, detection: { keyword: "unarmored" }, requirements: { pages: ["missions"] } },
-	{
-		name: "Current killstreak",
-		type: "killstreak",
-		stats: () => userdata.personalstats.killstreak,
-		requirements: { pages: ["missions"] },
-	},
+	{ name: "Current killstreak", type: "killstreak", stats: () => userdata.personalstats.killstreak, requirements: { pages: ["missions"] } },
 	{
 		name: "Best streak",
 		type: "killstreak",
