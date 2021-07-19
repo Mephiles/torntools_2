@@ -432,6 +432,7 @@
 			"matches": ["https://www.torn.com/page.php?sid=stocks*"],
 			"css": [
 				"scripts/global/functions/filters.css",
+				"scripts/features/stocks-filter/ttStocksFilter.css",
 				"scripts/features/stock-acronyms/ttStockAcronyms.css",
 				"scripts/features/total-portfolio-value/ttTotalPortfolioValue.css",
 				"scripts/features/hide-stocks/ttHideStocks.css"

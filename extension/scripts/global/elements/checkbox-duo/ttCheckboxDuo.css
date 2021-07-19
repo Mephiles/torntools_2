@@ -5,3 +5,11 @@
 .tt-checkbox-duo > *:not(:first-child) {
 	margin-left: 4px;
 }
+
+.tt-checkbox-duo .duo-yes i.icon {
+	color: var(--tt-color-green);
+}
+
+.tt-checkbox-duo .duo-no i.icon {
+	color: var(--tt-color-red);
+}

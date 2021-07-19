@@ -74,6 +74,26 @@
 		investmentSection.element.appendChild(passiveFilter.element);
 		filterContent.appendChild(investmentSection.element);
 
+		const priceSection = createFilterSection({ title: "Price" });
+
+		const priceFilter = createCheckboxDuo({ description: "Price", indicator: "icon" });
+		priceFilter.onChange(applyFilter);
+		priceFilter.setValue(filters.stocks.price.price);
+		priceSection.element.appendChild(priceFilter.element);
+		localFilters.price = { getValue: priceFilter.getValue };
+
+		if (hasAPIData()) {
+			const profitFilter = createCheckboxDuo({ description: "Profit" });
+			profitFilter.onChange(applyFilter);
+			profitFilter.setValue(filters.stocks.price.price);
+			localFilters.profit = { getValue: profitFilter.getValue };
+			priceSection.element.appendChild(profitFilter.element);
+		} else {
+			localFilters.profit = { getValue: () => "both" };
+		}
+
+		filterContent.appendChild(priceSection.element);
+
 		content.appendChild(filterContent);
 
 		await applyFilter();
@@ -88,12 +108,16 @@
 		const owned = localFilters.owned.getValue();
 		const benefit = localFilters.benefit.getValue();
 		const passive = localFilters.passive.getValue();
+		const price = localFilters.price.getValue();
+		const profit = localFilters.profit.getValue();
 
 		// Save filters
 		await ttStorage.change({ filters: { stocks: { name, owned: { owned, benefit, passive } } } });
 
 		// Actual Filtering
 		for (const row of document.findAll("#stockmarketroot ul[class*='stock___']")) {
+			const id = parseInt(row.getAttribute("id"));
+
 			// Name
 			if (name && !row.find("li[data-name='nameTab']").innerText.toLowerCase().includes(name.toLowerCase())) {
 				hideRow(row);
@@ -122,6 +146,34 @@
 				const isPassive = !!row.find("[class*='dividendInfo___'] [class*='passive___']");
 
 				if ((isPassive && passive === "no") || (!isPassive && passive === "yes")) {
+					hideRow(row);
+					continue;
+				}
+			}
+
+			if (price === "yes" || price === "no") {
+				const isUp = !!row.find("[class*='changePrice___'] [class*='up___']");
+
+				if ((isUp && price === "no") || (!isUp && price === "yes")) {
+					hideRow(row);
+					continue;
+				}
+			}
+
+			if (hasAPIData() && settings.apiUsage.user.stocks && (profit === "yes" || profit === "no")) {
+				if (!(id in userdata.stocks)) {
+					hideRow(row);
+					continue;
+				}
+
+				const currentPrice = torndata.stocks[id].current_price * userdata.stocks[id].total_shares;
+				const boughtPrice = Object.values(userdata.stocks[id].transactions)
+					.map((transaction) => transaction.shares * transaction.bought_price)
+					.totalSum();
+
+				const hasProfit = currentPrice > boughtPrice;
+
+				if ((hasProfit && profit === "no") || (!hasProfit && profit === "yes")) {
 					hideRow(row);
 					continue;
 				}

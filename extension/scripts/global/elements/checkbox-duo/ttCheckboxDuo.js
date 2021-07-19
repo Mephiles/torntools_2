@@ -2,11 +2,27 @@ function createCheckboxDuo(options = {}) {
 	options = {
 		description: "",
 		id: getUUID(),
+		indicator: "text",
 		...options,
 	};
 
-	const yesCheckbox = createCheckbox({ description: "Y:", reverseLabel: true });
-	const noCheckbox = createCheckbox({ description: "N:", reverseLabel: true });
+	let isHTML, descriptionYes, descriptionNo;
+	switch (options.indicator) {
+		case "icon":
+			isHTML = true;
+			descriptionYes = "<i class='icon fas fa-arrow-up'></i>";
+			descriptionNo = "<i class='icon fas fa-arrow-down'></i>";
+			break;
+		case "text":
+		default:
+			isHTML = false;
+			descriptionYes = "Y:";
+			descriptionNo = "N:";
+			break;
+	}
+
+	const yesCheckbox = createCheckbox({ description: descriptionYes, isHTML, reverseLabel: true, class: "duo-yes" });
+	const noCheckbox = createCheckbox({ description: descriptionNo, isHTML, reverseLabel: true, class: "duo-no" });
 
 	const checkboxWrapper = document.newElement({
 		type: "div",

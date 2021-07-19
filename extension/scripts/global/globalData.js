@@ -640,6 +640,10 @@ const DEFAULT_STORAGE = {
 				benefit: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				passive: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
+			price: {
+				price: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				profit: new DefaultSetting({ type: "string", defaultValue: "both" }),
+			},
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
