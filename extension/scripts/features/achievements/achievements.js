@@ -521,4 +521,28 @@ const ACHIEVEMENTS = [
 	{ name: "Fraud", stats: () => userdata.criminalrecord.fraud_crimes, detection: { keyword: "fraud" }, requirements: { pages: ["crimes"] } },
 	{ name: "Other crimes", stats: () => userdata.criminalrecord.other, detection: { keyword: "other crimes" }, requirements: { pages: ["crimes"] } },
 	{ name: "Total crimes", stats: () => userdata.criminalrecord.total, detection: { keyword: "criminal offences" }, requirements: { pages: ["crimes"] } },
+	{
+		name: "Damage",
+		stats: () => userdata.personalstats.attackdamage,
+		detection: { keyword: "total damage" },
+		requirements: { pages: ["missions"] },
+	},
+	// FIXME - 25 max xp
+	// FIXME - days in faction
+	{ name: "Auctions", stats: () => userdata.personalstats.auctionswon, detection: { keyword: "auctions" }, requirements: { pages: ["auction"] } },
+	{
+		name: "Defeat abroad",
+		stats: () => userdata.personalstats.attackswonabroad,
+		detection: { keyword: "abroad", include: ["defeat"] },
+		requirements: { pages: ["travelagency"] },
+	},
+	// FIXME - hunting skill
+	{ name: "Job points", stats: () => userdata.personalstats.jobpointsused, detection: { keyword: "job points" }, requirements: { pages: ["companies"] } },
+	// FIXME - own all light gyms
+	// FIXME - own all middle gyms
+	// FIXME - own all heavy gyms
+	{ name: "Stock profit", stats: () => userdata.personalstats.stockprofits, detection: { keyword: "total profit" }, requirements: { pages: ["stocks"] } },
+	{ name: "Stock loss", stats: () => userdata.personalstats.stocklosses, detection: { keyword: "total losses" }, requirements: { pages: ["stocks"] } },
+	// FIXME - time in Torn
+	// FIXME - level
 ];

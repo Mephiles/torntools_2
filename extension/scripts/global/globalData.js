@@ -929,6 +929,12 @@ const API_USAGE = {
 			traveltimes: true,
 			traveltime: true,
 			itemsboughtabroad: true,
+			attackdamage: true,
+			auctionswon: true,
+			attackswonabroad: true,
+			jobpointsused: true,
+			stockprofits: true,
+			stocklosses: true,
 		},
 		married: {
 			duration: true,

@@ -1322,6 +1322,9 @@ function getPage() {
 		case "pmarket":
 			page = "points-market";
 			break;
+		case "amarket":
+			page = "auction";
+			break;
 		case "loader":
 			const sid = getSearchParameters().get("sid");
 
