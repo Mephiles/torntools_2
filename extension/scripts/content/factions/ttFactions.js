@@ -1,5 +1,5 @@
 (async () => {
-	if (getSearchParameters().get("step") === "your") {
+	if (isOwnFaction()) {
 		addXHRListener(async ({ detail: { page, xhr } }) => {
 			if (page === "factions") {
 				const params = new URLSearchParams(xhr.requestBody);
@@ -56,7 +56,7 @@
 	async function loadInfo() {
 		await requireElement(".faction-description, .members-list");
 
-		triggerCustomListener(EVENT_CHANNELS.FACTION_INFO);
+		triggerCustomListener(EVENT_CHANNELS.FACTION_INFO, true);
 	}
 
 	async function loadCrimes() {
@@ -103,3 +103,7 @@
 		}
 	}
 })();
+
+function isOwnFaction() {
+	return getSearchParameters().get("step") === "your";
+}

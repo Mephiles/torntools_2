@@ -1,0 +1,7 @@
+.members-list .table-body .tt-member-index {
+	width: 3ch;
+    padding: 0;
+    display: table-cell;
+    margin: auto 0 auto 2px;
+    text-align: center;
+}
