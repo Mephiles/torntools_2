@@ -6,12 +6,12 @@
 	const feature = featureManager.registerFeature(
 		"Disable Ally Attacks",
 		"profile",
-		() => settings.pages.profile.disableAllyAttacks,
+		() => settings.pages.profile.disableAllyAttacks && settings.alliedFactions.length,
 		startObserver,
 		disableAttackButton,
 		enableButton,
 		{
-			storage: ["settings.pages.profile.disableAllyAttacks", "settings.allyFactionsIDs"],
+			storage: ["settings.pages.profile.disableAllyAttacks", "settings.alliedFactions"],
 		},
 		null
 	);
@@ -38,7 +38,7 @@
 		const factionName = document.find(".user-info-value [href*='/factions.php']").innerText.trim();
 		if (
 			(hasAPIData() && factionID === userdata.faction.faction_id) ||
-			settings.allyFactionsIDs.some((ally) => {
+			settings.alliedFactions.some((ally) => {
 				if (isIntNumber(ally)) return ally === factionID || ally.toString() === factionName;
 				else return ally.trim() === factionName;
 			})
@@ -50,7 +50,7 @@
 		}
 	}
 
-	async function enableButton() {
+	function enableButton() {
 		document.findAll(".tt-cross").forEach((x) => x.remove());
 	}
 })();
