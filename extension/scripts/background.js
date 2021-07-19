@@ -233,6 +233,8 @@ async function updateUserdata() {
 			"battlestats",
 			"crimes",
 			"workstats",
+			"skills",
+			"weaponexp",
 		]) {
 			if (!settings.apiUsage.user[selection]) continue;
 

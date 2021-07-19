@@ -521,14 +521,19 @@ const ACHIEVEMENTS = [
 	{ name: "Fraud", stats: () => userdata.criminalrecord.fraud_crimes, detection: { keyword: "fraud" }, requirements: { pages: ["crimes"] } },
 	{ name: "Other crimes", stats: () => userdata.criminalrecord.other, detection: { keyword: "other crimes" }, requirements: { pages: ["crimes"] } },
 	{ name: "Total crimes", stats: () => userdata.criminalrecord.total, detection: { keyword: "criminal offences" }, requirements: { pages: ["crimes"] } },
+	{ name: "Damage", stats: () => userdata.personalstats.attackdamage, detection: { keyword: "total damage" }, requirements: { pages: ["missions"] } },
 	{
-		name: "Damage",
-		stats: () => userdata.personalstats.attackdamage,
-		detection: { keyword: "total damage" },
+		name: "100% weapon EXP",
+		stats: () => userdata.weaponexp.filter((weapon) => weapon.exp === 100).length,
+		detection: { keyword: "100% exp" },
 		requirements: { pages: ["missions"] },
 	},
-	// FIXME - 25 max xp
-	// FIXME - days in faction
+	{
+		name: "Days in faction",
+		stats: () => userdata.faction.days_in_faction,
+		detection: { keyword: "days in a single faction" },
+		requirements: { pages: ["factions"] },
+	},
 	{ name: "Auctions", stats: () => userdata.personalstats.auctionswon, detection: { keyword: "auctions" }, requirements: { pages: ["auction"] } },
 	{
 		name: "Defeat abroad",
@@ -536,13 +541,61 @@ const ACHIEVEMENTS = [
 		detection: { keyword: "abroad", include: ["defeat"] },
 		requirements: { pages: ["travelagency"] },
 	},
-	// FIXME - hunting skill
+	{
+		name: "Hunting skill",
+		stats: () => userdata.hunting,
+		detection: { keyword: "hunting", include: ["skill"] },
+		requirements: { pages: ["home", "travelagency"] },
+	},
 	{ name: "Job points", stats: () => userdata.personalstats.jobpointsused, detection: { keyword: "job points" }, requirements: { pages: ["companies"] } },
-	// FIXME - own all light gyms
-	// FIXME - own all middle gyms
-	// FIXME - own all heavy gyms
 	{ name: "Stock profit", stats: () => userdata.personalstats.stockprofits, detection: { keyword: "total profit" }, requirements: { pages: ["stocks"] } },
 	{ name: "Stock loss", stats: () => userdata.personalstats.stocklosses, detection: { keyword: "total losses" }, requirements: { pages: ["stocks"] } },
-	// FIXME - time in Torn
-	// FIXME - level
+	{
+		name: "Age",
+		stats: () => userdata.age,
+		detection: {
+			goals: [
+				{ score: 365, type: "medals", id: 225 },
+				{ score: 730, type: "medals", id: 226 },
+				{ score: 1095, type: "medals", id: 227 },
+				{ score: 1460, type: "medals", id: 228 },
+				{ score: 1825, type: "medals", id: 229 },
+				{ score: 2190, type: "medals", id: 230 },
+				{ score: 2555, type: "medals", id: 231 },
+				{ score: 2920, type: "medals", id: 232 },
+				{ score: 3285, type: "medals", id: 234 },
+				{ score: 3650, type: "medals", id: 235 },
+			],
+		},
+		requirements: { pages: ["home"] },
+	},
+	{
+		name: "Level",
+		stats: () => userdata.level,
+		detection: {
+			goals: [
+				{ score: 5, type: "medals", id: 34 },
+				{ score: 10, type: "medals", id: 35 },
+				{ score: 15, type: "medals", id: 36 },
+				{ score: 20, type: "medals", id: 37 },
+				{ score: 25, type: "medals", id: 38 },
+				{ score: 30, type: "medals", id: 39 },
+				{ score: 35, type: "medals", id: 40 },
+				{ score: 40, type: "medals", id: 41 },
+				{ score: 45, type: "medals", id: 42 },
+				{ score: 50, type: "medals", id: 43 },
+				{ score: 55, type: "medals", id: 44 },
+				{ score: 60, type: "medals", id: 45 },
+				{ score: 65, type: "medals", id: 46 },
+				{ score: 70, type: "medals", id: 47 },
+				{ score: 75, type: "medals", id: 48 },
+				{ score: 80, type: "medals", id: 49 },
+				{ score: 85, type: "medals", id: 50 },
+				{ score: 90, type: "medals", id: 51 },
+				{ score: 95, type: "medals", id: 52 },
+				{ score: 100, type: "medals", id: 53 },
+			],
+		},
+		requirements: { pages: ["home"] },
+	},
 ];

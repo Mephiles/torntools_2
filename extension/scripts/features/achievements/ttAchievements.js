@@ -20,7 +20,12 @@
 				!settings.apiUsage.user.personalstats ||
 				!settings.apiUsage.user.perks ||
 				!settings.apiUsage.user.medals ||
-				!settings.apiUsage.user.honors
+				!settings.apiUsage.user.honors ||
+				!settings.apiUsage.user.crimes ||
+				!settings.apiUsage.user.battlestats ||
+				!settings.apiUsage.user.workstats ||
+				!settings.apiUsage.user.skills ||
+				!settings.apiUsage.user.weaponexp
 			)
 				return "No API access.";
 		}
@@ -83,7 +88,7 @@
 
 								let desc = description;
 								desc = desc.split("for at least")[0]; // remove 'day' numbers from networth
-								desc = desc.replace(/\D/g, ""); // replace all non-numbers
+								desc = desc.replace(/\D|[0-9]+%/g, ""); // replace all non-numbers and percentages
 
 								const score = parseInt(desc) || "none";
 								if (isNaN(score)) continue;

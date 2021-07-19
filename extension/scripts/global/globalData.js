@@ -326,6 +326,8 @@ const DEFAULT_STORAGE = {
 				battlestats: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				crimes: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				workstats: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				skills: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				weaponexp: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		themes: {
@@ -936,6 +938,9 @@ const API_USAGE = {
 			stockprofits: true,
 			stocklosses: true,
 		},
+		age: true,
+		level: true,
+		hunting: true,
 		married: {
 			duration: true,
 		},
@@ -974,6 +979,7 @@ const API_USAGE = {
 		faction: {
 			faction_id: true,
 			faction_tag: true,
+			days_in_faction: true,
 		},
 		timestamp: true,
 		city_bank: {
