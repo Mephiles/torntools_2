@@ -18,6 +18,7 @@
 
 	async function startObserver() {
 		await requireElement(".profile-container");
+
 		new MutationObserver(() => {
 			if (feature.enabled()) disableAttackButton();
 		}).observe(document.find(".profile-container"), { childList: true });
@@ -33,7 +34,9 @@
 
 	async function disableAttackButton() {
 		await requireElement(".user-info-value [href*='/factions.php']");
+
 		enableButton();
+
 		const factionID = parseInt(document.find(".user-info-value [href*='/factions.php']").href.replace(/\D+/g, ""));
 		const factionName = document.find(".user-info-value [href*='/factions.php']").innerText.trim();
 		if (
