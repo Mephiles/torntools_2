@@ -153,6 +153,8 @@ function createFilterSection(options) {
 			content.find(`.${ccTitle} .slider-counter`).innerText = string;
 		}
 	}
+
+	return { element: section };
 }
 
 function createStatistics(text = "items") {

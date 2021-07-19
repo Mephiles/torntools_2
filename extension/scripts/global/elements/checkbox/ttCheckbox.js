@@ -9,7 +9,7 @@ function createCheckbox(options = {}) {
 	const checkbox = document.newElement({ type: "input", id: options.id, attributes: { type: "checkbox" } });
 	const checkboxWrapper = document.newElement({
 		type: "div",
-		class: "tt-checkbox-wrapper",
+		class: `tt-checkbox-wrapper ${options.reverseLabel ? "reverse-label" : ""}`,
 		children: [
 			...(!options.reverseLabel ? [checkbox] : []),
 			document.newElement({ type: "label", text: options.description, attributes: { for: options.id } }),

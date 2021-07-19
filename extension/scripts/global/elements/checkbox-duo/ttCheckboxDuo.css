@@ -1,0 +1,7 @@
+.tt-checkbox-duo {
+	display: flex;
+}
+
+.tt-checkbox-duo > *:not(:first-child) {
+	margin-left: 4px;
+}

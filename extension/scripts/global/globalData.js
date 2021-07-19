@@ -635,6 +635,11 @@ const DEFAULT_STORAGE = {
 		closedScopes: new DefaultSetting({ type: "array", defaultValue: [] }),
 		stocks: {
 			name: new DefaultSetting({ type: "string", defaultValue: "" }),
+			investment: {
+				owned: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				benefit: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				passive: new DefaultSetting({ type: "string", defaultValue: "both" }),
+			},
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
