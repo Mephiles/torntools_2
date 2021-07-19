@@ -37,7 +37,7 @@
 		localFilters = {};
 
 		const { content } = createContainer("Stocks Filter", {
-			class: "mt10",
+			class: "mt10 mb10",
 			previousElement: document.find("#stockmarketroot").firstElementChild,
 			compact: true,
 			filter: true,
