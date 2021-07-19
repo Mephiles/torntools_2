@@ -1,8 +1,6 @@
 "use strict";
 
 (async () => {
-	startListener();
-
 	const feature = featureManager.registerFeature(
 		"Disable Ally Attacks",
 		"loader",
