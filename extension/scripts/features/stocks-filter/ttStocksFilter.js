@@ -3,7 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"Stocks Filter",
 		"stocks",
 		() => settings.pages.stocks.filter,
@@ -16,12 +16,17 @@
 		null
 	);
 
-	function initialiseFilters() {
-		// CUSTOM_LISTENERS[EVENT_CHANNELS.HOSPITAL_SWITCH_PAGE].push(() => {
-		// 	if (!feature.enabled()) return;
-		//
-		// 	filtering(true);
-		// });
+	async function initialiseFilters() {
+		await requireElement("#stockmarketroot [class*='stockMarket___']");
+
+		new MutationObserver((mutations) => {
+			if (!feature.enabled()) return;
+
+			// Stock ticks always update several attributes at once.
+			if (mutations.length < 3) return;
+
+			applyFilter();
+		}).observe(document.find("#stockmarketroot [class*='stockMarket___']"), { subtree: true, attributes: true, attributeFilter: ["aria-label"] });
 	}
 
 	let localFilters;
