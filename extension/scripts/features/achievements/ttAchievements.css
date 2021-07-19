@@ -76,7 +76,7 @@ body.dark-mode .awards-progress {
 	text-align: center;
 
 	position: relative;
-	padding: 0 0 8px 0;
+	padding: 0 1px 8px 1px;
 	line-height: 1.5;
 	font-weight: bold;
 	white-space: nowrap;
