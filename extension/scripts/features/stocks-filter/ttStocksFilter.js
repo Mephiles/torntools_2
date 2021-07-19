@@ -24,10 +24,12 @@
 		// });
 	}
 
-	const localFilters = {};
+	let localFilters;
 
 	async function addFilters() {
 		await requireElement("#stockmarketroot");
+
+		localFilters = {};
 
 		const { content } = createContainer("Stocks Filter", {
 			class: "mt10",
@@ -95,7 +97,9 @@
 	}
 
 	function removeFilters() {
+		localFilters = undefined;
+
 		removeContainer("Stocks Filter");
-		// document.findAll(".users-list > li.hidden").forEach((x) => x.classList.remove("hidden"));
+		document.findAll("#stockmarketroot ul[class*='stock___'].hidden").forEach((stock) => stock.classList.remove("hidden"));
 	}
 })();
