@@ -250,11 +250,11 @@
 
 	async function quickBustAndBail() {
 		await requireElement(".users-list > li");
-		// Get "quick" settings
+
 		const quickModes = [];
 		const quickBust = localFilters["Quick Bust"].isChecked();
 		const quickBail = localFilters["Quick Bail"].isChecked();
-		// const options = findContainer("Jail Filter").find(".title .options");
+
 		if (quickBust) quickModes.push("bust");
 		if (quickBail) quickModes.push("bail");
 
