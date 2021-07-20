@@ -72,9 +72,12 @@
 
 /* Replace Torn classes */
 
-/* CHECK - Replaces m-top10 */
 .mt10 {
 	margin-top: 10px;
+}
+
+.mb10 {
+	margin-bottom: 10px;
 }
 
 .t-flex {
@@ -402,6 +405,7 @@ body.scrolled #tt-page-status.top-right {
 	border-top-right-radius: 5px;
 	background-color: var(--default-bg-panel-color);
 	margin-top: 2px;
+	min-height: 22px;
 }
 
 body[data-layout="hospital"] #sidebarroot .pill {
@@ -409,7 +413,8 @@ body[data-layout="hospital"] #sidebarroot .pill {
 	margin-bottom: 1px;
 }
 
-#sidebarroot .pill a {
+#sidebarroot .pill > a,
+#sidebarroot .pill > span {
 	overflow: hidden;
 	color: var(--default-font-color);
 	text-decoration: none;

@@ -61,6 +61,8 @@
 				"scripts/global/elements/checkbox-list/ttCheckboxList.css",
 				"scripts/global/elements/slider/ttSlider.css",
 				"scripts/global/elements/table/ttTable.css",
+				"scripts/global/elements/textbox/ttTextbox.css",
+				"scripts/global/elements/checkbox-duo/ttCheckboxDuo.css",
 				"scripts/features/align-left/ttAlignLeft.css",
 				"scripts/features/font-size/ttFontSize.css",
 				"scripts/features/hide-leave/ttHideLeave.css",
@@ -69,7 +71,8 @@
 				"scripts/features/highlight-nerve-refill/ttHighlightNerveRefill.css",
 				"scripts/features/hide-areas/ttHideAreas.css",
 				"scripts/features/hide-icons/ttHideIcons.css",
-				"scripts/features/block-zalgo/ttBlockZalgo.css"
+				"scripts/features/block-zalgo/ttBlockZalgo.css",
+				"scripts/features/achievements/ttAchievements.css"
 			],
 			"js": [
 				"vendor/fontawesome/fontawesome.js",
@@ -95,6 +98,8 @@
 				"scripts/global/elements/table/ttTableRow.js",
 				"scripts/global/elements/table/ttTableCell.js",
 				"scripts/global/elements/table/ttHeaderCell.js",
+				"scripts/global/elements/textbox/ttTextbox.js",
+				"scripts/global/elements/checkbox-duo/ttCheckboxDuo.js",
 				"scripts/content/global/ttGlobal.entry.js",
 				"scripts/features/align-left/ttAlignLeft.entry.js",
 				"scripts/features/font-size/ttFontSize.entry.js",
@@ -104,7 +109,9 @@
 				"scripts/features/highlight-nerve-refill/ttHighlightNerveRefill.entry.js",
 				"scripts/features/hide-areas/ttHideAreas.entry.js",
 				"scripts/features/hide-icons/ttHideIcons.entry.js",
-				"scripts/features/block-zalgo/ttBlockZalgo.entry.js"
+				"scripts/features/block-zalgo/ttBlockZalgo.entry.js",
+				"scripts/features/achievements/achievements.js",
+				"scripts/features/achievements/ttAchievements.js"
 			],
 			"run_at": "document_start"
 		},
@@ -375,6 +382,12 @@
 			"run_at": "document_end"
 		},
 		{
+			"matches": ["https://www.torn.com/loader.php?sid=attack*"],
+			"css": ["scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css"],
+			"js": ["scripts/features/disable-ally-attacks/ttDisableAllyAttacksLoader.js"],
+			"run_at": "document_start"
+		},
+		{
 			"matches": ["https://www.torn.com/loader.php?sid=view*", "https://www.torn.com/loader.php?sid=rouletteStatistics"],
 			"css": ["scripts/features/casino-net-total/ttCasinoNetTotal.css"],
 			"js": ["scripts/features/casino-net-total/ttCasinoNetTotal.js"],
@@ -424,11 +437,15 @@
 		{
 			"matches": ["https://www.torn.com/page.php?sid=stocks*"],
 			"css": [
+				"scripts/global/functions/filters.css",
+				"scripts/features/stocks-filter/ttStocksFilter.css",
 				"scripts/features/stock-acronyms/ttStockAcronyms.css",
 				"scripts/features/total-portfolio-value/ttTotalPortfolioValue.css",
 				"scripts/features/hide-stocks/ttHideStocks.css"
 			],
 			"js": [
+				"scripts/global/functions/filters.js",
+				"scripts/features/stocks-filter/ttStocksFilter.js",
 				"scripts/features/stock-acronyms/ttStockAcronyms.js",
 				"scripts/features/total-portfolio-value/ttTotalPortfolioValue.js",
 				"scripts/features/hide-stocks/ttHideStocks.js"
