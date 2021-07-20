@@ -560,12 +560,12 @@ const DEFAULT_STORAGE = {
 		jail: {
 			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
 			faction: new DefaultSetting({ type: "string", defaultValue: "All" }),
-			timeStart: new DefaultSetting({ type: "string", defaultValue: 0 }),
-			timeEnd: new DefaultSetting({ type: "string", defaultValue: 100 }),
-			levelStart: new DefaultSetting({ type: "string", defaultValue: 1 }),
-			levelEnd: new DefaultSetting({ type: "string", defaultValue: 100 }),
-			scoreStart: new DefaultSetting({ type: "string", defaultValue: 0 }),
-			scoreEnd: new DefaultSetting({ type: "string", defaultValue: 5000 }),
+			timeStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			timeEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			levelStart: new DefaultSetting({ type: "number", defaultValue: 1 }),
+			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			scoreStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			scoreEnd: new DefaultSetting({ type: "number", defaultValue: 5000 }),
 		},
 		containers: new DefaultSetting({ type: "object", defaultValue: {} }),
 		travel: {
