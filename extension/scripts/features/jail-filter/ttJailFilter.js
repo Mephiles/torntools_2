@@ -21,6 +21,7 @@
 			if (!feature.enabled()) return;
 
 			filtering(true);
+			quickBustAndBail();
 		});
 	}
 
@@ -29,7 +30,7 @@
 	async function addFilters() {
 		await requireElement(".userlist-wrapper .user-info-list-wrap .bust-icon");
 
-		const { content } = createContainer("Jail Filter", {
+		const { content, options } = createContainer("Jail Filter", {
 			class: "mt10",
 			nextElement: document.find(".users-list-title"),
 			compact: true,
@@ -109,7 +110,20 @@
 
 		content.appendChild(filterContent);
 
+		const quickBust = createCheckbox({ description: "Quick Bust" });
+		quickBust.onChange(quickBustAndBail);
+		quickBust.setChecked(quick.jail.includes("bust"));
+		options.appendChild(quickBust.element);
+		localFilters["Quick Bust"] = { isChecked: quickBust.isChecked };
+
+		const quickBail = createCheckbox({ description: "Quick Bail" });
+		quickBail.onChange(quickBustAndBail);
+		quickBail.setChecked(quick.jail.includes("bail"));
+		options.appendChild(quickBail.element);
+		localFilters["Quick Bail"] = { isChecked: quickBail.isChecked };
+
 		await filtering();
+		await quickBustAndBail();
 	}
 
 	async function filtering(pageChange) {
@@ -232,6 +246,56 @@
 			document.findAll(".users-list > li").length,
 			content
 		);
+	}
+
+	async function quickBustAndBail() {
+		await requireElement(".users-list > li");
+		// Get "quick" settings
+		const quickModes = [];
+		const quickBust = localFilters["Quick Bust"].isChecked();
+		const quickBail = localFilters["Quick Bail"].isChecked();
+		// const options = findContainer("Jail Filter").find(".title .options");
+		if (quickBust) quickModes.push("bust");
+		if (quickBail) quickModes.push("bail");
+
+		await ttStorage.change({
+			quick: {
+				jail: quickModes,
+			},
+		});
+
+		if (quickBust || quickBail) {
+			if (!document.find(".users-list-title .tt-quick-refresh"))
+			document.find(".users-list-title").appendChild(document.newElement({
+				type: "i",
+				class: "fas fa-redo tt-quick-refresh",
+				events: {
+					"click": () => location.reload(),
+				},
+			}));
+		} else {
+			const refreshIcon = document.find(".tt-quick-refresh");
+			if (refreshIcon) refreshIcon.remove();
+		}
+
+		document.findAll(".users-list > li").forEach((li) => {
+			if (quickBust) addQAndHref(li.find(":scope > [href*='breakout']"));
+			else removeQAndHref(li.find(":scope > [href*='breakout']"));
+			if (quickBail) addQAndHref(li.find(":scope > [href*='buy']"));
+			else removeQAndHref(li.find(":scope > [href*='buy']"));
+		});
+
+		function addQAndHref(iconNode) {
+			if (iconNode.find(":scope > .tt-quick-q")) return;
+			iconNode.appendChild(document.newElement({ type: "span", class: "tt-quick-q", text: "Q" }));
+			iconNode.href = iconNode.href + "1";
+		}
+
+		function removeQAndHref(iconNode) {
+			const quickQ = iconNode.find(":scope > .tt-quick-q");
+			if (quickQ) quickQ.remove();
+			if (iconNode.href.slice(-1) === "1") iconNode.href = iconNode.href.slice(0, -1);
+		}
 	}
 
 	function getFactions() {
