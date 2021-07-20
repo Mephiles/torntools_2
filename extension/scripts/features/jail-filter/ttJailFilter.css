@@ -7,4 +7,7 @@
 
 .tt-quick-q {
 	color: #acea00;
+	font-size: 10px;
+    position: absolute;
+    margin: 10px 0 0 2px;
 }
