@@ -56,7 +56,7 @@
 	async function loadInfo() {
 		await requireElement(".faction-description, .members-list");
 
-		triggerCustomListener(EVENT_CHANNELS.FACTION_INFO, true);
+		triggerCustomListener(EVENT_CHANNELS.FACTION_INFO);
 	}
 
 	async function loadCrimes() {

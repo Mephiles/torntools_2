@@ -2,7 +2,7 @@
 
 (async () => {
 	const feature = featureManager.registerFeature(
-		"Number members of faction",
+		"Member rank",
 		"faction",
 		() => settings.pages.faction.numberMembers,
 		addListener,
@@ -16,24 +16,37 @@
 
 	function addListener() {
 		if (isOwnFaction()) {
-			CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_INFO].push(addNumbers);
+			CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_INFO].push(() => {
+				if (!feature.enabled()) return;
+
+				addNumbers(true);
+			});
 		}
 	}
 
-	async function addNumbers(triggeredByListener) {
-		if (!triggeredByListener && isOwnFaction() && getHashParameters().get("tab") !== "info") return;
-		if (!feature.enabled() || document.find(".tt-member-index")) return;
+	async function addNumbers(force) {
+		if (!force && isOwnFaction() && getHashParameters().get("tab") !== "info") return;
+
+		if (document.find(".tt-member-index")) return;
 		await requireElement("#faction-info-members .table-body > .table-row");
-		document.findAll("#faction-info-members .table-body > .table-row").forEach((memberRow, index) => {
-			memberRow.insertAdjacentElement("afterbegin", document.newElement({
-				type: "div",
-				class: "tt-member-index",
-				text: index + 1,
-			}))
-		});
+
+		const list = document.find("#faction-info-members .members-list");
+		if (list.classList.contains("tt-modified")) return;
+		list.classList.add("tt-modified");
+
+		list.findAll(".table-body > .table-row").forEach((row, index) =>
+			row.insertAdjacentElement(
+				"afterbegin",
+				document.newElement({
+					type: "div",
+					class: "tt-member-index",
+					text: index + 1,
+				})
+			)
+		);
 	}
 
 	function removeNumbers() {
-		document.findAll(".tt-member-index").forEach(x => x.remove());
+		document.findAll(".tt-member-index").forEach((element) => element.remove());
 	}
 })();

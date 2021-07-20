@@ -1,7 +1,18 @@
-.members-list .table-body .tt-member-index {
-	width: 3ch;
-    padding: 0;
-    display: table-cell;
-    margin: auto 0 auto 2px;
-    text-align: center;
+.tt-member-index {
+	width: 22px;
+	margin: auto 0 auto 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 7px;
+	height: 100%;
+	border-right: 1px solid var(--default-panel-divider-outer-side-color);
+}
+
+.members-list.tt-modified .table-header .member {
+	width: calc(34% + 61px) !important;
+}
+
+.members-list.tt-modified .status {
+	min-width: 60px;
 }
