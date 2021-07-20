@@ -9,10 +9,25 @@
 	border-right: 1px solid var(--default-panel-divider-outer-side-color);
 }
 
-.members-list.tt-modified .table-header .member {
+.tt-mobile .tt-member-index {
+	width: 25px;
+	margin: 0;
+	padding: 0;
+
+	background-color: var(--default-bg-panel-color);
+	position: absolute;
+	left: -26px;
+	top: 0;
+}
+
+body:not(.tt-mobile) .members-list.tt-modified .table-header .member {
 	width: calc(34% + 61px) !important;
 }
 
-.members-list.tt-modified .status {
+body:not(.tt-mobile) .members-list.tt-modified .status {
 	min-width: 60px;
+}
+
+body.tt-mobile .table-row {
+	position: relative;
 }
