@@ -22,29 +22,32 @@
 		}
 	}
 
+	const localTimers = new Set();
 	async function addFinishTimes() {
 		await requireElement("#react-root .f-war-list");
 
 		document.findAll(".f-war-list.war-new .status-wrap .timer:not(.tt-timer)").forEach((warTimer) => {
 			const timerParts = warTimer.innerText.split(":").map((x) => parseInt(x));
-			const msTime = Date.now() + timerParts[0] * 24 * 60 * 60 * 1000 + timerParts[1] * 60 * 60 * 1000 + timerParts[2] * 60 * 1000 + timerParts[3] * 1000;
-
+			const mseconds = Date.now() + timerParts[0] * 24 * 60 * 60 * 1000 + timerParts[1] * 60 * 60 * 1000 + timerParts[2] * 60 * 1000 + timerParts[3] * 1000;
 			const timerElement = document.newElement({
 				type: "div",
 				class: "timer tt-timer",
-				text: ,
-				attributes: { mseconds: msTime },
+				text: `${formatTime(mseconds)} ${formatDate(mseconds)}`,
+				attributes: { mseconds },
 			});
 			warTimer.insertAdjacentElement("afterend", timerElement);
 			const timerID = setInterval(() => {
 				if (!document.body.contains(timerElement)) clearInterval(timerID);
-				const mseconds = timerElement.getAttribute("mseconds");
-				timerElement.innerText = `${formatTime(mseconds)} ${formatDate(mseconds)}`
+				const msTime = timerElement.getAttribute("mseconds");
+				timerElement.innerText = `${formatTime(msTime)} ${formatDate(msTime)}`;
 			}, 1000);
+			localTimers.add(timerID);
 		});
 	}
 
 	async function removeFunction() {
+		localTimers.forEach(x => clearInterval(x));
+		localTimers.clear();
 		document.findAll(".f-war-list.war-new .status-wrap .timer.tt-timer").forEach(x => x.remove());
 	}
 })();
