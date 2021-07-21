@@ -214,32 +214,6 @@ const ttCache = new (class {
 	}
 })();
 
-const JAIL_CONSTANTS = {
-	// Activity
-	online: "online",
-	idle: "idle",
-	offline: "offline",
-	// Factions
-	allFactions: "__all__",
-	noFaction: "__none__",
-	unknownFactions: "__unknown__",
-	// Quick modes
-	bust: "bust",
-	bail: "bail",
-	// Time
-	timeMin: 0,
-	timeMax: 100,
-	timeStep: 1,
-	// Level
-	levelMin: 1,
-	levelMax: 100,
-	levelStep: 1,
-	// Score
-	scoreMin: 0,
-	scoreMax: 5000,
-	scoreStep: 25,
-};
-
 const DEFAULT_STORAGE = {
 	version: {
 		oldVersion: new DefaultSetting({ type: "string" }),
