@@ -1,18 +1,8 @@
-/*
- * Blood Bags
- */
-
-.good-blood {
-	background-color: var(--default-bg-green-hover-color) !important;
-}
-
-.bad-blood {
-	background-color: var(--default-bg-red-hover-color) !important;
-}
-
-.tt-blood-price {
-	float: right;
-	padding-right: 10px;
-	font-weight: normal;
-	color: var(--tt-color-item-text);
+.tt-timer {
+	font-family: fjalla one, sans-serif;
+	font-size: 11px;
+	color: #858585;
+	text-shadow: var(--title-text-shadow);
+	letter-spacing: 0.3px;
+	line-height: 14px;
 }
