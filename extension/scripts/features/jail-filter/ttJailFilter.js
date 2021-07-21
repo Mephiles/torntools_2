@@ -21,7 +21,6 @@
 			if (!feature.enabled()) return;
 
 			filtering(true);
-			quickBustAndBail();
 		});
 	}
 
@@ -123,7 +122,6 @@
 		localFilters["Quick Bail"] = { isChecked: quickBail.isChecked };
 
 		await filtering();
-		await quickBustAndBail();
 	}
 
 	async function filtering(pageChange) {
@@ -246,6 +244,7 @@
 			document.findAll(".users-list > li").length,
 			content
 		);
+		quickBustAndBail();
 	}
 
 	async function quickBustAndBail() {
@@ -264,18 +263,22 @@
 			},
 		});
 
+		document.findAll(".tt-quick-refresh, .tt-quick-refresh-wrap").forEach(x => x.remove());
 		if (quickBust || quickBail) {
-			if (!document.find(".users-list-title .tt-quick-refresh"))
-			document.find(".users-list-title").appendChild(document.newElement({
-				type: "i",
-				class: "fas fa-redo tt-quick-refresh",
-				events: {
-					"click": () => location.reload(),
-				},
-			}));
-		} else {
-			const refreshIcon = document.find(".tt-quick-refresh");
-			if (refreshIcon) refreshIcon.remove();
+			if (document.find(".users-list > li:not(.hidden)")) {
+				if (!document.find(".users-list-title .tt-quick-refresh")) {
+					document.find(".users-list-title").appendChild(newRefreshButton());
+				}
+			} else {
+				document.find(".users-list").appendChild(document.newElement({
+					type: "div",
+					class: "tt-quick-refresh-wrap",
+					children: [
+						... quickBail ? [newRefreshButton("tt-bail")] : [],
+						... quickBust ? [newRefreshButton("tt-bust")] : [],
+					]
+				}))
+			}
 		}
 
 		document.findAll(".users-list > li").forEach((li) => {
@@ -284,6 +287,16 @@
 			if (quickBail) addQAndHref(li.find(":scope > [href*='buy']"));
 			else removeQAndHref(li.find(":scope > [href*='buy']"));
 		});
+
+		function newRefreshButton(customClass = "") {
+			return document.newElement({
+						type: "i",
+						class: `fas fa-redo tt-quick-refresh ${customClass}`,
+						events: {
+							"click": () => location.reload(),
+						},
+					});
+		}
 
 		function addQAndHref(iconNode) {
 			if (iconNode.find(":scope > .tt-quick-q")) return;
