@@ -22,7 +22,6 @@
 		}
 	}
 
-	const localTimers = new Set();
 	async function addFinishTimes() {
 		await requireElement("#react-root .f-war-list");
 
@@ -33,21 +32,12 @@
 				type: "div",
 				class: "timer tt-timer",
 				text: `${formatTime(mseconds)} ${formatDate(mseconds)}`,
-				attributes: { mseconds },
 			});
 			warTimer.insertAdjacentElement("afterend", timerElement);
-			const timerID = setInterval(() => {
-				if (!document.body.contains(timerElement)) clearInterval(timerID);
-				const msTime = timerElement.getAttribute("mseconds");
-				timerElement.innerText = `${formatTime(msTime)} ${formatDate(msTime)}`;
-			}, 1000);
-			localTimers.add(timerID);
 		});
 	}
 
 	async function removeFunction() {
-		localTimers.forEach(x => clearInterval(x));
-		localTimers.clear();
 		document.findAll(".f-war-list.war-new .status-wrap .timer.tt-timer").forEach(x => x.remove());
 	}
 })();
