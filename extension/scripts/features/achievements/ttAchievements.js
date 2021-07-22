@@ -12,7 +12,7 @@
 		showAchievements,
 		removeAchievements,
 		{
-			storage: ["settings.scripts.achievements.show"],
+			storage: ["settings.scripts.achievements.show", "settings.scripts.achievements.completed"],
 		},
 		() => {
 			if (
