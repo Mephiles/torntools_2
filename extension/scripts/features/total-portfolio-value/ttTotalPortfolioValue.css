@@ -10,9 +10,9 @@ body.tt-tablet .tt-total-stock-value {
 
 body.tt-mobile .tt-total-stock-value {
 	font-size: 14px;
-	margin: 16px 0 0 -85px;
-    position: absolute;
-    font-weight: 700;
+	margin: 16px 0 0 -86px;
+	position: absolute;
+	font-weight: 700;
 }
 
 .tt-total-stock-value .value,
@@ -30,5 +30,5 @@ body.tt-mobile .tt-total-stock-value-wrap {
 
 body.tt-mobile .tt-total-stock-value-wrap h4 {
 	height: 41px;
-    width: 100%;
+	width: 100%;
 }
