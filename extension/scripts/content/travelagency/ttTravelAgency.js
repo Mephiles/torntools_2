@@ -1,19 +1,19 @@
 "use strict";
 
 (async () => {
-	if (await checkMobile() || await checkTablet()) {
-		document.find(".travel-agency").addEventListener("click", () => {
-			if (
-				event.target.closest(".travel-info-table-list[aria-selected*='true'][role*='tab']")
-			) {
-				triggerCustomListener(EVENT_CHANNELS.TRAVEL_SELECT_COUNTRY, null);
+	if ((await checkMobile()) || (await checkTablet())) {
+		document.find(".travel-agency").addEventListener("click", (event) => {
+			const parent = event.target.closest(".travel-info-table-list[aria-selected*='true'][role*='tab']");
+
+			if (parent) {
+				triggerCustomListener(EVENT_CHANNELS.TRAVEL_SELECT_COUNTRY, { country: parent.find(".city-flag").classList[1] });
 			}
 		});
-		document.find(".torn-tabs").addEventListener("click", () => {
-			if (
-				event.target.closest(".torn-tabs li[aria-selected='true']")
-			) {
-				triggerCustomListener(EVENT_CHANNELS.TRAVEL_SELECT_TYPE, null);
+		document.find(".torn-tabs").addEventListener("click", (event) => {
+			const parent = event.target.closest(".torn-tabs li[aria-selected='true']");
+
+			if (parent) {
+				triggerCustomListener(EVENT_CHANNELS.TRAVEL_SELECT_TYPE, { type: parent.find(".travel-name").innerText.toLowerCase() });
 			}
 		});
 	} else {
