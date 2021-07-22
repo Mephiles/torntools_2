@@ -13,7 +13,9 @@
 		{
 			storage: ["settings.pages.stocks.valueAndProfit"],
 		},
-		null
+		async () => {
+			await checkMobile();
+		}
 	);
 
 	async function addProfitAndValue() {
@@ -51,10 +53,12 @@
 				],
 			})
 		);
+		if (mobile) document.find("#stockmarketroot [class*='topSection__']").classList.add("tt-total-stock-value-wrap");
 	}
 
 	function removeProfitAndValue() {
 		const ttTotalStockValue = document.find("#stockmarketroot .tt-total-stock-value");
 		if (ttTotalStockValue) ttTotalStockValue.remove();
+		if (mobile) document.find("#stockmarketroot [class*='topSection__']").classList.remove("tt-total-stock-value-wrap");
 	}
 })();
