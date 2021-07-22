@@ -36,3 +36,8 @@
 .tt-mobile .dummy-div {
 	margin-top: 17px;
 }
+
+body.tt-tablet #customLinksAbove main .pill,
+body.tt-tablet #customLinksUnder main .pill {
+	font-size: 13px;
+}
