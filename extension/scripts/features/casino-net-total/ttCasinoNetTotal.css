@@ -7,6 +7,10 @@
 	justify-content: space-between;
 }
 
+body.tt-mobile .tt-net-total {
+	flex-wrap: wrap;
+}
+
 body:not(.dark-mode) .tt-net-total {
 	color: var(--tt-color-green);
 }
@@ -21,12 +25,26 @@ body.dark-mode .tt-net-total {
 	border-right: 2px solid var(--default-panel-divider-outer-side-color, #222);
 }
 
+body.tt-mobile .tt-net-total > .name {
+	width: 100%;
+	border: 0;
+    padding: 5px 6px 3px 10px;
+}
+
+body.tt-tablet .tt-net-total > .name {
+	padding-right: 0px;
+}
+
+body.tt-mobile .tt-net-total.bookie {
+	border-top-color: #fff;
+    border-bottom-color: #cfcfcf;
+}
+
 .tt-net-total.bookie > .name {
 	border-right-color: #cfcfcf;
 }
 
 .tt-net-total > .value {
-	width: 130px;
-	text-align: right;
-	padding: 6px 10px 6px 0;
+    padding: 0 0 7px 10px;
+    text-align: left;
 }

@@ -402,7 +402,7 @@
 			"run_at": "document_end"
 		},
 		{
-			"matches": ["https://www.torn.com/page.php?sid=bookie*"],
+			"matches": ["https://www.torn.com/bookies.php*"],
 			"css": ["scripts/features/casino-net-total/ttCasinoNetTotal.css"],
 			"js": ["scripts/features/casino-net-total/ttCasinoNetTotal.js"],
 			"run_at": "document_end"
