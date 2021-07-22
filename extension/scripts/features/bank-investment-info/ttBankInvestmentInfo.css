@@ -1,13 +1,3 @@
-#bankInvestment-Basedon2binvestment .title {
-	height:46px;
-}
-
-#bankInvestment-Basedon2binvestment .title .text {
-    width: 89%;
-    white-space: normal;
-    flex-shrink: 0;
-}
-
 body:not(.dark-mode) .tt-bank-investment-selected-row {
 	background-color: #9bff9b;
 }
