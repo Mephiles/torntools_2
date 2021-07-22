@@ -37,7 +37,6 @@
 	margin-top: 17px;
 }
 
-body.tt-tablet #customLinksAbove main .pill,
-body.tt-tablet #customLinksUnder main .pill {
+body.tt-tablet .tt-custom-link-container .pill {
 	font-size: 13px;
 }
