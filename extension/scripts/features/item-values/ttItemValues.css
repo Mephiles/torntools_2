@@ -23,7 +23,7 @@ span.tt-item-price {
 	color: var(--tt-color-item-quantity);
 }
 
-.tt-mobile .tt-item-price {
+body.tt-mobile .tt-item-price, body.tt-tablet .tt-item-price {
 	position: absolute;
 	right: -10px;
 	top: 10px;
@@ -31,12 +31,14 @@ span.tt-item-price {
 	font-size: 11px;
 }
 
-.tt-mobile .needed-item .tt-item-price {
+body.tt-mobile .needed-item .tt-item-price, body.tt-tablet .needed-item .tt-item-price {
 	right: 0;
 }
 
-.tt-mobile .items-cont .name,
-.tt-mobile .items-cont .qty {
+body.tt-mobile .items-cont .name,
+body.tt-tablet .items-cont .name,
+body.tt-mobile .items-cont .qty,
+body.tt-tablet .items-cont .qty {
 	position: relative;
 	top: -3px;
 }
