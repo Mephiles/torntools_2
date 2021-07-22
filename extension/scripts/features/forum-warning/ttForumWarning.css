@@ -26,6 +26,7 @@
 
 body.tt-mobile #tt-help-popup {
 	width: fit-content;
+	width: -moz-fit-content;
 }
 
 #tt-help-popup a {
