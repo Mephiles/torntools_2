@@ -1007,8 +1007,25 @@ const API_USAGE = {
 				initiated: true,
 			},
 		},
+		members: {
+			"*": {
+				last_action: {
+					relative: true,
+				},
+			},
+		},
 	},
-	company: {},
+	company: {
+		company: {
+			employees: {
+				"*": {
+					last_action: {
+						relative: true,
+					},
+				},
+			},
+		},
+	},
 	item_market: {
 		bazaar: {
 			"*": {
@@ -1099,8 +1116,13 @@ const API_SELECTIONS = {
 		"workstats",
 	],
 	properties: [],
-	faction: ["crimes"],
-	company: [],
+	faction: [
+		"basic", // target
+		"crimes",
+	],
+	company: [
+		"profile", // target
+	],
 	item_market: ["bazaar", "itemmarket"],
 	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks"],
 };
