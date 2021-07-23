@@ -2,7 +2,7 @@
 
 (async () => {
 	const feature = featureManager.registerFeature(
-		"Last Action - Faction",
+		"Last Action",
 		"last action",
 		() => settings.scripts.lastAction.factionMember,
 		addListener,
