@@ -423,7 +423,8 @@
 		},
 		{
 			"matches": ["https://www.torn.com/properties.ph*"],
-			"js": ["scripts/features/property-values/ttPropertyValues.js"],
+			"css": ["scripts/features/vault-sharing/ttVaultSharing.css"],
+			"js": ["scripts/features/property-values/ttPropertyValues.js", "scripts/features/vault-sharing/ttVaultSharing.js"],
 			"run_at": "document_end"
 		},
 		{
