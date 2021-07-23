@@ -29,7 +29,7 @@
 		if (isOwnCompany()) {
 			if (getHashParameters().get("option") !== "employees") return;
 			await requireElement(".employee-list-wrap .employee-list > li");
-			const lastActionList = (await fetchData("torn", { section: "company" })).company.employees;
+			const lastActionList = (await fetchData("torn", { section: "company", selections: ["profile"] })).company.employees;
 			const list = document.find(".employee-list-wrap .employee-list");
 			list.classList.add("tt-modified");
 			list.findAll(":scope > li").forEach((li) => {

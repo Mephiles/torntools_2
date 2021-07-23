@@ -28,8 +28,13 @@
 		if (isOwnFaction() && !force) return;
 		if (document.find(".tt-last-action")) return;
 		await requireElement(".members-list .table-body > li");
-		const lastActionList = (await fetchData("torn", { section: "faction", ...(isOwnFaction() ? {} : { id: parseInt(getSearchParameters().get("ID")) }) }))
-			.members;
+		const lastActionList = (
+			await fetchData("torn", {
+				section: "faction",
+				selections: ["basic"],
+				...(isOwnFaction() ? {} : { id: parseInt(getSearchParameters().get("ID")) }),
+			})
+		).members;
 		const list = document.find(".members-list .table-body");
 		list.classList.add("tt-modified");
 		list.findAll(":scope > li").forEach((li) => {
