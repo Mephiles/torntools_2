@@ -27,14 +27,29 @@
 	async function addLastAction(force) {
 		if (isOwnFaction() && !force) return;
 		if (document.find(".tt-last-action")) return;
+
 		await requireElement(".members-list .table-body > li");
-		const lastActionList = (
-			await fetchData("torn", {
-				section: "faction",
-				selections: ["basic"],
-				...(isOwnFaction() ? {} : { id: parseInt(getSearchParameters().get("ID")) }),
-			})
-		).members;
+
+		const id = isOwnFaction() ? "own" : parseInt(getSearchParameters().get("ID"));
+		if (!id) return; // FIXME - Find a way to go around this.
+
+		let members;
+		if (ttCache.hasValue("faction-members", id)) {
+			members = ttCache.get("faction-members", id);
+		} else {
+			members = (
+				await fetchData("torn", {
+					section: "faction",
+					...(isNaN(id) ? {} : { id }),
+					selections: ["basic"],
+					silent: true,
+					succeedOnError: true,
+				})
+			).members;
+
+			ttCache.set({ [id]: members }, TO_MILLIS.SECONDS * 30, "faction-members").then(() => {});
+		}
+
 		const list = document.find(".members-list .table-body");
 		list.classList.add("tt-modified");
 		list.findAll(":scope > li").forEach((li) => {
@@ -44,7 +59,7 @@
 				document.newElement({
 					type: "div",
 					class: "tt-last-action",
-					text: `Last action: ${lastActionList[userID].last_action.relative}`,
+					text: `Last action: ${members[userID].last_action.relative}`,
 				})
 			);
 		});

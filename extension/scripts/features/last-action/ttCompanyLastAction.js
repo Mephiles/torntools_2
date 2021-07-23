@@ -26,12 +26,35 @@
 
 	async function addLastAction() {
 		if (document.find(".tt-last-action")) return;
+
+		const own = isOwnCompany();
+		if (own && getHashParameters().get("option") !== "employees") return;
+
+		await requireElement(".employee-list-wrap .employee-list > li, .employees-wrap .employees-list > li");
+
+		const id = own ? "own" : parseInt(getHashParameters().get("ID"));
+		if (!id) return; // FIXME - Find a way to go around this.
+
+		let employees;
+		if (ttCache.hasValue("company-employees", id)) {
+			employees = ttCache.get("company-employees", id);
+		} else {
+			employees = (
+				await fetchData("torn", {
+					section: "company",
+					...(isNaN(id) ? {} : { id }),
+					selections: ["profile"],
+					silent: true,
+					succeedOnError: true,
+				})
+			).company.employees;
+
+			ttCache.set({ [id]: employees }, TO_MILLIS.SECONDS * 30, "company-employees").then(() => {});
+		}
+
+		let list;
 		if (isOwnCompany()) {
-			if (getHashParameters().get("option") !== "employees") return;
-			await requireElement(".employee-list-wrap .employee-list > li");
-			const lastActionList = (await fetchData("torn", { section: "company", selections: ["profile"] })).company.employees;
-			const list = document.find(".employee-list-wrap .employee-list");
-			list.classList.add("tt-modified");
+			list = document.find(".employee-list-wrap .employee-list");
 			list.findAll(":scope > li").forEach((li) => {
 				const employeeID = li.dataset.user;
 				li.insertAdjacentElement(
@@ -39,15 +62,12 @@
 					document.newElement({
 						type: "div",
 						class: "tt-last-action",
-						text: `Last action: ${lastActionList[employeeID].last_action.relative}`,
+						text: `Last action: ${employees[employeeID].last_action.relative}`,
 					})
 				);
 			});
 		} else {
-			await requireElement(".employees-wrap .employees-list > li");
-			const lastActionList = (await fetchData("torn", { section: "company", id: getHashParameters().get("ID") })).company.employees;
-			const list = document.find(".employees-wrap .employees-list");
-			list.classList.add("tt-modified");
+			list = document.find(".employees-wrap .employees-list");
 			list.findAll(":scope > li").forEach((li) => {
 				const employeeID = li.find(".user.name").dataset.placeholder.match(/(?<=\[)\d+(?=]$)/g)[0];
 				li.insertAdjacentElement(
@@ -55,11 +75,12 @@
 					document.newElement({
 						type: "div",
 						class: "tt-last-action joblist",
-						text: `Last action: ${lastActionList[employeeID].last_action.relative}`,
+						text: `Last action: ${employees[employeeID].last_action.relative}`,
 					})
 				);
 			});
 		}
+		list.classList.add("tt-modified");
 	}
 
 	function removeLastAction() {
