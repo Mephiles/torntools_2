@@ -514,6 +514,10 @@ const DEFAULT_STORAGE = {
 				show: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				completed: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
+			lastAction: {
+				factionMember: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				company: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
 		},
 		external: {
 			tornstats: new DefaultSetting({ type: "boolean", defaultValue: false }),
