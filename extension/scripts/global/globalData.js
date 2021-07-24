@@ -474,6 +474,7 @@ const DEFAULT_STORAGE = {
 				foldableInfobox: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				numberMembers: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				warFinishTimes: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				memberFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			property: {
 				value: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -618,6 +619,21 @@ const DEFAULT_STORAGE = {
 			price: {
 				price: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				profit: new DefaultSetting({ type: "string", defaultValue: "both" }),
+			},
+		},
+		faction: {
+			activity: new DefaultSetting({ type: "array", defaultValue: [] }),
+			levelStart: new DefaultSetting({ type: "number", defaultValue: 1 }),
+			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			lastActionStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			lastActionEnd: new DefaultSetting({ type: "number", defaultValue: 5000 }),
+			status: new DefaultSetting({ type: "string", defaultValue: "" }),
+			position: new DefaultSetting({ type: "string", defaultValue: "" }),
+			special: {
+				fedded: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				newPlayer: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				inCompany: new DefaultSetting({ type: "string", defaultValue: "both" }),
+				isDonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
 		},
 	},
