@@ -516,7 +516,8 @@ const DEFAULT_STORAGE = {
 			},
 			lastAction: {
 				factionMember: new DefaultSetting({ type: "boolean", defaultValue: false }),
-				company: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				companyOwn: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				companyOther: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 		},
 		external: {
