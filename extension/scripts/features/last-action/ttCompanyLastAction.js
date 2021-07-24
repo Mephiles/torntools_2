@@ -1,11 +1,12 @@
 "use strict";
 
-const ownCompany = location.pathname === "/companies.php";
 (async () => {
+	const isOwnCompany = location.pathname === "/companies.php";
+
 	const feature = featureManager.registerFeature(
 		"Last Action",
 		"last action",
-		() => (ownCompany && settings.scripts.lastAction.companyOwn) || (!ownCompany && settings.scripts.lastAction.companyOther),
+		() => (isOwnCompany && settings.scripts.lastAction.companyOwn) || (!isOwnCompany && settings.scripts.lastAction.companyOther),
 		addListener,
 		addLastAction,
 		removeLastAction,
@@ -16,8 +17,9 @@ const ownCompany = location.pathname === "/companies.php";
 	);
 
 	async function addListener() {
-		if (ownCompany) {
+		if (isOwnCompany) {
 			window.addEventListener("hashchange", () => {
+				if (!feature.enabled) return;
 				if (getHashParameters().get("option") === "employees") addLastAction(true);
 			});
 		} else {
@@ -25,24 +27,26 @@ const ownCompany = location.pathname === "/companies.php";
 			new MutationObserver((mutations) => {
 				if (
 					!feature.enabled() ||
-					(ownCompany && getHashParameters().get("option") !== "employees") ||
-					!mutations.some(mutation => mutation.addedNodes && mutation.addedNodes.length)
-				) return;
+					(isOwnCompany && getHashParameters().get("option") !== "employees") ||
+					!mutations.some((mutation) => mutation.addedNodes && mutation.addedNodes.length)
+				)
+					return;
+
 				if (mutations.length > 1) addLastAction();
 			}).observe(document.find(".content #mainContainer .content-wrapper"), { childList: true });
 		}
 	}
 
 	async function addLastAction(force) {
-		if (ownCompany && (getHashParameters().get("option") !== "employees" && !force)) return;
+		if (isOwnCompany && getHashParameters().get("option") !== "employees" && !force) return;
 		if (document.find(".tt-last-action")) return;
-		if (ownCompany && !settings.scripts.lastAction.companyOwn) return;
-		if (!ownCompany && !settings.scripts.lastAction.companyOther) return;
+		if (isOwnCompany && !settings.scripts.lastAction.companyOwn) return;
+		if (!isOwnCompany && !settings.scripts.lastAction.companyOther) return;
 
 		await requireElement(".employee-list-wrap .employee-list > li, .employees-wrap .employees-list > li");
 
 		let id;
-		if (ownCompany) {
+		if (isOwnCompany) {
 			id = userdata.job.company_id;
 		} else {
 			id = parseInt(getHashParameters().get("ID"));
@@ -77,7 +81,7 @@ const ownCompany = location.pathname === "/companies.php";
 		}
 
 		let list;
-		if (ownCompany) {
+		if (isOwnCompany) {
 			list = document.find(".employee-list-wrap .employee-list");
 			list.findAll(":scope > li").forEach((li) => {
 				const employeeID = li.dataset.user;
