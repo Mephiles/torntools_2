@@ -477,7 +477,6 @@ const DEFAULT_STORAGE = {
 			},
 			property: {
 				value: new DefaultSetting({ type: "boolean", defaultValue: true }),
-				vaultSharing: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			gym: {
 				specialist: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -514,6 +513,10 @@ const DEFAULT_STORAGE = {
 			achievements: {
 				show: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				completed: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			},
+			vaultSharing: {
+				vaultSharing: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				sidebar: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {

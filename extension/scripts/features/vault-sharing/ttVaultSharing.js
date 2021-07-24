@@ -5,13 +5,13 @@
 
 	const feature = featureManager.registerFeature(
 		"Vault Sharing",
-		"properties",
-		() => settings.pages.property.vaultSharing,
+		"vault sharing",
+		() => settings.scripts.vaultSharing.vaultSharing,
 		initialise,
 		startFeature,
 		dispose,
 		{
-			storage: ["settings.pages.property.vaultSharing"],
+			storage: ["settings.scripts.vaultSharing.vaultSharing"],
 		},
 		null
 	);

@@ -5,13 +5,13 @@
 
 	featureManager.registerFeature(
 		"Vault Balance",
-		"sidebar",
-		() => settings.pages.property.vaultSharing,
+		"vault sharing",
+		() => settings.scripts.vaultSharing.sidebar,
 		null,
 		showBalance,
 		removeBalance,
 		{
-			storage: ["settings.pages.property.vaultSharing"],
+			storage: ["settings.scripts.vaultSharing.sidebar"],
 		},
 		null
 	);
