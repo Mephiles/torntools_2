@@ -625,6 +625,19 @@ const DEFAULT_STORAGE = {
 		popup: {
 			calculatorItems: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
+		vault: {
+			initialized: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			lastTransaction: new DefaultSetting({ type: "string", defaultValue: "" }),
+			total: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			user: {
+				initial: new DefaultSetting({ type: "number", defaultValue: 0 }),
+				current: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			},
+			partner: {
+				initial: new DefaultSetting({ type: "number", defaultValue: 0 }),
+				current: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			},
+		},
 	},
 	stakeouts: new DefaultSetting({ type: "object", defaultValue: {} }),
 	attackHistory: {
