@@ -1,39 +1,63 @@
 "use strict";
 
+const ownCompany = location.pathname === "/companies.php";
 (async () => {
 	const feature = featureManager.registerFeature(
 		"Last Action",
 		"last action",
-		() => settings.scripts.lastAction.company,
+		() => (ownCompany && settings.scripts.lastAction.companyOwn) || (!ownCompany && settings.scripts.lastAction.companyOther),
 		addListener,
 		addLastAction,
 		removeLastAction,
 		{
-			storage: ["settings.scripts.lastAction.company"],
+			storage: ["settings.scripts.lastAction.companyOwn", "settings.scripts.lastAction.companyOther"],
 		},
 		null
 	);
 
-	function addListener() {
-		if (isOwnCompany()) {
+	async function addListener() {
+		if (ownCompany) {
 			window.addEventListener("hashchange", () => {
-				if (!feature.enabled()) return;
-
-				addLastAction();
+				if (getHashParameters().get("option") === "employees") addLastAction(true);
 			});
+		} else {
+			await requireElement(".content #mainContainer .employees-wrap");
+			new MutationObserver((mutations) => {
+				if (
+					!feature.enabled() ||
+					(ownCompany && getHashParameters().get("option") !== "employees") ||
+					!mutations.some(mutation => mutation.addedNodes && mutation.addedNodes.length)
+				) return;
+				if (mutations.length > 1) addLastAction();
+			}).observe(document.find(".content #mainContainer .content-wrapper"), { childList: true });
 		}
 	}
 
-	async function addLastAction() {
+	async function addLastAction(force) {
+		if (ownCompany && (getHashParameters().get("option") !== "employees" && !force)) return;
 		if (document.find(".tt-last-action")) return;
-
-		const own = isOwnCompany();
-		if (own && getHashParameters().get("option") !== "employees") return;
+		if (ownCompany && !settings.scripts.lastAction.companyOwn) return;
+		if (!ownCompany && !settings.scripts.lastAction.companyOther) return;
 
 		await requireElement(".employee-list-wrap .employee-list > li, .employees-wrap .employees-list > li");
 
-		const id = own ? "own" : parseInt(getHashParameters().get("ID"));
-		if (!id) return; // FIXME - Find a way to go around this.
+		let id;
+		if (ownCompany) {
+			id = userdata.job.company_id;
+		} else {
+			id = parseInt(getHashParameters().get("ID"));
+			if (isNaN(id)) {
+				const companyName = document.find(".company-details").dataset.name;
+				if (ttCache.hasValue("company-ids", companyName)) {
+					id = ttCache.get("company-ids", companyName);
+				} else {
+					const directorID = document.find(".company-details-wrap [href*='profiles.php']").href.split("=")[1];
+					const directorData = await fetchData("torn", { section: "user", selections: ["profile"], id: directorID });
+					id = directorData.job.company_id;
+					ttCache.set({ [companyName]: id }, TO_MILLIS.SECONDS * 30, "company-ids").then(() => {});
+				}
+			}
+		}
 
 		let employees;
 		if (ttCache.hasValue("company-employees", id)) {
@@ -42,7 +66,7 @@
 			employees = (
 				await fetchData("torn", {
 					section: "company",
-					...(isNaN(id) ? {} : { id }),
+					id: id,
 					selections: ["profile"],
 					silent: true,
 					succeedOnError: true,
@@ -53,7 +77,7 @@
 		}
 
 		let list;
-		if (isOwnCompany()) {
+		if (ownCompany) {
 			list = document.find(".employee-list-wrap .employee-list");
 			list.findAll(":scope > li").forEach((li) => {
 				const employeeID = li.dataset.user;
@@ -89,9 +113,5 @@
 			list.findAll(":scope > div.tt-last-action").forEach((x) => x.remove());
 			list.classList.remove("tt-modified");
 		}
-	}
-
-	function isOwnCompany() {
-		return location.pathname === "/companies.php";
 	}
 })();
