@@ -517,6 +517,7 @@ const DEFAULT_STORAGE = {
 			vaultSharing: {
 				vaultSharing: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				sidebar: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				sidebarTotal: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 		},
 		external: {

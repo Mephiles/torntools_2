@@ -11,7 +11,12 @@
 		showBalance,
 		removeBalance,
 		{
-			storage: ["settings.scripts.vaultSharing.sidebar"],
+			storage: [
+				"settings.scripts.vaultSharing.sidebar",
+				"settings.scripts.vaultSharing.sidebarTotal",
+				"localdata.vault.total",
+				"localdata.vault.user.current",
+			],
 		},
 		null
 	);
@@ -21,7 +26,8 @@
 
 		removeBalance();
 
-		let money = 0;
+		const isTotal = !localdata.vault.initialized || settings.scripts.vaultSharing.sidebarTotal;
+		const money = isTotal ? localdata.vault.total : localdata.vault.user.current;
 
 		const moneyBlock = document.find("#user-money").parentElement;
 		moneyBlock.parentElement.insertBefore(
@@ -29,7 +35,7 @@
 				type: "p",
 				class: "tt-vault-balance",
 				children: [
-					document.newElement({ type: "span", class: "name", text: "Vault:" }),
+					document.newElement({ type: "span", class: "name", text: `Vault${isTotal ? "*" : ""}:` }),
 					document.newElement({ type: "span", class: "value", text: formatNumber(money, { currency: true }) }),
 				],
 			}),
