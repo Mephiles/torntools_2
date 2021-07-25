@@ -58,8 +58,10 @@
 			defaults: filters.faction.special,
 			callback: applyFilter,
 		});
-		localFilters["Special"] = { getSelections: specialFilter.getSelections };
 		filterContent.appendChild(specialFilter.element);
+		localFilters["Special"] = { getSelections: specialFilter.getSelections };
+
+		const newDiv = document.newElement({ type: "div" });
 
 		const positionFilter = createFilterSection({
 			title: "Position",
@@ -67,7 +69,7 @@
 			defaults: "",
 			callback: applyFilter,
 		});
-		filterContent.appendChild(positionFilter.element);
+		newDiv.appendChild(positionFilter.element);
 		localFilters["Position"] = { getSelected: positionFilter.getSelected };
 
 		const statusFilter = createFilterSection({
@@ -83,8 +85,10 @@
 			defaults: "",
 			callback: applyFilter,
 		});
-		filterContent.appendChild(statusFilter.element);
+		newDiv.appendChild(statusFilter.element);
 		localFilters["Status"] = { getSelected: statusFilter.getSelected };
+
+		filterContent.appendChild(newDiv);
 
 		const levelFilter = createFilterSection({
 			title: "Level Filter",
@@ -101,20 +105,25 @@
 		filterContent.appendChild(levelFilter.element);
 		localFilters["Level Filter"] = { getStartEnd: levelFilter.getStartEnd, updateCounter: levelFilter.updateCounter };
 
-		const lastActiveFilter = createFilterSection({
-			title: "Last Active Filter",
-			noTitle: true,
-			slider: {
-				min: 1,
-				max: 100,
-				step: 1,
-				valueLow: filters.faction.levelStart,
-				valueHigh: filters.faction.levelEnd,
-			},
-			callback: applyFilter,
-		});
-		filterContent.appendChild(levelFilter.element);
-		localFilters["Last Active Filter"] = { getStartEnd: lastActiveFilter.getStartEnd, updateCounter: lastActiveFilter.updateCounter };
+		if (settings.scripts.lastAction.factionMember) {
+			await requireElement(".members-list .table-body.tt-modified");
+			let lastActionEndLimit = document.find(".members-list .table-body.tt-modified").getAttribute("max-hours");
+			if (lastActionEndLimit > 1000) lastActionEndLimit = 1000;
+			const lastActiveFilter = createFilterSection({
+				title: "Last Active Filter",
+				noTitle: true,
+				slider: {
+					min: 0,
+					max: lastActionEndLimit,
+					step: 25,
+					valueLow: filters.faction.lastActionStart >= lastActionEndLimit ? 0 : filters.faction.lastActionStart,
+					valueHigh: filters.faction.lastActionEnd >= lastActionEndLimit ? lastActionEndLimit : filters.faction.lastActionEnd,
+				},
+				callback: applyFilter,
+			});
+			filterContent.appendChild(lastActiveFilter.element);
+			localFilters["Last Active Filter"] = { getStartEnd: lastActiveFilter.getStartEnd, updateCounter: lastActiveFilter.updateCounter };
+		}
 
 		content.appendChild(filterContent);
 
@@ -128,7 +137,7 @@
 		const levels = localFilters["Level Filter"].getStartEnd(content);
 		const levelStart = parseInt(levels.start);
 		const levelEnd = parseInt(levels.end);
-		const lastActionLimits = localFilters["Last Active Filter"].getStartEnd(content);
+		const lastActionLimits = settings.scripts.lastAction.factionMember ? localFilters["Last Active Filter"].getStartEnd(content) : { start: 0, end: 1000 };
 		const lastActionStart = parseInt(lastActionLimits.start);
 		const lastActionEnd = parseInt(lastActionLimits.end);
 		const position = localFilters["Position"].getSelected(content);
@@ -136,7 +145,7 @@
 		const special = localFilters["Special"].getSelections(content);
 
 		localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
-		localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
+		if (settings.scripts.lastAction.factionMember) localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
 
 		// Save filters
 		await ttStorage.change({
@@ -217,14 +226,25 @@
 					}
 				}
 			}
+
+			// Last Action
+			if (li.nextSibling && li.nextSibling.className && li.nextSibling.className.includes("tt-last-action")) {
+				const liLastAction = parseInt(li.nextElementSibling.getAttribute("hours"));
+				if ((lastActionStart && liLastAction < lastActionStart) || (lastActionEnd !== 1000 && liLastAction > lastActionEnd)) {
+					hideRow(li);
+					continue;
+				}
+			}
 		}
 
 		function showRow(li) {
 			li.classList.remove("hidden");
+			if (li.nextSibling.className && li.nextSibling.className.includes("tt-last-action")) li.nextSibling.classList.remove("hidden");
 		}
 
 		function hideRow(li) {
 			li.classList.add("hidden");
+			if (li.nextSibling.className && li.nextSibling.className.includes("tt-last-action")) li.nextSibling.classList.add("hidden");
 		}
 
 		localFilters["Statistics"].updateStatistics(

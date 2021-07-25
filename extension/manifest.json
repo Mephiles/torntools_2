@@ -264,7 +264,8 @@
 				"scripts/features/csv-challenge-contributions/ttCSVChallengeContributions.css",
 				"scripts/features/faction-member-number/ttFactionMemberNumber.css",
 				"scripts/features/war-finish-times/ttWarFinishTimes.css",
-				"scripts/features/last-action/ttLastAction.css"
+				"scripts/features/last-action/ttLastAction.css",
+				"scripts/features/faction-member-filter/ttFactionMemberFilter.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
