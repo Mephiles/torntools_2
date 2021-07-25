@@ -11,7 +11,9 @@
 		{
 			storage: ["settings.scripts.lastAction.factionMember"],
 		},
-		null
+		() => {
+			if (!hasAPIData()) return "No API access!";
+		}
 	);
 
 	function addListener() {

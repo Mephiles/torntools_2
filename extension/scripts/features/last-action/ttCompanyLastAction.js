@@ -13,7 +13,9 @@
 		{
 			storage: ["settings.scripts.lastAction.companyOwn", "settings.scripts.lastAction.companyOther"],
 		},
-		null
+		() => {
+			if (!hasAPIData()) return "No API access!";
+		}
 	);
 
 	async function addListener() {
