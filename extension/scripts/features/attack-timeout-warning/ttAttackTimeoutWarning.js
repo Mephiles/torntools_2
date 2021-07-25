@@ -52,6 +52,17 @@
 			const seconds = textToTime(mutations[0].target.textContent, { short: true }) / TO_MILLIS.SECONDS;
 			if (seconds <= 0 || seconds >= 30) return;
 
+			if (seconds <= 0) return;
+			else if (seconds === 29 && settings.notifications.types.global) {
+				chrome.runtime.sendMessage(
+					{ action: "notification", title: "Attack Timeout", message: `Your attack is about to timeout in ${seconds} seconds!`, url: location.href },
+					(response) => {
+						if (response.error) return reject(response);
+						else return resolve(response);
+					}
+				);
+			} else if (seconds >= 30) return;
+
 			audio.play().catch(() => {});
 		});
 		observer.observe(document.find("span[id^='timeout-value']").firstChild, { characterData: true });
