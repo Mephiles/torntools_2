@@ -11,7 +11,9 @@
 		{
 			storage: ["settings.scripts.lastAction.factionMember"],
 		},
-		null
+		() => {
+			if (!hasAPIData()) return "No API access!";
+		}
 	);
 
 	function addListener() {
@@ -51,26 +53,18 @@
 		}
 
 		const list = document.find(".members-list .table-body");
-		let maxLastAction = 0;
-		const nowDate = Date.now();
+		list.classList.add("tt-modified");
 		list.findAll(":scope > li").forEach((li) => {
 			const userID = li.find(".user.name").dataset.placeholder.match(/(?<=\[)\d+(?=]$)/g)[0];
-			const hours = ((nowDate - (members[userID].last_action.timestamp * TO_MILLIS.SECONDS)) / TO_MILLIS.HOURS).dropDecimals();
 			li.insertAdjacentElement(
 				"afterend",
 				document.newElement({
 					type: "div",
 					class: "tt-last-action",
 					text: `Last action: ${members[userID].last_action.relative}`,
-					attributes: {
-						hours: hours,
-					}
 				})
 			);
-			if (hours > maxLastAction) maxLastAction = hours;
 		});
-		list.setAttribute("max-hours", maxLastAction);
-		list.classList.add("tt-modified");
 	}
 
 	function removeLastAction() {
