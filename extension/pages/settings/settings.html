@@ -1214,7 +1214,7 @@
 						<div class="header">Last Action</div>
 						<div class="option">
 							<input id="lastAction-factionMember" type="checkbox" />
-							<label for="lastAction-factionMember">Faction Members.</label>
+							<label for="lastAction-factionMember">Faction members.</label>
 						</div>
 						<div class="option">
 							<input id="lastAction-companyOwn" type="checkbox" />
@@ -1223,9 +1223,9 @@
 						<div class="option tabbed">
 							<input id="lastAction-companyOther" type="checkbox" />
 							<label for="lastAction-companyOther">Other company employees.</label>
-							<div class="tabbed note">
-								This uses twice the API Requests made when ID isn't available.
-							</div>
+							<label class="tabbed note" for="lastAction-companyOther">
+								This uses twice the api requests made when the company id isn't available.
+							</label>
 						</div>
 					</section>
 				</div>
@@ -1295,7 +1295,8 @@
 							<li>Bazaar worth: 1 request per visit</li>
 							<li>Company Special - muggable cash: 1 request per special usage, a 2nd if that user is in a clothing store</li>
 							<li>NNB: 1 request to YATA and 1 request to TornStats</li>
-							<li>Last Action - companies and factions: 1 request per visit</li>
+							<li>Last Action - factions: 1 request per visit</li>
+							<li>Last Action - companies: 1 or 2 requests per visit</li>
 						</ul>
 					</li>
 					<li>
