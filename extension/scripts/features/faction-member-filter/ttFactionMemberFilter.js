@@ -95,10 +95,10 @@
 		const statusFilter = createFilterSection({
 			title: "Status",
 			checkboxes: [
-				{ id: "okay" , description: "Okay" },
-				{ id: "hospital" , description: "Hospital" },
-				{ id: "jail" , description: "Jail" },
-				{ id: "traveling" , description: "Traveling" },
+				{ id: "okay", description: "Okay" },
+				{ id: "hospital", description: "Hospital" },
+				{ id: "jail", description: "Jail" },
+				{ id: "traveling", description: "Traveling" },
 			],
 			defaults: filters.faction.status,
 			callback: applyFilter,
@@ -148,14 +148,18 @@
 			callback: applyFilter,
 		});
 		filterContent.appendChild(lastActiveFilter.element);
-		localFilters["Last Active Filter"] = { getStartEnd: lastActiveFilter.getStartEnd, updateCounter: lastActiveFilter.updateCounter, element: lastActiveFilter.element };
+		localFilters["Last Active Filter"] = {
+			getStartEnd: lastActiveFilter.getStartEnd,
+			updateCounter: lastActiveFilter.updateCounter,
+			element: lastActiveFilter.element,
+		};
 		await applyFilter();
 	}
 
 	async function removeLastAction() {
 		if (!lastActionState && localFilters["Last Active Filter"] && localFilters["Last Active Filter"].element) {
 			localFilters["Last Active Filter"].element.remove();
-			document.findAll(".members-list .table-body > li.hidden.last-action").forEach(x => {
+			document.findAll(".members-list .table-body > li.hidden.last-action").forEach((x) => {
 				x.classList.remove("hidden");
 				x.classList.remove("last-action");
 			});
@@ -171,7 +175,10 @@
 		const levels = localFilters["Level Filter"].getStartEnd(content);
 		const levelStart = parseInt(levels.start);
 		const levelEnd = parseInt(levels.end);
-		const lastActionLimits = lastActionState && localFilters["Last Active Filter"] ? localFilters["Last Active Filter"].getStartEnd(content) : { start: filters.faction.lastActionStart, end: filters.faction.lastActionEnd };
+		const lastActionLimits =
+			lastActionState && localFilters["Last Active Filter"]
+				? localFilters["Last Active Filter"].getStartEnd(content)
+				: { start: filters.faction.lastActionStart, end: filters.faction.lastActionEnd };
 		const lastActionStart = parseInt(lastActionLimits.start);
 		const lastActionEnd = parseInt(lastActionLimits.end);
 		const position = localFilters["Position"].getSelected(content);
@@ -181,7 +188,8 @@
 		localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
 		if (lastActionState) {
 			await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
-			if (localFilters["Last Active Filter"]) localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
+			if (localFilters["Last Active Filter"])
+				localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
 		}
 
 		// Save filters
@@ -200,8 +208,6 @@
 		});
 
 		for (const li of document.findAll(".members-list .table-body > li")) {
-			showRow(li);
-
 			// Activity
 			if (
 				activity.length &&
@@ -296,7 +302,7 @@
 
 	function getPositions() {
 		const _positions = new Set();
-		document.findAll(".members-list .table-body > li > .position").forEach(x => _positions.add(x.innerText));
+		document.findAll(".members-list .table-body > li > .position").forEach((x) => _positions.add(x.innerText));
 		const positions = [
 			{
 				value: "",
@@ -308,7 +314,7 @@
 				disabled: true,
 			},
 		];
-		[..._positions].forEach(position => positions.push({ "value": position , "description": position }));
+		[..._positions].forEach((position) => positions.push({ value: position, description: position }));
 		return positions;
 	}
 
