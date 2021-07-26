@@ -252,6 +252,7 @@
 			}
 
 			// Special
+			let hideSpecial = false;
 			for (const key in special) {
 				const value = special[key];
 				if (value === "both") continue;
@@ -260,15 +261,19 @@
 				const definedIcons = SPECIAL_FILTER_ICONS[key];
 				if (value === "yes") {
 					if (!foundIcons.some((foundIcon) => definedIcons.includes(foundIcon))) {
-						hideRow(li);
-						continue;
+						hideSpecial = true;
+						break;
 					}
 				} else if (value === "no") {
 					if (foundIcons.some((foundIcon) => definedIcons.includes(foundIcon))) {
-						hideRow(li);
-						continue;
+						hideSpecial = true;
+						break;
 					}
 				}
+			}
+			if (hideSpecial) {
+				hideRow(li);
+				continue;
 			}
 
 			// Last Action
@@ -279,6 +284,8 @@
 					continue;
 				}
 			}
+
+			showRow(li);
 		}
 
 		function showRow(li) {
