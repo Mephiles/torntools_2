@@ -632,8 +632,8 @@ const DEFAULT_STORAGE = {
 			levelStart: new DefaultSetting({ type: "number", defaultValue: 1 }),
 			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
 			lastActionStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
-			lastActionEnd: new DefaultSetting({ type: "number", defaultValue: 5000 }),
-			status: new DefaultSetting({ type: "string", defaultValue: "" }),
+			lastActionEnd: new DefaultSetting({ type: "number", defaultValue: 1000 }),
+			status: new DefaultSetting({ type: "array", defaultValue: [] }),
 			position: new DefaultSetting({ type: "string", defaultValue: "" }),
 			special: {
 				fedded: new DefaultSetting({ type: "string", defaultValue: "both" }),

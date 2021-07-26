@@ -1,7 +1,3 @@
-#memberFilter .content .status__section-class {
-	margin-top: 10px
-}
-
 #memberFilter .content .levelFilter__section-class,
 #memberFilter .content .lastActiveFilter__section-class {
 	display: flex;
