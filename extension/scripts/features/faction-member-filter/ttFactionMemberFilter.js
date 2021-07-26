@@ -193,19 +193,7 @@
 		}
 
 		// Save filters
-		await ttStorage.change({
-			filters: {
-				faction: {
-					activity: activity,
-					status: status,
-					levelStart: levelStart,
-					levelEnd: levelEnd,
-					lastActionStart: lastActionStart,
-					lastActionEnd: lastActionEnd,
-					special: special,
-				},
-			},
-		});
+		await ttStorage.change({ filters: { faction: { activity, status, levelStart, levelEnd, lastActionStart, lastActionEnd, special } } });
 
 		for (const li of document.findAll(".members-list .table-body > li")) {
 			// Activity
