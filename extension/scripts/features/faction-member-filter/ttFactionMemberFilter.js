@@ -141,7 +141,7 @@
 			slider: {
 				min: 0,
 				max: lastActionEndLimit,
-				step: 25,
+				step: 1,
 				valueLow: filters.faction.lastActionStart >= lastActionEndLimit ? 0 : filters.faction.lastActionStart,
 				valueHigh: filters.faction.lastActionEnd >= lastActionEndLimit ? lastActionEndLimit : filters.faction.lastActionEnd,
 			},
