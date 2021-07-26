@@ -1,3 +1,5 @@
+"use strict";
+
 (async () => {
 	if (isOwnFaction()) {
 		addXHRListener(async ({ detail: { page, xhr } }) => {
@@ -79,7 +81,7 @@
 				return;
 
 			triggerCustomListener(EVENT_CHANNELS.FACTION_ARMORY_TAB, { section: getCurrentSection() });
-		}).observe(document.find(`#faction-armoury-tabs`), { childList: true, subtree: true });
+		}).observe(document.find("#faction-armoury-tabs"), { childList: true, subtree: true });
 
 		function getCurrentSection() {
 			return document.find("#faction-armoury-tabs > ul.torn-tabs > li[aria-selected='true']").getAttribute("aria-controls").replace("armoury-", "");
