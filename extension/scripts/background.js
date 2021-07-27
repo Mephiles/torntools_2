@@ -966,7 +966,6 @@ async function notifyUser(title, message, url) {
 
 	function notifyNative() {
 		const notification = new Notification(title, options);
-		console.log("DKK notifyNative", title, options);
 
 		if (notificationSound !== "default" && notificationSound !== "mute") {
 			notification.onshow = () => {
@@ -1014,7 +1013,6 @@ async function notifyUser(title, message, url) {
 			});
 		}
 
-		console.log("DKK notifyService", title, options);
 		// Send the actual notification.
 		await new Promise((resolve, reject) => {
 			notificationWorker
@@ -1076,7 +1074,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 chrome.notifications.onClicked.addListener((id) => {
-	console.log("DKK notification clicked old", id);
 	if (settings.notifications.link) {
 		chrome.tabs.create({ url: notificationRelations[id] });
 	}
