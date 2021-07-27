@@ -6,6 +6,6 @@ function usingFirefox() {
 
 function hasSilentSupport() {
 	if (navigator.userAgentData) {
-		return navigator.userAgentData.brands.some((brand) => brand === "Chromium");
+		return navigator.userAgentData.brands.some(({ brand }) => brand === "Chromium");
 	} else return !usingFirefox();
 }
