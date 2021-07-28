@@ -26,12 +26,14 @@
 	}
 
 	let cbHideUnavailable;
+
 	async function addFilter(section) {
 		if (!section) return;
-		let presentFilter = findContainer("Armory Filter");
+
+		const presentFilter = findContainer("Armory Filter");
 		if (presentFilter) {
 			presentFilter.classList.remove("hidden");
-			presentFilter = undefined;
+
 			await applyFilters();
 			return;
 		}
@@ -54,13 +56,7 @@
 			const hideUnavailable = cbHideUnavailable.isChecked();
 
 			// Save the filters
-			await ttStorage.change({
-				filters: {
-					factionArmory: {
-						hideUnavailable: hideUnavailable,
-					},
-				},
-			});
+			await ttStorage.change({ filters: { factionArmory: { hideUnavailable } } });
 
 			document.findAll(".torn-tabs ~ [aria-hidden*='false'] .item-list > li").forEach((li) => {
 				if (hideUnavailable && li.find(":scope > .loaned a")) {

@@ -2,7 +2,8 @@
 
 (async () => {
 	if (!isOwnFaction()) return;
-	addXHRListener(async ({ detail: { page, xhr } }) => {
+
+	addXHRListener(({ detail: { page, xhr } }) => {
 		if (page === "factions") {
 			const params = new URLSearchParams(xhr.requestBody);
 			const step = params.get("step");
@@ -71,10 +72,8 @@
 
 		triggerCustomListener(EVENT_CHANNELS.FACTION_ARMORY_TAB, { section: getCurrentSection() });
 		new MutationObserver((mutations) => {
-			if (
-				mutations.length > 1 &&
-				mutations.some(mut => mut.target.id.includes("armoury-"))
-			) triggerCustomListener(EVENT_CHANNELS.FACTION_ARMORY_TAB, { section: getCurrentSection() });
+			if (mutations.length > 1 && mutations.some((mutation) => mutation.target.id.includes("armoury-")))
+				triggerCustomListener(EVENT_CHANNELS.FACTION_ARMORY_TAB, { section: getCurrentSection() });
 		}).observe(document.find("#faction-armoury-tabs"), { childList: true, subtree: true });
 
 		function getCurrentSection() {
