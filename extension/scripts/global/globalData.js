@@ -216,6 +216,7 @@ const ttCache = new (class {
 
 const DEFAULT_STORAGE = {
 	version: {
+		current: new DefaultSetting({ type: "string", defaultValue: () => chrome.runtime.getManifest().version }),
 		oldVersion: new DefaultSetting({ type: "string" }),
 		showNotice: new DefaultSetting({ type: "boolean", defaultValue: true }),
 	},
@@ -451,6 +452,7 @@ const DEFAULT_STORAGE = {
 			shops: {
 				fillMax: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				maxBuyIgnoreCash: new DefaultSetting({ type: "boolean", defaultValue: false }),
+				profit: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			casino: {
 				netTotal: new DefaultSetting({ type: "boolean", defaultValue: true }),

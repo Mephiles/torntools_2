@@ -3,7 +3,7 @@
 const notificationPlayer = getAudioPlayer();
 const notificationTestPlayer = getAudioPlayer();
 
-let notificationSound = null;
+let notificationSound, notificationWorker;
 const notificationRelations = {};
 
 const notifications = {
@@ -47,6 +47,7 @@ async function convertDatabase() {
 	} else {
 		console.log("Old storage.", storage);
 
+		convertSpecific(storage);
 		const newStorage = convertGeneral(storage, DEFAULT_STORAGE);
 
 		await ttStorage.set(newStorage);
@@ -103,6 +104,41 @@ async function convertDatabase() {
 		}
 
 		return newStorage;
+	}
+
+	function convertSpecific(storage) {
+		const versionString = storage.version.current || "5.0.0";
+		const version = toNumericVersion(versionString);
+
+		let updated = false;
+		if (version <= toNumericVersion("5")) {
+			if (storage.vault) {
+				storage.localdata.vault.initialized = storage.vault?.initialized ?? false;
+				storage.localdata.vault.lastTransaction = storage.vault?.last_transaction ?? "";
+				storage.localdata.vault.total = storage.vault?.total_money ?? 0;
+				storage.localdata.vault.user.initial = storage.vault?.user.initial_money ?? 0;
+				storage.localdata.vault.user.current = storage.vault?.user.current_money ?? 0;
+				storage.localdata.vault.partner.initial = storage.vault?.partner.initial_money ?? 0;
+				storage.localdata.vault.partner.current = storage.vault?.partner.current_money ?? 0;
+				updated = true;
+			}
+		}
+
+		const newVersion = chrome.runtime.getManifest().version;
+		if (updated) {
+			console.log(`Upgraded database from ${versionString} to ${newVersion}`);
+		}
+		storage.version.current = newVersion;
+
+		function toNumericVersion(version) {
+			return parseInt(
+				version
+					.split(".")
+					.map((part) => part.padStart(3, "0"))
+					.join("")
+					.padEnd(9, "9")
+			);
+		}
 	}
 }
 
@@ -936,41 +972,19 @@ async function notifyUser(title, message, url) {
 		body: message,
 		requireInteraction: settings.notifications.requireInteraction,
 	};
-	if (notificationSound !== "default" && hasSilentSupport()) options.silent = true;
 
 	await setupSoundPlayer();
+	if (notificationSound !== "default" && hasSilentSupport()) options.silent = true;
 
-	let notification = new Notification(title, options);
-
-	if (notificationSound !== "default" && notificationSound !== "mute")
-		notification.onshow = () => {
-			notificationPlayer.play();
-		};
-
-	if (settings.notifications.link)
-		notification.onclick = () => {
-			if (settings.notifications.searchOpenTab) {
-				chrome.tabs.query({ url: "https://www.torn.com/index.php" }, (result) => {
-					if (result.length) {
-						const tab = result[0];
-
-						chrome.tabs.highlight({ windowId: tab.windowId, tabs: tab.index });
-					} else {
-						chrome.tabs.create({ url });
-					}
-				});
-			} else {
-				chrome.tabs.create({ url });
-			}
-		};
-
-	if (settings.notifications.tts) {
-		const ttsTitle = new SpeechSynthesisUtterance(title);
-		const ttsMessage = new SpeechSynthesisUtterance(message);
-		ttsTitle.volume = settings.notifications.volume / 100;
-		ttsMessage.volume = settings.notifications.volume / 100;
-		window.speechSynthesis.speak(ttsTitle);
-		window.speechSynthesis.speak(ttsMessage);
+	if (settings.notifications.tts) speakMessage();
+	try {
+		notifyNative();
+	} catch (errorNative) {
+		try {
+			await notifyService();
+		} catch (errorService) {
+			console.error("Failed to send notification.", { native: errorNative, service: errorService });
+		}
 	}
 
 	async function setupSoundPlayer() {
@@ -984,6 +998,77 @@ async function notifyUser(title, message, url) {
 			notificationSound = settings.notifications.sound;
 		}
 		notificationPlayer.volume = settings.notifications.volume / 100;
+	}
+
+	function notifyNative() {
+		const notification = new Notification(title, options);
+
+		if (notificationSound !== "default" && notificationSound !== "mute") {
+			notification.onshow = () => {
+				notificationPlayer.play();
+			};
+		}
+
+		if (settings.notifications.link) {
+			notification.onclick = () => {
+				if (settings.notifications.searchOpenTab) {
+					chrome.tabs.query({ url: "https://www.torn.com/index.php" }, (result) => {
+						if (result.length) {
+							const tab = result[0];
+
+							chrome.tabs.highlight({ windowId: tab.windowId, tabs: tab.index });
+						} else {
+							chrome.tabs.create({ url });
+						}
+					});
+				} else {
+					chrome.tabs.create({ url });
+				}
+			};
+		}
+	}
+
+	async function notifyService() {
+		options.data = { settings: {} };
+
+		if (settings.notifications.link) {
+			options.data.link = url;
+			options.data.settings.searchOpenTab = settings.notifications.searchOpenTab;
+		}
+
+		if (!notificationWorker) {
+			// Setup the service worker.
+			await new Promise((resolve, reject) => {
+				navigator.serviceWorker
+					.register("scripts/service-worker.js")
+					.then((registration) => {
+						notificationWorker = registration;
+						registration.update().then(() => resolve());
+					})
+					.catch((error) => reject(error));
+			});
+		}
+
+		// Send the actual notification.
+		await new Promise((resolve, reject) => {
+			notificationWorker
+				.showNotification(title, options)
+				.then(() => {
+					if (notificationSound !== "default" && notificationSound !== "mute") notificationPlayer.play();
+
+					resolve();
+				})
+				.catch((error) => reject(error));
+		});
+	}
+
+	function speakMessage() {
+		const ttsTitle = new SpeechSynthesisUtterance(title);
+		const ttsMessage = new SpeechSynthesisUtterance(message);
+		ttsTitle.volume = settings.notifications.volume / 100;
+		ttsMessage.volume = settings.notifications.volume / 100;
+		window.speechSynthesis.speak(ttsTitle);
+		window.speechSynthesis.speak(ttsMessage);
 	}
 }
 
