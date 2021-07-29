@@ -57,6 +57,10 @@
 	}
 
 	function removeWarning() {
-		document.findAll(".employee-list-wrap .employee-list > li.tt-modified").forEach((x) => x.classList.remove("hidden"));
+		document.findAll(".employee-list-wrap .employee-list > li.tt-modified").forEach((x) => {
+			x.classList.remove("tt-modified");
+			x.classList.remove("inactive-one");
+			x.classList.remove("inactive-two");
+		});
 	}
 })();
