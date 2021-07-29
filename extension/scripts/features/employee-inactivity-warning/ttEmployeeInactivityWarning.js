@@ -39,28 +39,25 @@
 
 		document.findAll(".employee-list-wrap .employee-list > li").forEach(li => {
 			if (li.nextSibling.className.includes("tt-last-action")) {
-				const days = li.nextSibling.getAttribute("days");
+				const days = li.nextSibling.dataset.days;
 				Object.keys(settings.employeeInactivityWarning).forEach((maxDays, index) => {
 					if (days >= maxDays) {
 						li.classList.add("tt-modified");
-						if (index === 0) li.classList.add("inactive-one");
-						else if (index === 1) {
+						if (index === 0) {
+							li.classList.add("inactive-one");
+							li.style.setProperty("--tt-inactive-one-background-color", Object.entries(settings.employeeInactivityWarning)[0][1]);
+						} else if (index === 1) {
 							li.classList.remove("inactive-one");
 							li.classList.add("inactive-two");
+							li.style.setProperty("--tt-inactive-two-background-color", Object.entries(settings.employeeInactivityWarning)[1][1]);
 						}
 					}
 				});
 			}
 		});
-		document.documentElement.style.setProperty("--tt-inactive-one-background-color", Object.entries(settings.employeeInactivityWarning)[0][1]);
-		document.documentElement.style.setProperty("--tt-inactive-two-background-color", Object.entries(settings.employeeInactivityWarning)[1][1]);
 	}
 
 	function removeWarning() {
-		document.findAll(".employee-list-wrap .employee-list > li.tt-modified").forEach((x) => {
-			x.classList.remove("tt-modified");
-			x.classList.remove("inactive-one");
-			x.classList.remove("inactive-two");
-		});
+		document.findAll(".employee-list-wrap .employee-list > li.tt-modified").forEach((x) => x.classList.remove("tt-modified", "inactive-one", "inactive-two"));
 	}
 })();

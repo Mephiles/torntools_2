@@ -13,14 +13,15 @@
 		},
 		() => {
 			if (!hasAPIData()) return "No API access!";
-		}
+		},
+		{ triggerCallback: true }
 	);
 
 	async function addListener() {
 		if (isOwnCompany) {
 			CUSTOM_LISTENERS[EVENT_CHANNELS.COMPANY_EMPLOYEES_PAGE].push(() => {
 				if (!feature.enabled) return;
-				if (getHashParameters().get("option") === "employees") addLastAction(true);
+				addLastAction(true);
 			});
 		} else {
 			await requireElement(".content #mainContainer .employees-wrap");
@@ -94,7 +95,7 @@
 						class: "tt-last-action",
 						text: `Last action: ${employees[employeeID].last_action.relative}`,
 						attributes: {
-							days: days,
+							"data-days": days,
 						}
 					})
 				);
@@ -114,8 +115,6 @@
 			});
 		}
 		list.classList.add("tt-modified");
-
-		triggerCustomListener(EVENT_CHANNELS.FEATURE_ENABLED, { name: feature.name });
 	}
 
 	function removeLastAction() {
