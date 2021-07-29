@@ -13,7 +13,8 @@
 		{
 			storage: ["settings.pages.faction.armoryFilter"],
 		},
-		null
+		null,
+		{ liveReload: true }
 	);
 
 	function addListener() {
