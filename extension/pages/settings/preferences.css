@@ -241,14 +241,14 @@ body.dark #preferences #customLinks .dragging {
 }
 
 #employeeInactivityWarning .tabbed {
-    height: 35px;
-    display: flex;
-    align-items: center;
+	height: 35px;
+	display: flex;
+	align-items: center;
 }
 
 #employeeInactivityWarning input[type="number"] {
-    margin-right: 5px;
-    width: 40px;
+	margin-right: 5px;
+	width: 40px;
 }
 
 #employeeInactivityWarning input[type="color"] {
