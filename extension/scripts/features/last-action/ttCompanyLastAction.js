@@ -94,8 +94,8 @@
 						type: "div",
 						class: "tt-last-action",
 						text: `Last action: ${employees[employeeID].last_action.relative}`,
-						attributes: {
-							"data-days": days,
+						dataset: {
+							days: days,
 						}
 					})
 				);
