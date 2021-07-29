@@ -1,0 +1,7 @@
+li.tt-modified.inactive-one {
+	background-color: var(--tt-inactive-one-background-color);
+}
+
+li.tt-modified.inactive-two {
+	background-color: var(--tt-inactive-two-background-color);
+}
