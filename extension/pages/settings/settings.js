@@ -581,7 +581,7 @@ async function setupPreferences() {
 			numberInput.value = timePeriod;
 			numberInput.nextElementSibling.value = settings.employeeInactivityWarning[timePeriod];
 		});
-		_preferences.findAll("#employeeInactivityWarning > .tabbed input[type='number']").forEach((inputNode, index) => {
+		_preferences.findAll("#employeeInactivityWarning > .tabbed input[type='number']").forEach((inputNode) => {
 			settings.employeeInactivityWarning[inputNode.value] = inputNode.nextElementSibling.value;
 		});
 	}
@@ -854,7 +854,7 @@ async function setupPreferences() {
 		settings.hideCasinoGames = [..._preferences.findAll("#hide-casino-games span.disabled")].map((game) => game.getAttribute("name"));
 		settings.hideStocks = [..._preferences.findAll("#hide-stocks span.disabled")].map((stock) => stock.getAttribute("id"));
 		settings.employeeInactivityWarning = {};
-		_preferences.findAll("#employeeInactivityWarning > .tabbed input[type='number']").forEach(inputNode => {
+		_preferences.findAll("#employeeInactivityWarning > .tabbed input[type='number']").forEach((inputNode) => {
 			settings.employeeInactivityWarning[inputNode.value] = inputNode.nextElementSibling.value;
 		});
 
