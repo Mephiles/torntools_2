@@ -92,6 +92,7 @@
 		}
 	}
 
+	let oldObserver;
 	async function showDetails(id, options = {}) {
 		options = {
 			react: false,
@@ -123,7 +124,7 @@
 			const hasInformation = info.classList.contains("tt-modified");
 
 			show(info, details);
-			if (options.changeListener && hasInformation) watchChanges(element, details);
+			if (options.changeListener) watchChanges(element, details);
 		}
 
 		function findElement() {
@@ -202,7 +203,8 @@
 		}
 
 		function watchChanges(element, details) {
-			new MutationObserver((mutations, observer) => {
+			if (oldObserver) oldObserver.disconnect();
+			oldObserver = new MutationObserver((mutations, observer) => {
 				const filteredMutations = [...mutations].filter((mutation) =>
 					[...mutation.addedNodes].some((node) => node.nodeType === Node.ELEMENT_NODE && node.classList.contains("info-wrap"))
 				);
