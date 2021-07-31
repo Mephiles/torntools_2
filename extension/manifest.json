@@ -430,7 +430,8 @@
 				"scripts/features/status-indicator/ttStatusIndicator.css",
 				"scripts/features/friendly-fire/ttFriendlyFire.css",
 				"scripts/features/age-to-words/ttAgeToWords.css",
-				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css"
+				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css",
+				"scripts/features/profile-box/ttProfileBox.css"
 			],
 			"js": [
 				"scripts/features/profile-id/ttProfileID.js",
@@ -438,7 +439,8 @@
 				"scripts/features/status-indicator/ttStatusIndicator.js",
 				"scripts/features/friendly-fire/ttFriendlyFire.js",
 				"scripts/features/age-to-words/ttAgeToWords.js",
-				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.js"
+				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.js",
+				"scripts/features/profile-box/ttProfileBox.js"
 			],
 			"run_at": "document_end"
 		},
