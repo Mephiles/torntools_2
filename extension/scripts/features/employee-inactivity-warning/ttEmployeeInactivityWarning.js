@@ -6,7 +6,7 @@
 	const feature = featureManager.registerFeature(
 		"Employee Inactivity Warning",
 		"companies",
-		() => isOwnCompany && settings.employeeInactivityWarning.length,
+		() => isOwnCompany && settings.employeeInactivityWarning.filter((warning) => "days" in warning).length,
 		addListener,
 		addWarning,
 		removeWarning,
@@ -42,7 +42,7 @@
 			if (li.nextSibling.className.includes("tt-last-action")) {
 				const days = parseInt(li.nextSibling.dataset.days);
 				settings.employeeInactivityWarning.forEach((warning) => {
-					if (!warning.days || days < warning.days) return;
+					if (!("days" in warning) || days < warning.days) return;
 
 					li.style.setProperty("--tt-inactive-background", warning.color);
 					li.classList.add("tt-inactive");
