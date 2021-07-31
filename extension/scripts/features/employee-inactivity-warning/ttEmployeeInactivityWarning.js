@@ -52,8 +52,9 @@
 	}
 
 	function removeWarning() {
-		document
-			.findAll(".employee-list-wrap .employee-list > li.tt-inactive")
-			.forEach((x) => x.classList.remove("tt-inactive"));
+		document.findAll(".tt-inactive").forEach((inactive) => {
+			inactive.style.removeProperty("--tt-inactive-background");
+			inactive.classList.remove("tt-inactive");
+		});
 	}
 })();
