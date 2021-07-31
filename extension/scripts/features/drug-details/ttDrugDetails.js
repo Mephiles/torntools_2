@@ -63,7 +63,7 @@
 		function addMutationObserver(selector) {
 			requireElement(selector).then(() => {
 				new MutationObserver(async (mutations) => {
-					const viewMutations = mutations.filter((mutation) => [...mutation.addedNodes].some((node) => node.classList.contains("^=view_")));
+					const viewMutations = mutations.filter((mutation) => [...mutation.addedNodes].some((node) => node.classList?.contains("^=view_")));
 					if (!viewMutations.length) return;
 
 					const newNodes = viewMutations[0].addedNodes;
