@@ -19,10 +19,13 @@
 		}
 	);
 
-	function showBox() {
-		// FIXME - Position right.
-		// FIXME - Fix margin top.
-		const { content } = createContainer("User Information", {});
+	async function showBox() {
+		await requireElement(".profile-wrapper");
+
+		const { content } = createContainer("User Information", {
+			nextElement: document.find(".medals-wrapper") || document.find(".basic-information")?.closest(".profile-wrapper"),
+			class: "mt10",
+		});
 	}
 
 	function removeBox() {
