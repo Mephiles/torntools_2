@@ -14,7 +14,9 @@
 		{
 			storage: ["settings.pages.profile.box"],
 		},
-		null
+		() => {
+			if (!hasAPIData()) return "No API access.";
+		}
 	);
 
 	function showBox() {
