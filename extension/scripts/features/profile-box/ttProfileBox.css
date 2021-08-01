@@ -1,0 +1,28 @@
+/* region Layout */
+
+#userInformation main {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+}
+
+#userInformation main > * {
+	outline: 1px solid red;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 25px;
+}
+
+.user-stats {
+	grid-row-start: 1;
+	grid-row-end: span 2;
+}
+
+.attack-history {
+	grid-row-start: 3;
+	grid-column-start: 1;
+	grid-column-end: span 2;
+}
+
+/* endregion */
