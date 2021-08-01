@@ -481,6 +481,7 @@ const DEFAULT_STORAGE = {
 				memberFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				armoryFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				armoryWorth: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				upgradeRequiredRespect: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			property: {
 				value: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -1009,6 +1010,7 @@ const API_USAGE = {
 		stock_perks: true,
 		book_perk: true,
 		faction: {
+			position: true,
 			faction_id: true,
 			faction_tag: true,
 			days_in_faction: true,
@@ -1042,6 +1044,9 @@ const API_USAGE = {
 			other: true,
 			total: true,
 		},
+		job: {
+			company_type: true,
+		},
 	},
 	properties: {},
 	faction: {
@@ -1057,6 +1062,11 @@ const API_USAGE = {
 				last_action: {
 					relative: true,
 				},
+			},
+		},
+		positions: {
+			"*": {
+				canAccessFactionApi: true,
 			},
 		},
 	},
@@ -1164,6 +1174,7 @@ const API_SELECTIONS = {
 	faction: [
 		"basic", // target
 		"crimes",
+		"positions",
 	],
 	company: [
 		"profile", // target
