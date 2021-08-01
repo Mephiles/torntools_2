@@ -7,12 +7,12 @@
 	const feature = featureManager.registerFeature(
 		"Upgrade Required Respect",
 		"faction",
-		() => settings.pages.faction.upgrdReqRespect,
+		() => settings.pages.faction.upgradeRequiredRespect,
 		addListener,
-		addReqRespect,
-		removeReqRespect,
+		showRequiredRespect,
+		removeRequiredRespect,
 		{
-			storage: ["settings.pages.faction.upgrdReqRespect"],
+			storage: ["settings.pages.faction.upgradeRequiredRespect"],
 		},
 		null,
 		{ liveReload: true }
@@ -20,11 +20,11 @@
 
 	function addListener() {
 		CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_UPGRADE_INFO].push(() => {
-			if (feature.enabled()) addReqRespect(true);
+			if (feature.enabled()) showRequiredRespect(true);
 		});
 	}
 
-	async function addReqRespect(force) {
+	async function showRequiredRespect(force) {
 		if (!force) return;
 		await requireElement("#faction-upgrades #stu-confirmation div[role] > :nth-child(3)");
 
@@ -42,7 +42,7 @@
 		requiredNode.innerText += ` (${formatNumber(diff)} needed to go)`;
 	}
 
-	function removeReqRespect() {
+	function removeRequiredRespect() {
 		const requiredNode = document.find("#faction-upgrades #stu-confirmation div[role] > .tt-modified > .text");
 		if (requiredNode) {
 			requiredNode.innerText = requiredNode.innerText.replace(/ \(.*\)/, "");
