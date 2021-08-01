@@ -2,6 +2,7 @@
 
 (async () => {
 	if (!getPageStatus().access) return;
+	if (isOwnProfile()) return;
 
 	featureManager.registerFeature(
 		"Profile Box",
