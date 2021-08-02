@@ -7,12 +7,20 @@
 	featureManager.registerFeature(
 		"Profile Box",
 		"profile",
-		() => settings.pages.profile.box,
+		() =>
+			settings.pages.profile.box &&
+			(settings.pages.profile.boxStats || settings.pages.profile.boxSpy || settings.pages.profile.boxStakeout || settings.pages.profile.boxAttackHistory),
 		null,
 		showBox,
 		removeBox,
 		{
-			storage: ["settings.pages.profile.box"],
+			storage: [
+				"settings.pages.profile.box",
+				"settings.pages.profile.boxStats",
+				"settings.pages.profile.boxSpy",
+				"settings.pages.profile.boxStakeout",
+				"settings.pages.profile.boxAttackHistory",
+			],
 		},
 		() => {
 			if (!hasAPIData()) return "No API access.";
@@ -33,18 +41,26 @@
 		buildAttackHistory().catch((error) => console.log("TT - Couldn't build the attack history part of the profile box.", error));
 
 		async function buildStats() {
+			if (!settings.pages.profile.boxStats) return;
+
 			content.appendChild(document.newElement({ type: "div", class: "user-stats", text: "Stats" }));
 		}
 
 		async function buildSpy() {
+			if (!settings.pages.profile.boxSpy) return;
+
 			content.appendChild(document.newElement({ type: "div", class: "spy-information", text: "Spy" }));
 		}
 
 		async function buildStakeouts() {
+			if (!settings.pages.profile.boxStakeout) return;
+
 			content.appendChild(document.newElement({ type: "div", class: "stakeout", text: "Stakeout" }));
 		}
 
 		async function buildAttackHistory() {
+			if (!settings.pages.profile.boxAttackHistory) return;
+
 			content.appendChild(document.newElement({ type: "div", class: "attack-history", text: "Attack History" }));
 		}
 	}

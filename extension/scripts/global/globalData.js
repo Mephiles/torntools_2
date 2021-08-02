@@ -332,6 +332,10 @@ const DEFAULT_STORAGE = {
 				ageToWords: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				disableAllyAttacks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				box: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				boxStats: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				boxSpy: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				boxStakeout: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				boxAttackHistory: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			chat: {
 				fontSize: new DefaultSetting({ type: "number", defaultValue: 12 }),
