@@ -18,3 +18,19 @@
 }
 
 /* endregion */
+
+.stakeout {
+	padding: 4px;
+}
+
+.stakeout .alerts {
+	margin-left: 20px;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.stakeout .alerts .tt-textbox {
+	width: 40px;
+	margin-left: 2px;
+}

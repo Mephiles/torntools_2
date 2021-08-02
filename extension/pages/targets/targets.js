@@ -174,7 +174,7 @@ async function setupStakeouts() {
 		}
 	}
 
-	function addStakeout(id, data = {}) {
+	function addStakeout(id, data = {}, showStatus = true) {
 		const row = document.newElement({ type: "tr", class: "row", id: `stakeout_${id}`, dataset: { id } });
 
 		row.appendChild(
@@ -219,7 +219,7 @@ async function setupStakeouts() {
 				})
 			);
 		} else {
-			row.classList.add("new");
+			if (showStatus) row.classList.add("new");
 			row.appendChild(document.newElement({ type: "td", class: "name", text: "" }));
 			row.appendChild(document.newElement({ type: "td", class: "status", text: "", attributes: { value: 0 } }));
 			row.appendChild(document.newElement({ type: "td", class: "last-action", text: "", attributes: { value: 0 } }));
@@ -318,7 +318,10 @@ async function setupStakeouts() {
 			if (isNaN(parseInt(id))) continue;
 
 			const row = stakeoutList.find(`tr[data-id="${id}"]`);
-			if (!row) continue;
+			if (!row) {
+				addStakeout(id, {}, false);
+				continue;
+			}
 
 			row.classList.remove("new");
 
@@ -333,6 +336,13 @@ async function setupStakeouts() {
 				row.find(".status").innerText = "";
 				row.find(".last-action").innerText = "";
 			}
+
+			const alerts = row.find(".alerts-wrap");
+			alerts.find(".okay").checked = stakeouts[id].alerts.okay;
+			alerts.find(".hospital").checked = stakeouts[id].alerts.hospital;
+			alerts.find(".landing").checked = stakeouts[id].alerts.landing;
+			alerts.find(".online").checked = stakeouts[id].alerts.online;
+			alerts.find(".life").value = stakeouts[id].alerts.life || "";
 		}
 	}
 
