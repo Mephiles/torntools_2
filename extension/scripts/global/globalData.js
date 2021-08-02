@@ -421,6 +421,7 @@ const DEFAULT_STORAGE = {
 				valueAndProfit: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			events: {
+				eventWorth: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				easterEggs: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 			hospital: {
