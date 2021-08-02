@@ -340,17 +340,18 @@ async function setupStakeouts() {
 		const newStakeouts = {};
 
 		for (const row of stakeoutList.findAll("tr.row")) {
-			const id = parseInt(row.find(".id").innerText);
+			const id = parseInt(row.dataset.id);
+
+			const alertsSection = row.find(".alerts-wrap");
 
 			newStakeouts[id] = {
 				info: id in stakeouts ? stakeouts[id].info : {},
 				alerts: {
-					okay: row.find(".okay").checked,
-					hospital: row.find(".hospital").checked,
-					landing: row.find(".landing").checked,
-					online: row.find(".online").checked,
-					// life: row.find(".life").checked,
-					life: parseInt(row.find(".life").value),
+					okay: alertsSection.find(".okay").checked,
+					hospital: alertsSection.find(".hospital").checked,
+					landing: alertsSection.find(".landing").checked,
+					online: alertsSection.find(".online").checked,
+					life: parseInt(alertsSection.find(".life").value) || false,
 				},
 			};
 		}
