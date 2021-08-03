@@ -5,7 +5,7 @@
 		"Bazaar Worth",
 		"bazaar",
 		() => settings.pages.bazaar.worth,
-		null,
+		addListener,
 		addWorth,
 		removeWorth,
 		{
@@ -16,47 +16,41 @@
 		}
 	);
 
-	async function addWorth() {
+	function addListener() {
+		addFetchListener(({ detail: { page, json } }) => {
+			if (page === "bazaar" && json && json.list) addWorth(json.list);
+		});
+	}
+
+	async function addWorth(bazaarData) {
+		if (!bazaarData) return;
 		await requireElement(".info-msg-cont .msg a[href]");
-		const bazaarUserId = getSearchParameters().get("userId");
 
-		if (ttCache.hasValue("bazaar", bazaarUserId)) {
-			handleBazaar(ttCache.get("bazaar", bazaarUserId));
-		} else {
-			fetchData("torn", { section: "user", id: bazaarUserId, selections: ["bazaar"] })
-				.then((result) => {
-					handleBazaar(result.bazaar);
-
-					ttCache.set({ [bazaarUserId]: result.bazaar }, TO_MILLIS.SECONDS * 30, "bazaar");
-				})
-				.catch((error) => {
-					document.find(".info-msg-cont .msg").appendChild(
-						document.newElement({
-							type: "div",
-							class: "tt-bazaar-text",
-							text: "TORN API returned error:" + error.toString(),
-						})
-					);
-					console.log("TT - Bazaar Worth API Error:", error);
-				});
-		}
-
-		function handleBazaar(bazaar) {
-			let total = 0;
-
-			for (const item of bazaar) {
-				total += item.market_price * item.quantity;
-			}
-
+		if (bazaarData.length === 0) {
 			document.find(".info-msg-cont .msg").appendChild(
 				document.newElement({
 					type: "div",
 					class: "tt-bazaar-text",
 					text: "This bazaar is worth ",
-					children: [document.newElement({ type: "span", text: formatNumber(total, { currency: true }) + "." })],
+					children: [document.newElement({ type: "span", text: "$0." })],
 				})
 			);
+			return;
 		}
+
+		let total = 0;
+		for (const item of bazaarData) {
+			total += item.averageprice * item.amount;
+		}
+
+		document.find(".info-msg-cont .msg").appendChild(
+			document.newElement({
+				type: "div",
+				class: "tt-bazaar-text",
+				text: "This bazaar is worth ",
+				children: [document.newElement({ type: "span", text: formatNumber(total, { currency: true }) + "." })],
+			})
+		);
 	}
 
 	function removeWorth() {

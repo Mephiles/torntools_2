@@ -196,7 +196,6 @@
 				"scripts/features/total-item-cost/ttTotalItemCost.css",
 				"scripts/features/bazaar-worth/ttBazaarWorth.css",
 				"scripts/features/item-redirect/ttBazaarRedirect.css",
-				"scripts/features/bazaar-worth/ttBazaarWorth.css",
 				"scripts/features/bazaar-fill-max/ttBazaarFillMax.css"
 			],
 			"js": [
@@ -205,10 +204,9 @@
 				"scripts/features/total-item-cost/ttTotalItemCost.js",
 				"scripts/features/bazaar-worth/ttBazaarWorth.js",
 				"scripts/features/item-redirect/ttBazaarRedirect.js",
-				"scripts/features/bazaar-worth/ttBazaarWorth.js",
 				"scripts/features/bazaar-fill-max/ttBazaarFillMax.js"
 			],
-			"run_at": "document_end"
+			"run_at": "document_start"
 		},
 		{
 			"matches": ["https://www.torn.com/bounties.php*"],
