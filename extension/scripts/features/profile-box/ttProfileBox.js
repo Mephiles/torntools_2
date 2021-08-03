@@ -55,9 +55,154 @@
 		}
 
 		async function buildSpy() {
-			if (!settings.pages.profile.boxSpy) return;
+			if (!settings.pages.profile.boxSpy && settings.apiUsage.user.battlestats) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "section spy-information", text: "Spy" }));
+			const section = document.newElement({ type: "div", class: "section spy-information" });
+			content.appendChild(section);
+
+			showLoadingPlaceholder(section, true);
+
+			let errors = [];
+			let spy = false;
+			if (settings.external.yata) {
+				try {
+					let result;
+					if (ttCache.hasValue("yata-spy", id)) {
+						result = ttCache.get("yata-spy", id);
+					} else {
+						result = (await fetchData("yata", { relay: true, section: "spy", id, includeKey: true, silent: true }))?.spies[id];
+
+						if (result) {
+							result = {
+								...result,
+								update: result.update * 1000,
+							};
+						}
+
+						ttCache.set({ [id]: result || false }, TO_MILLIS.SECONDS * 30, "yata-spy").then(() => {});
+					}
+
+					if (result) {
+						spy = {
+							defense: result.defense,
+							dexterity: result.dexterity,
+							speed: result.speed,
+							strength: result.strength,
+							total: result.total,
+
+							type: false,
+							timestamp: result.update,
+							updated: formatTime(result.update, { type: "ago" }),
+							source: "YATA",
+						};
+					}
+				} catch (error) {
+					if (error.code === 2 && error.error === "Player not found") errors.push({ service: "YATA", message: "You don't have an account." });
+					else errors.push({ service: "YATA", message: `Unknown (${error.code}) - ${error.error}` });
+
+					console.log("Couldn't load stat spy from YATA.", error);
+				}
+			}
+			if (settings.external.tornstats) {
+				try {
+					let result;
+					if (ttCache.hasValue("tornstats-spy", id)) {
+						result = ttCache.get("tornstats-spy", id);
+					} else {
+						result = await fetchData("tornstats", { section: "spy", id, silent: true });
+
+						result = {
+							status: result.status,
+							message: result.message,
+							spy: result.spy,
+						};
+
+						ttCache.set({ [id]: result }, TO_MILLIS.SECONDS * 30, "tornstats-spy").then(() => {});
+					}
+
+					if (result.spy?.status) {
+						// FIXME - Load timestamp.
+						const timestamp = false;
+
+						if (!spy || timestamp > spy.timestamp) {
+							spy = {
+								defense: result.spy.defense,
+								dexterity: result.spy.dexterity,
+								speed: result.spy.speed,
+								strength: result.spy.strength,
+								total: result.spy.total,
+
+								type: result.spy.type,
+								timestamp,
+								updated: result.spy.difference,
+								source: "TornStats",
+							};
+						}
+					} else {
+						if (!result.status) {
+							if (result.message.includes("User not found.")) errors.push({ service: "TornStats", message: "You don't have an account." });
+							else errors.push({ service: "TornStats", message: `Unknown - ${error.message}` });
+						}
+					}
+				} catch (error) {
+					errors.push({ service: "TornStats", message: `Unknown - ${error}` });
+					console.log("Couldn't load stat spy from TornStats.", error);
+				}
+			}
+
+			showLoadingPlaceholder(section, false);
+
+			if (spy) {
+				console.log("DKK spy found", spy);
+
+				const table = createTable(
+					[
+						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
+						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
+						// FIXME - Allow relative values.
+						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "number" },
+					],
+					[
+						{ stat: "Strength", them: spy.strength, you: userdata.strength },
+						{ stat: "Defense", them: spy.defense, you: userdata.defense },
+						{ stat: "Speed", them: spy.speed, you: userdata.speed },
+						{ stat: "Dexterity", them: spy.dexterity, you: userdata.dexterity },
+						{ stat: "Total", them: spy.total, you: userdata.total },
+					],
+					{
+						cellRenderers: {
+							number: (number) => {
+								return { element: document.createTextNode(formatNumber(number, { decimals: 0 })), dispose: () => {} };
+							},
+						},
+						rowClass: (rowData) => {
+							if (rowData.them === "N/A" || rowData.you === "N/A") return "";
+
+							return rowData.them > rowData.you ? "superior-them" : "superior-you";
+						},
+						stretchColumns: true,
+					}
+				);
+				section.appendChild(table.element);
+
+				let footer;
+				if (spy.source && spy.type) footer = `Source: ${spy.source} (${spy.type}), ${spy.updated}`;
+				else if (spy.source) footer = `Source: ${spy.source}, ${spy.updated}`;
+
+				if (footer) section.appendChild(document.newElement({ type: "p", class: "spy-source", html: footer }));
+			} else {
+				section.appendChild(document.newElement({ type: "span", class: "no-spy", text: "There is no spy report." }));
+
+				if (errors.length) {
+					section.appendChild(
+						document.newElement({
+							type: "p",
+							class: "no-spy-errors",
+							html: errors.map(({ service, message }) => `${service} - ${message}`).join("<br>"),
+						})
+					);
+				}
+			}
 		}
 
 		async function buildStakeouts() {
@@ -163,7 +308,6 @@
 								if (respect > 0) respect = formatNumber(respect, { decimals: 2 });
 								else respect = "/";
 
-								console.log("DKK data", respectArray);
 								return { element: document.createTextNode(respect), dispose: () => {} };
 							},
 						},
