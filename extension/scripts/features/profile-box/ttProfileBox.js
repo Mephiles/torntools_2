@@ -38,10 +38,21 @@
 				.match(/\[([0-9]*)]/i)[1]
 		);
 
-		const { content } = createContainer("User Information", {
+		const { content, options } = createContainer("User Information", {
 			nextElement: document.find(".medals-wrapper") || document.find(".basic-information")?.closest(".profile-wrapper"),
 			class: "mt10",
 		});
+
+		const relativeValue = createCheckbox({ description: "Relative values" });
+		relativeValue.setChecked(filters.profile.relative);
+		relativeValue.onChange(() => {
+			for (const field of content.findAll(".relative-field")) {
+				field.innerText = relativeValue.isChecked()
+					? formatNumber(field.dataset.relative, { decimals: 0, forceOperation: true })
+					: formatNumber(field.dataset.value, { decimals: 0 });
+			}
+		});
+		options.appendChild(relativeValue.element);
 
 		buildStats().catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error));
 		buildSpy().catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error));
@@ -157,26 +168,44 @@
 					[
 						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
 						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
-						// FIXME - Allow relative values.
-						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "number" },
+						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "relative" },
 					],
 					[
-						{ stat: "Strength", them: spy.strength, you: userdata.strength },
-						{ stat: "Defense", them: spy.defense, you: userdata.defense },
-						{ stat: "Speed", them: spy.speed, you: userdata.speed },
-						{ stat: "Dexterity", them: spy.dexterity, you: userdata.dexterity },
-						{ stat: "Total", them: spy.total, you: userdata.total },
+						{ stat: "Strength", them: spy.strength, you: { value: userdata.strength, relative: getRelative(spy.strength, userdata.strength) } },
+						{ stat: "Defense", them: spy.defense, you: { value: userdata.defense, relative: getRelative(spy.defense, userdata.defense) } },
+						{ stat: "Speed", them: spy.speed, you: { value: userdata.speed, relative: getRelative(spy.speed, userdata.speed) } },
+						{
+							stat: "Dexterity",
+							them: spy.dexterity,
+							you: { value: userdata.dexterity, relative: getRelative(spy.dexterity, userdata.dexterity) },
+						},
+						{ stat: "Total", them: spy.total, you: { value: userdata.total, relative: getRelative(spy.total, userdata.total) } },
 					],
 					{
 						cellRenderers: {
 							number: (number) => {
 								return { element: document.createTextNode(formatNumber(number, { decimals: 0 })), dispose: () => {} };
 							},
+							relative: (data) => {
+								const isRelative = filters.profile.relative;
+
+								return {
+									element: document.newElement({
+										type: "span",
+										class: "relative-field",
+										text: isRelative
+											? formatNumber(data.relative, { decimals: 0, forceOperation: true })
+											: formatNumber(data.value, { decimals: 0 }),
+										dataset: data,
+									}),
+									dispose: () => {},
+								};
+							},
 						},
 						rowClass: (rowData) => {
-							if (rowData.them === "N/A" || rowData.you === "N/A") return "";
+							if (rowData.them === "N/A" || rowData.you.value === "N/A") return "";
 
-							return rowData.them > rowData.you ? "superior-them" : "superior-you";
+							return rowData.them > rowData.you.value ? "superior-them" : "superior-you";
 						},
 						stretchColumns: true,
 					}
@@ -200,6 +229,10 @@
 						})
 					);
 				}
+			}
+
+			function getRelative(them, your) {
+				return them === "N/A" || your === "N/A" ? "N/A" : your - them;
 			}
 		}
 

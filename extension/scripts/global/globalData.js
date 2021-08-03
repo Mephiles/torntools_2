@@ -657,6 +657,9 @@ const DEFAULT_STORAGE = {
 		factionArmory: {
 			hideUnavailable: new DefaultSetting({ type: "boolean", defaultValue: false }),
 		},
+		profile: {
+			relative: new DefaultSetting({ type: "boolean", defaultValue: false }),
+		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
 	torndata: new DefaultSetting({ type: "object", defaultValue: {} }),
