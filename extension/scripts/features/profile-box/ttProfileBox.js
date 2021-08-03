@@ -153,8 +153,6 @@
 			showLoadingPlaceholder(section, false);
 
 			if (spy) {
-				console.log("DKK spy found", spy);
-
 				const table = createTable(
 					[
 						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
