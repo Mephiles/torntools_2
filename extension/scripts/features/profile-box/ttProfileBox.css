@@ -19,8 +19,11 @@
 
 /* endregion */
 
-.stakeout {
+#userInformation .section {
 	padding: 4px;
+	margin: 1px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .stakeout .alerts {
@@ -33,4 +36,61 @@
 .stakeout .alerts .tt-textbox {
 	width: 40px;
 	margin-left: 2px;
+}
+
+#userInformation .section.attack-history {
+	padding: 0;
+}
+
+.attack-history .no-history {
+	display: block;
+	margin: 2px 4px;
+}
+
+.attack-history .tt-table {
+	border: 0 !important;
+	background: unset !important;
+	padding: 0;
+
+	/* FIXME - Remove CSS. */
+	width: auto;
+	margin: 0;
+	box-shadow: unset;
+	color: initial;
+}
+
+.attack-history .tt-table .tt-table-header {
+	min-height: auto;
+	background: unset;
+	padding: 0;
+}
+
+.attack-history .tt-table .positive {
+	background-color: #dfffdf;
+}
+
+.attack-history .tt-table .negative {
+	background-color: #ffe0e0;
+}
+
+.attack-history .tt-table .neutral {
+	background-color: white;
+}
+
+.attack-history .tt-table .last-cell {
+	border-right: 1px solid #333;
+}
+
+.attack-history .tt-table .tt-table-row {
+	min-height: auto;
+	padding: 0;
+	border-color: #333 !important;
+}
+
+.attack-history .tt-table .tt-table-header-cell,
+.attack-history .tt-table .tt-table-row-cell {
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding: 2px;
 }

@@ -28,7 +28,10 @@ Object.defineProperty(Document.prototype, "newElement", {
 			const newElement = this.createElement(options.type);
 
 			if (options.id) newElement.id = options.id;
-			if (options.class) newElement.setClass(options.class);
+			if (options.class) {
+				if (Array.isArray(options.class)) newElement.setClass(...options.class);
+				else newElement.setClass(options.class);
+			}
 			if (options.text) newElement.innerText = options.text;
 			if (options.html) newElement.innerHTML = options.html;
 			if (options.value) {

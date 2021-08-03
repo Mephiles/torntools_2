@@ -20,6 +20,7 @@
 				"settings.pages.profile.boxSpy",
 				"settings.pages.profile.boxStakeout",
 				"settings.pages.profile.boxAttackHistory",
+				"settings.pages.global.keepAttackHistory",
 			],
 		},
 		() => {
@@ -50,13 +51,13 @@
 		async function buildStats() {
 			if (!settings.pages.profile.boxStats) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "user-stats", text: "Stats" }));
+			content.appendChild(document.newElement({ type: "div", class: "section user-stats", text: "Stats" }));
 		}
 
 		async function buildSpy() {
 			if (!settings.pages.profile.boxSpy) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "spy-information", text: "Spy" }));
+			content.appendChild(document.newElement({ type: "div", class: "section spy-information", text: "Spy" }));
 		}
 
 		async function buildStakeouts() {
@@ -133,13 +134,49 @@
 				alerts.classList.add("hidden");
 			}
 
-			content.appendChild(document.newElement({ type: "div", class: "stakeout", children: [checkbox.element, alerts] }));
+			content.appendChild(document.newElement({ type: "div", class: "section stakeout", children: [checkbox.element, alerts] }));
 		}
 
 		async function buildAttackHistory() {
-			if (!settings.pages.profile.boxAttackHistory) return;
+			if (!settings.pages.profile.boxAttackHistory || !settings.pages.global.keepAttackHistory) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "attack-history", text: "Attack History" }));
+			const section = document.newElement({ type: "div", class: "section attack-history" });
+
+			if (id in attackHistory.history) {
+				const history = attackHistory.history[id];
+
+				const table = createTable(
+					[
+						{ id: "win", title: "Wins", class: "positive", width: 40, cellRenderer: "string" },
+						{ id: "defend", title: "Defends", class: "positive last-cell", width: 60, cellRenderer: "string" },
+						{ id: "lose", title: "Lost", class: "negative", width: 30, cellRenderer: "string" },
+						{ id: "defend_lost", title: "Defends lost", class: "negative", width: 80, cellRenderer: "string" },
+						{ id: "stalemate", title: "Stalemates", class: "negative", width: 70, cellRenderer: "string" },
+						{ id: "escapes", title: "Escapes", class: "negative last-cell", width: 60, cellRenderer: "string" },
+						{ id: "respect_base", title: "Respect", class: "neutral", width: 50, cellRenderer: "respect" },
+					],
+					[history],
+					{
+						cellRenderers: {
+							respect: (respectArray) => {
+								let respect = respectArray.length ? respectArray.totalSum() / respectArray.length : 0;
+								if (respect > 0) respect = formatNumber(respect, { decimals: 2 });
+								else respect = "/";
+
+								console.log("DKK data", respectArray);
+								return { element: document.createTextNode(respect), dispose: () => {} };
+							},
+						},
+						stretchColumns: true,
+					}
+				);
+
+				section.appendChild(table.element);
+			} else {
+				section.appendChild(document.newElement({ type: "span", class: "no-history", text: "There is no attack history." }));
+			}
+
+			content.appendChild(section);
 		}
 	}
 
