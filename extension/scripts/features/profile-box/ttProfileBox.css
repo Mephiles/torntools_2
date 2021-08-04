@@ -19,6 +19,12 @@
 
 /* endregion */
 
+.manually-fetch {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 #userInformation .tt-table {
 	border: 0 !important;
 	background: unset !important;

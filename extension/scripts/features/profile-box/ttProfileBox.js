@@ -44,7 +44,7 @@
 		});
 
 		const relativeValue = createCheckbox({ description: "Relative values" });
-		relativeValue.setChecked(filters.profile.relative);
+		relativeValue.setChecked(settings.pages.profile.boxFetch);
 		relativeValue.onChange(() => {
 			for (const field of content.findAll(".relative-field")) {
 				field.innerText = relativeValue.isChecked()
@@ -54,21 +54,66 @@
 		});
 		options.appendChild(relativeValue.element);
 
-		buildStats().catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error));
-		buildSpy().catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error));
+		if (filters.profile.fetch) {
+			buildStats().catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error));
+			buildSpy().catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error));
+		} else {
+			const button = document.newElement({
+				type: "button",
+				class: "tt-btn",
+				text: "Fetch data from the API.",
+				events: {
+					async click() {
+						showLoadingPlaceholder(section, true);
+						button.classList.add("hidden");
+
+						let finished = 0;
+
+						buildStats()
+							.catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error))
+							.then(handleBuild);
+						buildSpy()
+							.catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error))
+							.then(handleBuild);
+
+						function handleBuild() {
+							finished++;
+
+							if (finished === 1) {
+								section.remove();
+							} else if (finished === 2) {
+								for (const section of [...content.findAll(".section[order]")].sort(
+									(a, b) => parseInt(a.getAttribute("order")) - parseInt(b.getAttribute("order"))
+								))
+									section.parentElement.appendChild(section);
+							}
+						}
+					},
+				},
+			});
+
+			const section = document.newElement({
+				type: "div",
+				class: "manually-fetch",
+				children: [button],
+			});
+
+			content.appendChild(section);
+		}
+
 		buildStakeouts().catch((error) => console.log("TT - Couldn't build the stakeout part of the profile box.", error));
 		buildAttackHistory().catch((error) => console.log("TT - Couldn't build the attack history part of the profile box.", error));
 
 		async function buildStats() {
 			if (!settings.pages.profile.boxStats) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "section user-stats", text: "Stats" }));
+			content.appendChild(document.newElement({ type: "div", class: "section user-stats", text: "Stats", attributes: { order: 1 } }));
 		}
 
 		async function buildSpy() {
 			if (!settings.pages.profile.boxSpy && settings.apiUsage.user.battlestats) return;
 
-			const section = document.newElement({ type: "div", class: "section spy-information" });
+			const section = document.newElement({ type: "div", class: "section spy-information", attributes: { order: 2 } });
 			content.appendChild(section);
 
 			showLoadingPlaceholder(section, true);
@@ -310,13 +355,15 @@
 				alerts.classList.add("hidden");
 			}
 
-			content.appendChild(document.newElement({ type: "div", class: "section stakeout", children: [checkbox.element, alerts] }));
+			content.appendChild(
+				document.newElement({ type: "div", class: "section stakeout", attributes: { order: 3 }, children: [checkbox.element, alerts] })
+			);
 		}
 
 		async function buildAttackHistory() {
 			if (!settings.pages.profile.boxAttackHistory || !settings.pages.global.keepAttackHistory) return;
 
-			const section = document.newElement({ type: "div", class: "section attack-history" });
+			const section = document.newElement({ type: "div", class: "section attack-history", attributes: { order: 4 } });
 
 			if (id in attackHistory.history) {
 				const history = attackHistory.history[id];

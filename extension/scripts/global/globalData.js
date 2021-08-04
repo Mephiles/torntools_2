@@ -336,6 +336,7 @@ const DEFAULT_STORAGE = {
 				boxSpy: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				boxStakeout: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				boxAttackHistory: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				boxFetch: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			chat: {
 				fontSize: new DefaultSetting({ type: "number", defaultValue: 12 }),
@@ -662,6 +663,7 @@ const DEFAULT_STORAGE = {
 		},
 		profile: {
 			relative: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			fetch: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),
