@@ -4,12 +4,12 @@
 	const feature = featureManager.registerFeature(
 		"Event Worth",
 		"events",
-		() => settings.pages.eventPage.eventWorth,
+		() => settings.pages.events.worth,
 		startListener,
 		addWorth,
 		removeWorth,
 		{
-			storage: ["settings.pages.eventPage.eventWorth"],
+			storage: ["settings.pages.events.worth"],
 		},
 		null
 	);
@@ -25,15 +25,16 @@
 
 		const regexes = [
 			/(?<=bought ).*(?= of)|(?<=your points that were on the market for \$).*(?=\.)/g,
-			/(?<=bought ).*(?=x)|(?<=from your bazaar for \$).*(?=\.)/g
+			/(?<=bought ).*(?=x)|(?<=from your bazaar for \$).*(?=\.)/g,
 		];
-		document.findAll("form#masssell .mail-link[id]").forEach(li => {
+		document.findAll("form#masssell .mail-link[id]").forEach((li) => {
 			regexes.forEach((regex) => {
 				const matches = li.innerText.match(regex);
 				if (matches?.length === 2) {
-					li.setAttribute("title", `(worth ${
-						formatNumber(matches[1].replaceAll(",", "") / matches[0].replaceAll(",", ""), { currency: true })
-					} each)`);
+					li.setAttribute(
+						"title",
+						`(worth ${formatNumber(matches[1].replaceAll(",", "") / matches[0].replaceAll(",", ""), { currency: true })} each)`
+					);
 					li.classList.add("tt-modified");
 				}
 			});
@@ -41,7 +42,7 @@
 	}
 
 	function removeWorth() {
-		document.findAll("form#masssell .tt-modified.mail-link[id]").forEach(x => {
+		document.findAll("form#masssell .tt-modified.mail-link[id]").forEach((x) => {
 			x.removeAttribute("title");
 			x.classList.remove("tt-modified");
 		});
