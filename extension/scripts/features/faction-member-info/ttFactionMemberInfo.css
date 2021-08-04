@@ -5,7 +5,7 @@
 	border-color: var(--default-panel-divider-outer-side-color);
 }
 
-.tt-last-action.modified {
+.tt-last-action.tt-modified {
 	display: flex;
 	align-items: center;
 	justify-content: space-around;

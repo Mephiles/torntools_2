@@ -55,48 +55,39 @@
 		if (ttCache.hasValue("faction-members-donations", userdata.faction.faction_id)) {
 			donations = ttCache.get("faction-members-donations", userdata.faction.faction_id);
 		} else {
-			donations = (
-				await fetchData("torn", {
-					section: "faction",
-					selections: ["donations"],
-					silent: true,
-					succeedOnError: true,
-				})
-			).donations;
+			donations = (await fetchData("torn", { section: "faction", selections: ["donations"], silent: true, succeedOnError: true })).donations;
 
 			ttCache.set({ [userdata.faction.faction_id]: donations }, TO_MILLIS.SECONDS * 60, "faction-members-donations").then(() => {});
 		}
 
 		document.findAll(".members-list .table-body > li").forEach((li) => {
 			const userID = li.find(".user.name").dataset.placeholder.match(/(?<=\[)\d+(?=]$)/g)[0];
-			const memberInfo = document.newElement({
-				type: "div",
-				class: "tt-member-info",
-			});
+			if (!donations[userID]) return;
+
+			const memberInfo = document.newElement({ type: "div", class: "tt-member-info" });
 			const parent = lastActionState && li.nextSibling?.className?.includes("tt-last-action") ? li.nextSibling : memberInfo;
-			if (donations[userID]) {
-				if (donations[userID].points_balance) {
-					parent.appendChild(
-						document.newElement({
-							type: "div",
-							class: "tt-points-balance",
-							text: `Point Balance: ${formatNumber(donations[userID].points_balance)}`,
-						})
-					);
-				}
-				if (donations[userID].money_balance) {
-					parent.appendChild(
-						document.newElement({
-							type: "div",
-							class: "tt-money-balance",
-							text: `Money Balance: ${formatNumber(donations[userID].money_balance, { currency: true })}`,
-						})
-					);
-				}
+
+			if (donations[userID].points_balance) {
+				parent.appendChild(
+					document.newElement({
+						type: "div",
+						class: "tt-points-balance",
+						text: `Point Balance: ${formatNumber(donations[userID].points_balance)}`,
+					})
+				);
+			}
+			if (donations[userID].money_balance) {
+				parent.appendChild(
+					document.newElement({
+						type: "div",
+						class: "tt-money-balance",
+						text: `Money Balance: ${formatNumber(donations[userID].money_balance, { currency: true })}`,
+					})
+				);
 			}
 
 			if (lastActionState && li.nextSibling?.className?.includes("tt-last-action")) {
-				li.nextSibling.classList.add("modified");
+				li.nextSibling.classList.add("tt-modified");
 			} else if (added) {
 				li.insertAdjacentElement("afterend", memberInfo);
 			}
@@ -105,6 +96,6 @@
 
 	function removeInfo() {
 		document.findAll(".tt-member-info, .tt-points-balance, .tt-money-balance").forEach((x) => x.remove());
-		document.findAll(".tt-last-action.modified").forEach((x) => x.classList.remove("modified"));
+		document.findAll(".tt-last-action.tt-modified").forEach((x) => x.classList.remove("modified"));
 	}
 })();
