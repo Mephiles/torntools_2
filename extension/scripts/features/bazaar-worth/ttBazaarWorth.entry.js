@@ -30,14 +30,16 @@
 	async function addWorth(liveReload, list) {
 		if (!liveReload) return;
 
-		await requireElement(".info-msg-cont .msg a[href]");
+		const bazaarUserId = parseInt(getSearchParameters().get("userId"));
+
+		if (!bazaarUserId || bazaarUserId === userdata.player_id) await requireElement(".info-msg-cont:not(.red) .msg ");
+		else await requireElement(".info-msg-cont .msg a[href]");
 
 		if (list && Array.isArray(list)) {
 			handleBazaar(list);
 			return;
 		}
 
-		const bazaarUserId = getSearchParameters().get("userId");
 		if (ttCache.hasValue("bazaar", bazaarUserId)) {
 			handleBazaar(ttCache.get("bazaar", bazaarUserId));
 		} else {
