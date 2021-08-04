@@ -21,22 +21,23 @@
 		addFetchListener(({ detail: { page, json } }) => {
 			if (page === "bazaar" && json && json.list) {
 				if (json.list.length === 0) addWorth(true, []);
-				else if (json.list.length > 0 && json.list.length === json.total) addWorth(true, json.list);
-				else if (json.list.length > 0 && json.list.length < json.total) addWorth(true, false);
+				else if (json.list.length === json.total) addWorth(true, json.list);
+				else if (json.list.length < json.total) addWorth(true, false);
 			}
 		});
 	}
 
 	async function addWorth(liveReload, list) {
 		if (!liveReload) return;
+
 		await requireElement(".info-msg-cont .msg a[href]");
-		const bazaarUserId = getSearchParameters().get("userId");
 
 		if (list && Array.isArray(list)) {
 			handleBazaar(list);
 			return;
 		}
 
+		const bazaarUserId = getSearchParameters().get("userId");
 		if (ttCache.hasValue("bazaar", bazaarUserId)) {
 			handleBazaar(ttCache.get("bazaar", bazaarUserId));
 		} else {
