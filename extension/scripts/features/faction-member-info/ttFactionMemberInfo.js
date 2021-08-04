@@ -20,24 +20,25 @@
 	);
 
 	let lastActionState = settings.scripts.lastAction.factionMember;
+
 	function addListener() {
 		CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_INFO].push(async () => {
 			if (!feature.enabled()) return;
 
 			await addInfo(true);
 		});
-		CUSTOM_LISTENERS[EVENT_CHANNELS.FEATURE_ENABLED].push(async (featureName) => {
+		CUSTOM_LISTENERS[EVENT_CHANNELS.FEATURE_ENABLED].push(async ({ name }) => {
 			if (!feature.enabled()) return;
 
-			if (featureName === "Last Action") {
+			if (name === "Last Action") {
 				lastActionState = true;
 				await addInfo(true);
 			}
 		});
-		CUSTOM_LISTENERS[EVENT_CHANNELS.FEATURE_DISABLED].push(async (featureName) => {
+		CUSTOM_LISTENERS[EVENT_CHANNELS.FEATURE_DISABLED].push(async ({ name }) => {
 			if (!feature.enabled()) return;
 
-			if (featureName === "Last Action") {
+			if (name === "Last Action") {
 				lastActionState = false;
 				await addInfo(true);
 			}
