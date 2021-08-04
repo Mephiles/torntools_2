@@ -1,15 +1,17 @@
-.tt-money-balance, .tt-points-balance {
-	text-align: center;
-	padding: 5px;
+.tt-member-info {
+	display: flex;
+    justify-content: space-evenly;
 	border-bottom: 1px solid;
 	border-color: var(--default-panel-divider-outer-side-color);
 }
 
-.members-list .table-body > li.hidden + .tt-last-action + .tt-money-balance,
-.members-list .table-body > li.hidden + .tt-last-action + .tt-points-balance + .tt-money-balance,
-.members-list .table-body > li.hidden + .tt-last-action + .tt-points-balance,
-.members-list .table-body > li.hidden + .tt-money-balance,
-.members-list .table-body > li.hidden + .tt-points-balance + .tt-money-balance,
-.members-list .table-body > li.hidden + .tt-points-balance {
-	display: none;
+.tt-last-action.modified {
+	display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.tt-money-balance, .tt-points-balance {
+	text-align: center;
+	padding: 5px;
 }
