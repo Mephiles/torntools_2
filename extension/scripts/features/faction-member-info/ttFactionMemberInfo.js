@@ -14,7 +14,7 @@
 			storage: ["settings.pages.faction.memberInfo"],
 		},
 		() => {
-			if (!hasAPIData() || !hasFactionAPIAccess()) return "No API access!";
+			if (!hasFactionAPIAccess()) return "No API access!";
 		},
 		{ liveReload: true }
 	);
@@ -51,54 +51,33 @@
 
 		document.findAll(".members-list .table-body > li").forEach((li) => {
 			const userID = li.find(".user.name").dataset.placeholder.match(/(?<=\[)\d+(?=]$)/g)[0];
+			const parent = li.nextSibling?.className?.includes("tt-last-action") ? li.nextSibling : li;
 			if (donations[userID]) {
 				if (donations[userID].money_balance) {
-					if (li.nextSibling?.className?.includes("tt-last-action")) {
-						li.nextSibling.insertAdjacentElement(
-							"afterend",
-							document.newElement({
-								type: "div",
-								class: "tt-money-balance",
-								text: `Money Balance: ${formatNumber(donations[userID].money_balance, { currency: true })}`,
-							})
-						);
-					} else {
-						li.insertAdjacentElement(
-							"afterend",
-							document.newElement({
-								type: "div",
-								class: "tt-money-balance",
-								text: `Money Balance: ${formatNumber(donations[userID].money_balance, { currency: true })}`,
-							})
-						);
-					}
+					parent.insertAdjacentElement(
+						"afterend",
+						document.newElement({
+							type: "div",
+							class: "tt-money-balance",
+							text: `Money Balance: ${formatNumber(donations[userID].money_balance, { currency: true })}`,
+						})
+					);
 				}
 				if (donations[userID].points_balance) {
-					if (li.nextSibling?.className?.includes("tt-last-action")) {
-						li.nextSibling.insertAdjacentElement(
-							"afterend",
-							document.newElement({
-								type: "div",
-								class: "tt-points-balance",
-								text: `Point Balance: ${formatNumber(donations[userID].points_balance)}`,
-							})
-						);
-					} else {
-						li.insertAdjacentElement(
-							"afterend",
-							document.newElement({
-								type: "div",
-								class: "tt-points-balance",
-								text: `Point Balance: ${formatNumber(donations[userID].points_balance)}`,
-							})
-						);
-					}
+					parent.insertAdjacentElement(
+						"afterend",
+						document.newElement({
+							type: "div",
+							class: "tt-points-balance",
+							text: `Point Balance: ${formatNumber(donations[userID].points_balance)}`,
+						})
+					);
 				}
 			}
 		});
 	}
 
 	function removeInfo() {
-		document.findAll(".members-list .table-body > .tt-money-balance, .members-list .table-body > .tt-points-balance").forEach((x) => x.remove());
+		document.findAll(".tt-money-balance, .tt-points-balance").forEach((x) => x.remove());
 	}
 })();
