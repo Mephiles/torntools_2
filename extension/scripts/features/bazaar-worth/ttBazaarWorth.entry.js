@@ -65,14 +65,17 @@
 				total += (item.market_price ?? item.averageprice) * (item.quantity ?? item.amount);
 			}
 
-			document.find(".info-msg-cont .msg").appendChild(
-				document.newElement({
-					type: "div",
-					class: "tt-bazaar-text",
-					text: "This bazaar is worth ",
-					children: [document.newElement({ type: "span", text: formatNumber(total, { currency: true }) + "." })],
-				})
-			);
+			const text = document.find(".tt-bazaar-text span");
+			if (text) text.innerText = formatNumber(total, { currency: true });
+			else
+				document.find(".info-msg-cont .msg").appendChild(
+					document.newElement({
+						type: "div",
+						class: "tt-bazaar-text",
+						text: "This bazaar is worth ",
+						children: [document.newElement({ type: "span", text: formatNumber(total, { currency: true }) }), "."],
+					})
+				);
 		}
 	}
 
