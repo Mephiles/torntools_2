@@ -663,7 +663,6 @@ const DEFAULT_STORAGE = {
 		},
 		profile: {
 			relative: new DefaultSetting({ type: "boolean", defaultValue: false }),
-			fetch: new DefaultSetting({ type: "boolean", defaultValue: true }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),

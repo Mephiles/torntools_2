@@ -44,7 +44,7 @@
 		});
 
 		const relativeValue = createCheckbox({ description: "Relative values" });
-		relativeValue.setChecked(settings.pages.profile.boxFetch);
+		relativeValue.setChecked(filters.profile.relative);
 		relativeValue.onChange(() => {
 			for (const field of content.findAll(".relative-field")) {
 				field.innerText = relativeValue.isChecked()
@@ -54,7 +54,7 @@
 		});
 		options.appendChild(relativeValue.element);
 
-		if (filters.profile.fetch) {
+		if (settings.pages.profile.boxFetch) {
 			buildStats().catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error));
 			buildSpy().catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error));
 		} else {
