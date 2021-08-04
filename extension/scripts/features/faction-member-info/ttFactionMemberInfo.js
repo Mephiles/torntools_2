@@ -105,5 +105,6 @@
 
 	function removeInfo() {
 		document.findAll(".tt-member-info").forEach((x) => x.remove());
+		document.findAll(".tt-last-action.modified").forEach((x) => x.classList.remove("modified"));
 	}
 })();
