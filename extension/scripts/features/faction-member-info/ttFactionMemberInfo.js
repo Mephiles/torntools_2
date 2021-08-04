@@ -71,7 +71,7 @@
 			const userID = li.find(".user.name").dataset.placeholder.match(/(?<=\[)\d+(?=]$)/g)[0];
 			const memberInfo = document.newElement({
 				type: "div",
-				class: "tt-member-info"
+				class: "tt-member-info",
 			});
 			const parent = lastActionState && li.nextSibling?.className?.includes("tt-last-action") ? li.nextSibling : memberInfo;
 			if (donations[userID]) {
@@ -104,7 +104,7 @@
 	}
 
 	function removeInfo() {
-		document.findAll(".tt-member-info").forEach((x) => x.remove());
+		document.findAll(".tt-member-info, .tt-points-balance, .tt-money-balance").forEach((x) => x.remove());
 		document.findAll(".tt-last-action.modified").forEach((x) => x.classList.remove("modified"));
 	}
 })();
