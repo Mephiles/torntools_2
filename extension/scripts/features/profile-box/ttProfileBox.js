@@ -43,18 +43,8 @@
 			class: "mt10",
 		});
 
-		const relativeValue = createCheckbox({ description: "Relative values" });
-		relativeValue.setChecked(filters.profile.relative);
-		relativeValue.onChange(() => {
-			for (const field of content.findAll(".relative-field")) {
-				field.innerText = relativeValue.isChecked()
-					? formatNumber(field.dataset.relative, { decimals: 0, forceOperation: true })
-					: formatNumber(field.dataset.value, { decimals: 0 });
-			}
-		});
-		options.appendChild(relativeValue.element);
-
 		if (settings.pages.profile.boxFetch) {
+			showRelative();
 			buildStats().catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error));
 			buildSpy().catch((error) => console.log("TT - Couldn't build the spy part of the profile box.", error));
 		} else {
@@ -69,6 +59,7 @@
 
 						let finished = 0;
 
+						showRelative();
 						buildStats()
 							.catch((error) => console.log("TT - Couldn't build the stats part of the profile box.", error))
 							.then(handleBuild);
@@ -103,6 +94,19 @@
 
 		buildStakeouts().catch((error) => console.log("TT - Couldn't build the stakeout part of the profile box.", error));
 		buildAttackHistory().catch((error) => console.log("TT - Couldn't build the attack history part of the profile box.", error));
+
+		function showRelative() {
+			const relativeValue = createCheckbox({ description: "Relative values" });
+			relativeValue.setChecked(filters.profile.relative);
+			relativeValue.onChange(() => {
+				for (const field of content.findAll(".relative-field")) {
+					field.innerText = relativeValue.isChecked()
+						? formatNumber(field.dataset.relative, { decimals: 0, forceOperation: true })
+						: formatNumber(field.dataset.value, { decimals: 0 });
+				}
+			});
+			options.appendChild(relativeValue.element);
+		}
 
 		async function buildStats() {
 			if (!settings.pages.profile.boxStats) return;
