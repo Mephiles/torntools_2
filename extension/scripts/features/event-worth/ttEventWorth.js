@@ -4,20 +4,19 @@
 	const feature = featureManager.registerFeature(
 		"Event Worth",
 		"events",
-		() => settings.pages.events.eventWorth,
+		() => settings.pages.eventPage.eventWorth,
 		startListener,
 		addWorth,
 		removeWorth,
 		{
-			storage: ["settings.pages.events.eventWorth"],
+			storage: ["settings.pages.eventPage.eventWorth"],
 		},
 		null
 	);
 
-	async function startListener() {
-		await requireElement("form#masssell .no-messages");
-		addXHRListener(({ detail: { page, xhr } }) => {
-			if (page === "events") addWorth();
+	function startListener() {
+		addXHRListener(({ detail: { page } }) => {
+			if (page === "events" && feature.enabled()) addWorth();
 		});
 	}
 
