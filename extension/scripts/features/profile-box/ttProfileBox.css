@@ -6,6 +6,12 @@
 	grid-template-rows: repeat(3, auto);
 }
 
+body.tt-tablet #userInformation main,
+body.tt-mobile #userInformation main {
+	display: flex;
+	flex-direction: column;
+}
+
 .user-stats {
 	grid-row-start: 1;
 	grid-row-end: span 2;
