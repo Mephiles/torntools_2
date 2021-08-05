@@ -58,10 +58,12 @@ body.tt-mobile #userInformation main {
 	padding: 2px 4px;
 }
 
+.user-stats .tt-table .tt-table-header-cell,
 .spy-information .tt-table .tt-table-header-cell {
 	line-height: 20px;
 }
 
+.user-stats .tt-table .tt-table-row-cell,
 .spy-information .tt-table .tt-table-row-cell {
 	line-height: 18px;
 }
@@ -124,6 +126,8 @@ body.tt-mobile #userInformation main {
 	border-color: #ddd !important;
 }
 
+.user-stats .tt-table .tt-table-header-cell:not(:last-child),
+.user-stats .tt-table .tt-table-row-cell:not(:last-child),
 .spy-information .tt-table .tt-table-header-cell:not(:last-child),
 .spy-information .tt-table .tt-table-row-cell:not(:last-child) {
 	border-right: 1px solid #ddd;

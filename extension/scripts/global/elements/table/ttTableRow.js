@@ -1,6 +1,6 @@
 function createTableRow(rowData, tableColumnsDefs, options) {
 	const rowCells = tableColumnsDefs.map((columnDef) =>
-		createTableCell(rowData[columnDef.id], columnDef, options.cellRenderers[columnDef.cellRenderer], options)
+		createTableCell(rowData[columnDef.id], columnDef, options.cellRenderers[rowData.cellRenderer ?? columnDef.cellRenderer], options)
 	);
 
 	const rowElement = document.newElement({

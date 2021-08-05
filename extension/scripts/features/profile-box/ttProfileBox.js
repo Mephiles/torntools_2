@@ -100,9 +100,14 @@
 			relativeValue.setChecked(filters.profile.relative);
 			relativeValue.onChange(() => {
 				for (const field of content.findAll(".relative-field")) {
-					field.innerText = relativeValue.isChecked()
-						? formatNumber(field.dataset.relative, { decimals: 0, forceOperation: true })
-						: formatNumber(field.dataset.value, { decimals: 0 });
+					const isRelative = relativeValue.isChecked();
+
+					const value = isRelative ? field.dataset.relative : field.dataset.value;
+
+					// noinspection JSCheckFunctionSignatures
+					const options = { ...(JSON.parse(field.dataset.options ?? false) || { decimals: 0 }), forceOperation: isRelative };
+
+					field.innerText = formatNumber(value, options);
 				}
 			});
 			options.appendChild(relativeValue.element);
@@ -111,7 +116,89 @@
 		async function buildStats() {
 			if (!settings.pages.profile.boxStats) return;
 
-			content.appendChild(document.newElement({ type: "div", class: "section user-stats", text: "Stats", attributes: { order: 1 } }));
+			const section = document.newElement({ type: "div", class: "section user-stats", attributes: { order: 1 } });
+			content.appendChild(section);
+
+			showLoadingPlaceholder(section, true);
+
+			// FIXME - Load data.
+			// FIXME - Decide what to show.
+			let data = {};
+
+			if (data) {
+				// FIXME - Show data.
+				const rows = [
+					{ stat: "Networth", them: 17566379925, you: { value: 20735866343, relative: 3169486418 }, cellRenderer: "currency" },
+					{ stat: "Drugs: Xanax", them: 2397, you: { value: 2507, relative: 110 } },
+					{ stat: "Attacks: Elo rating", them: 1629, you: { value: 1493, relative: -199 } },
+				];
+
+				const table = createTable(
+					[
+						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
+						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
+						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "number" },
+					],
+					rows,
+					{
+						cellRenderers: {
+							number: (data) => {
+								let node;
+								if (typeof data === "object") {
+									const isRelative = filters.profile.relative;
+
+									const value = isRelative ? data.relative : data.value;
+									const forceOperation = isRelative;
+
+									const options = { decimals: 0, forceOperation };
+									node = document.newElement({
+										type: "span",
+										class: "relative-field",
+										text: formatNumber(value, options),
+										dataset: { value: data.value, relative: data.relative, options },
+									});
+								} else {
+									node = document.createTextNode(formatNumber(data, { decimals: 0 }));
+								}
+
+								return { element: node, dispose: () => {} };
+							},
+							currency: (data) => {
+								let node;
+								if (typeof data === "object") {
+									const isRelative = filters.profile.relative;
+
+									const value = isRelative ? data.relative : data.value;
+									const forceOperation = isRelative;
+
+									const options = { decimals: 0, currency: true, forceOperation };
+									node = document.newElement({
+										type: "span",
+										class: "relative-field",
+										text: formatNumber(value, options),
+										dataset: { value: data.value, relative: data.relative, options },
+									});
+								} else {
+									node = document.createTextNode(formatNumber(data, { decimals: 0, currency: true }));
+								}
+
+								return { element: node, dispose: () => {} };
+							},
+						},
+						rowClass: (rowData) => {
+							if (rowData.them === "N/A" || rowData.you.value === "N/A" || rowData.them === rowData.you.value) return "";
+
+							return rowData.them > rowData.you.value ? "superior-them" : "superior-you";
+						},
+						stretchColumns: true,
+					}
+				);
+				section.appendChild(table.element);
+			} else {
+				// FIXME - Show error.
+			}
+
+			showLoadingPlaceholder(section, false);
 		}
 
 		async function buildSpy() {
@@ -217,7 +304,7 @@
 					[
 						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
 						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
-						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "relative" },
+						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "number" },
 					],
 					[
 						{ stat: "Strength", them: spy.strength, you: { value: userdata.strength, relative: getRelative(spy.strength, userdata.strength) } },
@@ -232,23 +319,26 @@
 					],
 					{
 						cellRenderers: {
-							number: (number) => {
-								return { element: document.createTextNode(formatNumber(number, { decimals: 0 })), dispose: () => {} };
-							},
-							relative: (data) => {
-								const isRelative = filters.profile.relative;
+							number: (data) => {
+								let node;
+								if (typeof data === "object") {
+									const isRelative = filters.profile.relative;
 
-								return {
-									element: document.newElement({
+									const value = isRelative ? data.relative : data.value;
+									const forceOperation = isRelative;
+
+									const options = { decimals: 0, forceOperation };
+									node = document.newElement({
 										type: "span",
 										class: "relative-field",
-										text: isRelative
-											? formatNumber(data.relative, { decimals: 0, forceOperation: true })
-											: formatNumber(data.value, { decimals: 0 }),
-										dataset: data,
-									}),
-									dispose: () => {},
-								};
+										text: formatNumber(value, options),
+										dataset: { value: data.value, relative: data.relative, options },
+									});
+								} else {
+									node = document.createTextNode(formatNumber(data, { decimals: 0 }));
+								}
+
+								return { element: node, dispose: () => {} };
 							},
 						},
 						rowClass: (rowData) => {
