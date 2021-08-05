@@ -194,6 +194,9 @@
 					}
 				);
 				section.appendChild(table.element);
+
+				const otherList = document.newElement({ type: "div", class: "other-stats", text: "View other stats." });
+				section.appendChild(otherList);
 			} else {
 				// FIXME - Show error.
 			}

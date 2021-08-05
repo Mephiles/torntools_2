@@ -54,6 +54,26 @@ body.tt-mobile #userInformation main {
 	color: var(--tt-color-red);
 }
 
+.user-stats {
+	display: flex;
+	flex-direction: column;
+}
+
+.other-stats {
+	background-color: var(--tt-color-light-green);
+	text-align: center;
+	border-radius: 5px 5px 0 0;
+	line-height: 20px;
+	width: 80%;
+	margin: 4px 0 -4px 0;
+	align-self: center;
+	cursor: pointer;
+}
+
+#userInformation .user-stats .tt-table {
+	margin-bottom: auto;
+}
+
 #userInformation .spy-information .tt-table {
 	padding: 2px 4px;
 }
