@@ -4,6 +4,195 @@
 	if (!getPageStatus().access) return;
 	if (isOwnProfile()) return;
 
+	const STATS = [
+		// Basic rewards.
+		{ name: "Awards", type: "basic", getter: (data) => data.awards },
+		{ name: "Logins", type: "basic", getter: (data) => data.logins },
+		{ name: "Networth", type: "basic", getter: (data) => data.networth, formatter: "currency" },
+		{ name: "User Activity", type: "basic", getter: (data) => data.useractivity },
+		{ name: "Stat Enhancers Used", type: "basic", getter: (data) => data.statenhancersused },
+	];
+
+	const key_dict = {
+		attacks: {
+			attackswon: "Attacks: Won",
+			attackslost: "Attacks: Lost",
+			attacksdraw: "Attacks: Draw",
+			attacksstealthed: "Attacks: Stealthed",
+			attackhits: "Attacks: Total Hits",
+			attackmisses: "Attacks: Misses",
+			attacksassisted: "Attacks: Assisted",
+			attackswonabroad: "Attacks: Won Abroad",
+			highestbeaten: "Attacks: Highest Lvl Beaten",
+			largestmug: "Attacks: Largest Mug",
+			moneymugged: "Attacks: Money Mugged",
+			onehitkills: "Attacks: One Hit Kills",
+			attackdamage: "Attacks: Total Damage",
+			yourunaway: "Attacks: Escaped",
+			unarmoredwon: "Attacks: Unarmored Wins",
+			weaponsbought: "Attacks: Weapons Bought",
+			attackcriticalhits: "Attacks: Critical Hits",
+			bestdamage: "Attacks: Best Damage",
+			bestkillstreak: "Attacks: Best Killstreak",
+			arrestsmade: "Attacks: Arrests",
+			roundsfired: "Attacks: Ammo: Fired",
+			incendiaryammoused: "Attacks: Ammo: Incendiary",
+			piercingammoused: "Attacks: Ammo: Piercing",
+			tracerammoused: "Attacks: Ammo: Tracer",
+			specialammoused: "Attacks: Ammo: Special Total",
+			hollowammoused: "Attacks: Ammo: Hollow Point",
+			elo: "Attacks: Elo rating",
+		},
+		bounties: {
+			bountiesplaced: "Bounties: Placed",
+			bountiescollected: "Bounties: Completed",
+			totalbountyreward: "Bounties: Rewards",
+			totalbountyspent: "Bounties: Spent On",
+			receivedbountyvalue: "Bounties: Received",
+			bountiesreceived: "Bounties: Times Bountied",
+		},
+		crimes: {
+			selling_illegal_products: "Crimes: Sell illegal products",
+			theft: "Crimes: Theft",
+			auto_theft: "Crimes: Auto theft",
+			drug_deals: "Crimes: Drug deals",
+			computer_crimes: "Crimes: Computer",
+			murder: "Crimes: Murder",
+			fraud_crimes: "Crimes: Fraud",
+			other: "Crimes: Other",
+			total: "Crimes: Total",
+			organisedcrimes: "Crimes: Organised Crimes",
+		},
+		consumables: {
+			candyused: "Consumables: Candy",
+			energydrinkused: "Consumables: Energy Drinks",
+			consumablesused: "Consumables: Total",
+			alcoholused: "Consumables: Alcohol",
+			boostersused: "Consumables: Boosters",
+		},
+		contracts: {
+			contractscompleted: "Contracts: Completed",
+			dukecontractscompleted: "Contracts: Duke",
+			missionscompleted: "Contracts: Missions Completed",
+			missioncreditsearned: "Contracts: Miss. Credits Earned",
+		},
+		defends: {
+			defendswon: "Defends: Won",
+			defendslost: "Defends: Lost",
+			defendsstalemated: "Defends: Stalemated",
+			defendslostabroad: "Defends: Lost Abroad",
+		},
+		drugs: {
+			cantaken: "Drugs: Cannabis",
+			exttaken: "Drugs: Ecstasy",
+			lsdtaken: "Drugs: LSD",
+			shrtaken: "Drugs: Shrooms",
+			xantaken: "Drugs: Xanax",
+			victaken: "Drugs: Vicodin",
+			drugsused: "Drugs: Total",
+			kettaken: "Drugs: Ketamine",
+			opitaken: "Drugs: Opium",
+			spetaken: "Drugs: Speed",
+			pcptaken: "Drugs: PCP",
+			overdosed: "Drugs: Overdosed",
+		},
+		finishers: {
+			chahits: "Finishers: Mechanical",
+			axehits: "Finishers: Clubbing",
+			grehits: "Finishers: Temporary",
+			pishits: "Finishers: Pistol",
+			rifhits: "Finishers: Rifle",
+			smghits: "Finishers: SMG",
+			piehits: "Finishers: Piercing",
+			slahits: "Finishers: Slashing",
+			shohits: "Finishers: Shotgun",
+			heahits: "Finishers: Heavy Artillery",
+			machits: "Finishers: Machine Guns",
+			h2hhits: "Finishers: Unarmed",
+		},
+		items: {
+			itemsbought: "Items: Bought",
+			itemsboughtabroad: "Items: Bought Abroad",
+			itemssent: "Items: Sent",
+			auctionsells: "Items: Auctioned",
+			cityfinds: "Items: Found in City",
+			itemsdumped: "Items: Dumped",
+		},
+		refills: {
+			nerverefills: "Refills: Nerve",
+			tokenrefills: "Refills: Token",
+			refills: "Refills: Energy",
+		},
+		revives: {
+			revives: "Revives: Given",
+			reviveskill: "Revives: Skill",
+			revivesreceived: "Revives: Received",
+		},
+		travel: {
+			argtravel: "Travel: Argentina",
+			mextravel: "Travel: Mexico",
+			dubtravel: "Travel: UAE",
+			hawtravel: "Travel: Hawaii",
+			japtravel: "Travel: Japan",
+			lontravel: "Travel: UK",
+			soutravel: "Travel: South Africa",
+			switravel: "Travel: Switzerland",
+			chitravel: "Travel: China",
+			cantravel: "Travel: Canada",
+			caytravel: "Travel: Cayman Islands",
+			traveltimes: "Travel: Total",
+			traveltime: "Travel: Time Spent",
+		},
+		other: {
+			auctionswon: "Auctions Won",
+
+			peopleboughtspent: "Bail Fees Spent",
+			booksread: "Books Read",
+			bloodwithdrawn: "Blood Bags Filled",
+
+			classifiedadsplaced: "Classified Ads Placed",
+			companymailssent: "Company Mail Sent",
+
+			dumpfinds: "Dump Finds",
+			dumpsearches: "Dump Searches",
+			daysbeendonator: "Days Been A Donator",
+
+			failedbusts: "Failed Busts",
+			theyrunaway: "Foes Escaped",
+			friendmailssent: "Friend Mail Sent",
+			factionmailssent: "Faction Mail Sent",
+
+			peoplebusted: "Jail: Busted",
+			peoplebought: "Jail: Bailed",
+			jailed: "Jail: Total",
+
+			medicalitemsused: "Meds Used",
+			medstolen: "Meds Stolen",
+			meritsbought: "Merits Bought",
+			rehabcost: "Money Spent On Rehab",
+
+			pointsbought: "Points Bought",
+			personalsplaced: "Personal Ads Placed",
+
+			respectforfaction: "Respect Earned",
+			rehabs: "Rehabs Done",
+			racingpointsearned: "Racing: Points Earned",
+			raceswon: "Racing: Won",
+			racesentered: "Racing: Entered",
+
+			spousemailssent: "Spouse Mail Sent",
+			spydone: "Spies Done",
+			cityitemsbought: "Shop Purchases",
+
+			trainsreceived: "Times Trained",
+			mailssent: "Total Mail Sent",
+			hospital: "Times In Hospital",
+			territorytime: "Territory Time",
+
+			virusescoded: "Viruses Coded",
+		},
+	};
+
 	featureManager.registerFeature(
 		"Profile Box",
 		"profile",
@@ -127,13 +316,30 @@
 
 			if (data) {
 				// FIXME - Show data.
-				const rows = [
-					{ stat: "Networth", them: 17566379925, you: { value: 20735866343, relative: 3169486418 }, cellRenderer: "currency" },
-					{ stat: "Drugs: Xanax", them: 2397, you: { value: 2507, relative: 110 } },
-					{ stat: "Attacks: Elo rating", them: 1629, you: { value: 1493, relative: -199 } },
-				];
 
-				const table = createTable(
+				buildCustom();
+				buildOthers();
+
+				const otherList = document.newElement({
+					type: "button",
+					class: "other-stats-button",
+					text: "View other stats.",
+					events: {
+						click() {
+							content.find(".custom-stats").classList.toggle("hidden");
+							content.find(".other-stats").classList.toggle("hidden");
+						},
+					},
+				});
+				section.appendChild(otherList);
+			} else {
+				// FIXME - Show error.
+			}
+
+			showLoadingPlaceholder(section, false);
+
+			function createStatsTable(id, rows, hidden) {
+				return createTable(
 					[
 						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
 						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
@@ -141,6 +347,7 @@
 					],
 					rows,
 					{
+						class: `${id} ${hidden ? "hidden" : ""}`,
 						cellRenderers: {
 							number: (data) => {
 								let node;
@@ -193,15 +400,26 @@
 						stretchColumns: true,
 					}
 				);
-				section.appendChild(table.element);
-
-				const otherList = document.newElement({ type: "div", class: "other-stats", text: "View other stats." });
-				section.appendChild(otherList);
-			} else {
-				// FIXME - Show error.
 			}
 
-			showLoadingPlaceholder(section, false);
+			function buildCustom() {
+				// FIXME - Decide what to show.
+				const rows = [
+					{ stat: "Networth", them: 17566379925, you: { value: 20735866343, relative: 3169486418 }, cellRenderer: "currency" },
+					{ stat: "Drugs: Xanax", them: 2397, you: { value: 2507, relative: 110 } },
+				];
+
+				const table = createStatsTable("custom-stats", rows, false);
+				section.appendChild(table.element);
+			}
+
+			function buildOthers() {
+				// FIXME - Decide what to show.
+				const rows = [{ stat: "Attacks: Elo rating", them: 1629, you: { value: 1493, relative: -199 } }];
+
+				const table = createStatsTable("other-stats", rows, true);
+				section.appendChild(table.element);
+			}
 		}
 
 		async function buildSpy() {

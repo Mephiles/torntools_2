@@ -30,7 +30,7 @@ Object.defineProperty(Document.prototype, "newElement", {
 			if (options.id) newElement.id = options.id;
 			if (options.class) {
 				if (Array.isArray(options.class)) newElement.setClass(...options.class);
-				else newElement.setClass(options.class);
+				else newElement.setClass(options.class.trim());
 			}
 			if (options.text) newElement.innerText = options.text;
 			if (options.html) newElement.innerHTML = options.html;
