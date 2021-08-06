@@ -190,22 +190,24 @@
 		},
 		{
 			"matches": ["https://www.torn.com/bazaar.php*"],
+			"css": ["scripts/features/bazaar-worth/ttBazaarWorth.css"],
+			"js": ["scripts/features/bazaar-worth/ttBazaarWorth.entry.js"],
+			"run_at": "document_start"
+		},
+		{
+			"matches": ["https://www.torn.com/bazaar.php*"],
 			"css": [
 				"scripts/features/drug-details/ttDrugDetails.css",
 				"scripts/features/item-values/ttItemValues.css",
 				"scripts/features/total-item-cost/ttTotalItemCost.css",
-				"scripts/features/bazaar-worth/ttBazaarWorth.css",
 				"scripts/features/item-redirect/ttBazaarRedirect.css",
-				"scripts/features/bazaar-worth/ttBazaarWorth.css",
 				"scripts/features/bazaar-fill-max/ttBazaarFillMax.css"
 			],
 			"js": [
 				"scripts/features/drug-details/ttDrugDetails.js",
 				"scripts/features/item-values/ttItemValues.js",
 				"scripts/features/total-item-cost/ttTotalItemCost.js",
-				"scripts/features/bazaar-worth/ttBazaarWorth.js",
 				"scripts/features/item-redirect/ttBazaarRedirect.js",
-				"scripts/features/bazaar-worth/ttBazaarWorth.js",
 				"scripts/features/bazaar-fill-max/ttBazaarFillMax.js"
 			],
 			"run_at": "document_end"
@@ -281,7 +283,9 @@
 				"scripts/features/faction-member-number/ttFactionMemberNumber.css",
 				"scripts/features/war-finish-times/ttWarFinishTimes.css",
 				"scripts/features/last-action/ttLastAction.css",
-				"scripts/features/faction-member-filter/ttFactionMemberFilter.css"
+				"scripts/features/faction-member-filter/ttFactionMemberFilter.css",
+				"scripts/features/faction-member-info/ttFactionMemberInfo.css",
+				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
@@ -306,7 +310,9 @@
 				"scripts/features/armory-filter/ttArmoryFilter.js",
 				"scripts/features/armory-worth/ttArmoryWorth.js",
 				"scripts/features/armory-filter/ttArmoryFilter.js",
-				"scripts/features/upgrade-required-respect/ttUpgradeRequiredRespect.js"
+				"scripts/features/upgrade-required-respect/ttUpgradeRequiredRespect.js",
+				"scripts/features/faction-member-info/ttFactionMemberInfo.js",
+				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js"
 			],
 			"run_at": "document_end"
 		},

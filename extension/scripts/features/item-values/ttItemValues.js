@@ -13,7 +13,7 @@
 		const userId = parseInt(getSearchParameters().get("userId"));
 
 		if (userId && hasAPIData() && userId !== userdata.player_id) return;
-	} else if (page === "faction" && !isOwnFaction()) return;
+	} else if (page === "faction" && !isOwnFaction) return;
 
 	const feature = featureManager.registerFeature(
 		"Item Values",
@@ -251,7 +251,9 @@
 		for (const item of document.findAll(`.items-cont > li[data-item="${id}"]`)) {
 			const priceElement = item.find(".tt-item-price");
 			if (!priceElement) continue;
+
 			const quantityElement = priceElement.find(".tt-item-quantity");
+			if (!quantityElement) continue;
 
 			const price = torndata.items[id].market_value;
 			const newQuantity = parseInt(quantityElement.innerText.match(/([0-9]*)x = /i)[1]) + change;
