@@ -217,3 +217,7 @@ body.dark-mode .attack-history .tt-table .neutral {
 .spy-source {
 	margin: 0 4px 2px 4px;
 }
+
+.stats-error-message {
+	color: var(--tt-color-red);
+}

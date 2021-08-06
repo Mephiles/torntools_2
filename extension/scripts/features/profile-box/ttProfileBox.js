@@ -7,10 +7,10 @@
 	const STATS = [
 		// Basic rewards.
 		{ name: "Awards", type: "basic", getter: (data) => data.awards },
-		{ name: "Logins", type: "basic", getter: (data) => data.logins },
-		{ name: "Networth", type: "basic", getter: (data) => data.networth, formatter: "currency" },
-		{ name: "User Activity", type: "basic", getter: (data) => data.useractivity },
-		{ name: "Stat Enhancers Used", type: "basic", getter: (data) => data.statenhancersused },
+		{ name: "Networth", type: "basic", getter: (data) => data.personalstats.networth, formatter: "currency" },
+		{ name: "User Activity", type: "basic", getter: (data) => data.personalstats.useractivity },
+		// FIXME - Decide type of these stats.
+		{ name: "Stat Enhancers Used", type: "basic", getter: (data) => data.personalstats.statenhancersused },
 	];
 
 	const key_dict = {
@@ -303,16 +303,25 @@
 		}
 
 		async function buildStats() {
-			if (!settings.pages.profile.boxStats) return;
+			if (!settings.pages.profile.boxStats || !settings.apiUsage.user.personalstats || !settings.apiUsage.user.crimes) return;
 
 			const section = document.newElement({ type: "div", class: "section user-stats", attributes: { order: 1 } });
 			content.appendChild(section);
 
 			showLoadingPlaceholder(section, true);
 
-			// FIXME - Load data.
-			// FIXME - Decide what to show.
-			let data = {};
+			let data;
+			if (ttCache.hasValue("profile-stats", userdata.faction.faction_id)) {
+				data = ttCache.get("profile-stats", id);
+			} else {
+				try {
+					data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
+
+					ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
+				} catch (error) {
+					console.log("TT - Couldn't fetch users stats.", error);
+				}
+			}
 
 			if (data) {
 				// FIXME - Show data.
@@ -343,12 +352,25 @@
 					type: "button",
 					class: "edit-stats",
 					children: [document.newElement({ type: "i", class: "fas fa-cog" })],
+					events: {
+						click() {
+							const overlay = document.find(".tt-overlay");
+
+							if (overlay.classList.toggle("hidden")) {
+								// Overlay is now hidden.
+								// FIXME - Remove click listener.
+							} else {
+								// Overlay is now shown.
+								// FIXME - Handle stat click.
+							}
+						},
+					},
 				});
 
 				const actions = document.newElement({ type: "div", class: "stat-actions", children: [otherList, editButton] });
 				section.appendChild(actions);
 			} else {
-				// FIXME - Show error.
+				section.appendChild(document.newElement({ type: "div", class: "stats-error-message", text: "Failed to fetch data." }));
 			}
 
 			showLoadingPlaceholder(section, false);
@@ -383,7 +405,10 @@
 									node = document.createTextNode(formatNumber(data, { decimals: 0 }));
 								}
 
-								return { element: node, dispose: () => {} };
+								return {
+									element: node,
+									dispose: () => {},
+								};
 							},
 							currency: (data) => {
 								let node;
@@ -404,7 +429,10 @@
 									node = document.createTextNode(formatNumber(data, { decimals: 0, currency: true }));
 								}
 
-								return { element: node, dispose: () => {} };
+								return {
+									element: node,
+									dispose: () => {},
+								};
 							},
 						},
 						rowClass: (rowData) => {
@@ -419,10 +447,28 @@
 
 			function buildCustom() {
 				// FIXME - Decide what to show.
-				const rows = [
-					{ stat: "Networth", them: 17566379925, you: { value: 20735866343, relative: 3169486418 }, cellRenderer: "currency" },
-					{ stat: "Drugs: Xanax", them: 2397, you: { value: 2507, relative: 110 } },
-				];
+				const stats = ["Networth"];
+
+				const rows = stats
+					.map((name) => {
+						const stat = STATS.find((_stat) => _stat.name === name);
+						if (!stat) return false;
+
+						const them = stat.getter(data);
+						const you = stat.getter(userdata);
+						if (isNaN(them) || isNaN(you)) return false;
+
+						const row = {
+							stat: stat.name,
+							them: them,
+							you: { value: you, relative: them - you },
+						};
+
+						if (stat.formatter) row.cellRenderer = stat.formatter;
+
+						return row;
+					})
+					.filter((value) => !!value);
 
 				const table = createStatsTable("custom-stats", rows, false);
 				section.appendChild(table.element);
@@ -430,7 +476,37 @@
 
 			function buildOthers() {
 				// FIXME - Decide what to show.
-				const rows = [{ stat: "Attacks: Elo rating", them: 1629, you: { value: 1493, relative: -199 } }];
+				const stats = ["Networth"];
+
+				const _stats = STATS.filter((stat) => !stats.includes(stat.name))
+					.map((stat) => {
+						const them = stat.getter(data);
+						const you = stat.getter(userdata);
+						if (isNaN(them) || isNaN(you)) return false;
+
+						const row = {
+							stat: stat.name,
+							them: them,
+							you: { value: you, relative: them - you },
+							type: stat.type,
+						};
+
+						if (stat.formatter) row.cellRenderer = stat.formatter;
+
+						return row;
+					})
+					.filter((value) => !!value);
+				const types = [...new Set(_stats.map((stat) => stat.type))];
+
+				// FIXME - Change table to allow stray rows.
+				const _rows = types.flatMap((type) => {
+					return [{ type: capitalizeText(type) }, ..._stats.filter((stat) => stat.type === type).sort((a, b) => a.name.localeCompare(b.name))];
+				});
+
+				console.log("DKK potential rows", _rows);
+
+				// FIXME - Decide what to show.
+				const rows = [];
 
 				const table = createStatsTable("other-stats", rows, true);
 				section.appendChild(table.element);
@@ -438,7 +514,7 @@
 		}
 
 		async function buildSpy() {
-			if (!settings.pages.profile.boxSpy && settings.apiUsage.user.battlestats) return;
+			if (!settings.pages.profile.boxSpy || !settings.apiUsage.user.battlestats) return;
 
 			const section = document.newElement({ type: "div", class: "section spy-information", attributes: { order: 2 } });
 			content.appendChild(section);
@@ -574,7 +650,10 @@
 									node = document.createTextNode(formatNumber(data, { decimals: 0 }));
 								}
 
-								return { element: node, dispose: () => {} };
+								return {
+									element: node,
+									dispose: () => {},
+								};
 							},
 						},
 						rowClass: (rowData) => {
@@ -716,7 +795,10 @@
 								if (respect > 0) respect = formatNumber(respect, { decimals: 2 });
 								else respect = "/";
 
-								return { element: document.createTextNode(respect), dispose: () => {} };
+								return {
+									element: document.createTextNode(respect),
+									dispose: () => {},
+								};
 							},
 						},
 						stretchColumns: true,
