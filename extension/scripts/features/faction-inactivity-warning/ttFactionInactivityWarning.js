@@ -47,7 +47,9 @@
 			await requireElement(".tt-last-action");
 			document.findAll(".members-list .table-body > li").forEach((li) => {
 				if (li.nextSibling?.className?.includes("tt-last-action")) {
+					// noinspection JSCheckFunctionSignatures
 					const days = parseInt(li.nextSibling.getAttribute("hours") / 24);
+
 					settings.factionInactivityWarning.forEach((warning) => {
 						if (!("days" in warning) || days < warning.days) return;
 
