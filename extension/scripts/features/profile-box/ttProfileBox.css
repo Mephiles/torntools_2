@@ -140,16 +140,30 @@ body.tt-mobile #userInformation main {
 	padding: 0;
 }
 
-.attack-history .tt-table .positive {
+body:not(.dark-mode) .attack-history .tt-table .positive {
 	background-color: #dfffdf;
 }
 
-.attack-history .tt-table .negative {
+body.dark-mode .attack-history .tt-table .positive {
+	background-color: #408624;
+	/*background-color: green;*/
+}
+
+body:not(.dark-mode) .attack-history .tt-table .negative {
 	background-color: #ffe0e0;
 }
 
-.attack-history .tt-table .neutral {
+body.dark-mode .attack-history .tt-table .negative {
+	/*background-color: #a71f1f;*/
+	background-color: darkred;
+}
+
+body:not(.dark-mode) .attack-history .tt-table .neutral {
 	background-color: white;
+}
+
+body.dark-mode .attack-history .tt-table .neutral {
+	background-color: #555;
 }
 
 .attack-history .tt-table .last-cell {
