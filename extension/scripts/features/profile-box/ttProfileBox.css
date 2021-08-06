@@ -35,12 +35,13 @@ body.tt-mobile #userInformation main {
 	border: 0 !important;
 	background: unset !important;
 	padding: 0;
+	border-radius: 3px;
+	color: var(--default-color);
 
 	/* FIXME - Remove CSS. */
 	width: auto;
 	margin: 0;
 	box-shadow: unset;
-	color: initial;
 }
 
 #userInformation .section {
@@ -59,18 +60,37 @@ body.tt-mobile #userInformation main {
 	flex-direction: column;
 }
 
+.stat-actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: -4px;
+	position: relative;
+}
+
 .other-stats-button {
 	background-color: var(--tt-color-light-green);
 	text-align: center;
 	border-radius: 5px 5px 0 0;
 	line-height: 20px;
 	width: 80%;
-	margin: 4px 0 -4px 0;
+	margin: 4px 0 0 0;
 	align-self: center;
 	cursor: pointer;
-	color: initial;
+	color: black;
 	border: 0;
 	padding: 0;
+}
+
+.edit-stats {
+	position: absolute;
+	right: 1px;
+	bottom: 1px;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	color: var(--default-color);
+	cursor: pointer;
 }
 
 #userInformation .user-stats .tt-table {

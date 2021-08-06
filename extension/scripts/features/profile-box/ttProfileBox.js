@@ -326,12 +326,27 @@
 					text: "View other stats.",
 					events: {
 						click() {
-							content.find(".custom-stats").classList.toggle("hidden");
-							content.find(".other-stats").classList.toggle("hidden");
+							const isCustom = !content.find(".custom-stats").classList.toggle("hidden");
+
+							if (isCustom) {
+								content.find(".other-stats").classList.add("hidden");
+								otherList.innerText = "View other stats.";
+							} else {
+								content.find(".other-stats").classList.remove("hidden");
+								otherList.innerText = "View custom list.";
+							}
 						},
 					},
 				});
-				section.appendChild(otherList);
+
+				const editButton = document.newElement({
+					type: "button",
+					class: "edit-stats",
+					children: [document.newElement({ type: "i", class: "fas fa-cog" })],
+				});
+
+				const actions = document.newElement({ type: "div", class: "stat-actions", children: [otherList, editButton] });
+				section.appendChild(actions);
 			} else {
 				// FIXME - Show error.
 			}
