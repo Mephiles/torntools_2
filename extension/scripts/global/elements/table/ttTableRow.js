@@ -1,11 +1,20 @@
 function createTableRow(rowData, tableColumnsDefs, options) {
-	const rowCells = tableColumnsDefs.map((columnDef) =>
-		createTableCell(rowData[columnDef.id], columnDef, options.cellRenderers[rowData.cellRenderer ?? columnDef.cellRenderer], options)
-	);
+	let isHeader = options.hasHeaders && "header" in rowData;
+
+	let rowCells;
+	if (isHeader) {
+		rowCells = [
+			createTableCell(rowData.header, { class: "tt-table-row-header", width: 0 }, options.cellRenderers[rowData.cellRenderer ?? "string"], options),
+		];
+	} else {
+		rowCells = tableColumnsDefs.map((columnDef) =>
+			createTableCell(rowData[columnDef.id], columnDef, options.cellRenderers[rowData.cellRenderer ?? columnDef.cellRenderer], options)
+		);
+	}
 
 	const rowElement = document.newElement({
 		type: "div",
-		class: ["tt-table-row", ...(options.rowClass ? [options.rowClass(rowData)] : [])].join(" "),
+		class: ["tt-table-row", ...(options.rowClass ? [options.rowClass(rowData, isHeader)] : [])].join(" "),
 		children: rowCells.map((cell) => cell.element),
 	});
 

@@ -324,8 +324,6 @@
 			}
 
 			if (data) {
-				// FIXME - Show data.
-
 				buildCustom();
 				buildOthers();
 
@@ -375,7 +373,7 @@
 
 			showLoadingPlaceholder(section, false);
 
-			function createStatsTable(id, rows, hidden) {
+			function createStatsTable(id, rows, hidden = false, hasHeaders = false) {
 				return createTable(
 					[
 						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
@@ -435,12 +433,14 @@
 								};
 							},
 						},
-						rowClass: (rowData) => {
-							if (rowData.them === "N/A" || rowData.you.value === "N/A" || rowData.them === rowData.you.value) return "";
+						rowClass: (rowData, isHeader) => {
+							if (isHeader) return "";
+							if (rowData.them === "N/A" || rowData.you?.value === "N/A" || rowData.them === rowData.you?.value) return "";
 
-							return rowData.them > rowData.you.value ? "superior-them" : "superior-you";
+							return rowData.them > rowData.you?.value ? "superior-them" : "superior-you";
 						},
 						stretchColumns: true,
+						hasHeaders,
 					}
 				);
 			}
@@ -470,7 +470,7 @@
 					})
 					.filter((value) => !!value);
 
-				const table = createStatsTable("custom-stats", rows, false);
+				const table = createStatsTable("custom-stats", rows, false, false);
 				section.appendChild(table.element);
 			}
 
@@ -498,17 +498,11 @@
 					.filter((value) => !!value);
 				const types = [...new Set(_stats.map((stat) => stat.type))];
 
-				// FIXME - Change table to allow stray rows.
-				const _rows = types.flatMap((type) => {
-					return [{ type: capitalizeText(type) }, ..._stats.filter((stat) => stat.type === type).sort((a, b) => a.name.localeCompare(b.name))];
+				const rows = types.flatMap((type) => {
+					return [{ header: capitalizeText(type) }, ..._stats.filter((stat) => stat.type === type).sort((a, b) => a.stat.localeCompare(b.stat))];
 				});
 
-				console.log("DKK potential rows", _rows);
-
-				// FIXME - Decide what to show.
-				const rows = [];
-
-				const table = createStatsTable("other-stats", rows, true);
+				const table = createStatsTable("other-stats", rows, true, true);
 				section.appendChild(table.element);
 			}
 		}
