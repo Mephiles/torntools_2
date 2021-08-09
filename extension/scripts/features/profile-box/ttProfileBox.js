@@ -35,8 +35,8 @@
 		{ name: "Incendiary ammo used", type: "attacking", getter: (data) => data.personalstats.incendiaryammoused },
 		{ name: "Stealth attacks", type: "attacking", getter: (data) => data.personalstats.attacksstealthed },
 		{ name: "Retaliations", type: "attacking", getter: (data) => data.personalstats.retals },
-		{ name: "Money mugged", type: "attacking", getter: (data) => data.personalstats.moneymugged },
-		{ name: "Largest mug", type: "attacking", getter: (data) => data.personalstats.largestmug },
+		{ name: "Money mugged", type: "attacking", getter: (data) => data.personalstats.moneymugged, formatter: "currency" },
+		{ name: "Largest mug", type: "attacking", getter: (data) => data.personalstats.largestmug, formatter: "currency" },
 		{ name: "Items looted", type: "attacking", getter: (data) => data.personalstats.itemslooted },
 		{ name: "Highest level beaten", type: "attacking", getter: (data) => data.personalstats.highestbeaten },
 		{ name: "Total respect", type: "attacking", getter: (data) => data.personalstats.respectforfaction },
@@ -161,7 +161,7 @@
 		{ name: "Races entered", type: "racing", getter: (data) => data.personalstats.racesentered },
 		{ name: "Races won", type: "racing", getter: (data) => data.personalstats.raceswon },
 		// Networth
-		{ name: "Networth", type: "networth", getter: (data) => data.personalstats.networth },
+		{ name: "Networth", type: "networth", getter: (data) => data.personalstats.networth, formatter: "currency" },
 		// Other
 		{ name: "Time played", type: "other", getter: (data) => data.personalstats.useractivity }, // FIXME - Improve formatting.
 		{ name: "Current activity streak", type: "other", getter: (data) => data.personalstats.activestreak },
