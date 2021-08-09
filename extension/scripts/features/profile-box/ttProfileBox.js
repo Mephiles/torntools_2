@@ -466,7 +466,7 @@
 						const row = {
 							stat: stat.name,
 							them: them,
-							you: { value: you, relative: them - you },
+							you: { value: you, relative: you - them },
 							type: stat.type,
 						};
 
