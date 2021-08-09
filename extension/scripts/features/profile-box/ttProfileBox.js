@@ -5,193 +5,174 @@
 	if (isOwnProfile()) return;
 
 	const STATS = [
-		// Basic rewards.
-		{ name: "Awards", type: "basic", getter: (data) => data.awards },
-		{ name: "Networth", type: "basic", getter: (data) => data.personalstats.networth, formatter: "currency" },
-		{ name: "User Activity", type: "basic", getter: (data) => data.personalstats.useractivity },
-		// FIXME - Decide type of these stats.
-		{ name: "Stat Enhancers Used", type: "basic", getter: (data) => data.personalstats.statenhancersused },
+		// Attacking
+		{ name: "Attacks won", type: "attacking", getter: (data) => data.personalstats.attackswon },
+		{ name: "Attacks lost", type: "attacking", getter: (data) => data.personalstats.attackslost },
+		{ name: "Attacks stalemated", type: "attacking", getter: (data) => data.personalstats.attacksdraw },
+		{ name: "Attacks assisted", type: "attacking", getter: (data) => data.personalstats.attacksassisted },
+		{ name: "Arrests made", type: "attacking", getter: (data) => data.personalstats.arrestsmade },
+		{ name: "Defends won", type: "attacking", getter: (data) => data.personalstats.defendswon },
+		{ name: "Defends lost", type: "attacking", getter: (data) => data.personalstats.defendslost },
+		{ name: "Defends stalemated", type: "attacking", getter: (data) => data.personalstats.defendsstalemated },
+		// { name: "Defends total", type: "attacking", getter: (data) => 0 },
+		// { name: "Win Loss Ratio", type: "attacking", getter: (data) =>  0 },
+		{ name: "Elo Rating", type: "attacking", getter: (data) => data.personalstats.elo },
+		{ name: "Times escaped", type: "attacking", getter: (data) => data.personalstats.yourunaway },
+		{ name: "Foes escaped", type: "attacking", getter: (data) => data.personalstats.theyrunaway },
+		{ name: "Unarmored fights won", type: "attacking", getter: (data) => data.personalstats.unarmoredwon },
+		{ name: "Best kill streak", type: "attacking", getter: (data) => data.personalstats.bestkillstreak },
+		{ name: "Hits", type: "attacking", getter: (data) => data.personalstats.attackhits },
+		{ name: "Misses", type: "attacking", getter: (data) => data.personalstats.attackmisses },
+		{ name: "Total damage made", type: "attacking", getter: (data) => data.personalstats.attackdamage },
+		{ name: "Best damage made", type: "attacking", getter: (data) => data.personalstats.bestdamage },
+		{ name: "One hit kills", type: "attacking", getter: (data) => data.personalstats.onehitkills },
+		{ name: "Critical hits", type: "attacking", getter: (data) => data.personalstats.attackcriticalhits },
+		{ name: "Rounds fired", type: "attacking", getter: (data) => data.personalstats.roundsfired },
+		{ name: "Special ammunition used", type: "attacking", getter: (data) => data.personalstats.specialammoused },
+		{ name: "Hollow point ammo used", type: "attacking", getter: (data) => data.personalstats.hollowammoused },
+		{ name: "Tracer ammo used", type: "attacking", getter: (data) => data.personalstats.tracerammoused },
+		{ name: "Piercing ammo used", type: "attacking", getter: (data) => data.personalstats.piercingammoused },
+		{ name: "Incendiary ammo used", type: "attacking", getter: (data) => data.personalstats.incendiaryammoused },
+		{ name: "Stealth attacks", type: "attacking", getter: (data) => data.personalstats.attacksstealthed },
+		{ name: "Retaliations", type: "attacking", getter: (data) => data.personalstats.retals },
+		{ name: "Money mugged", type: "attacking", getter: (data) => data.personalstats.moneymugged },
+		{ name: "Largest mug", type: "attacking", getter: (data) => data.personalstats.largestmug },
+		{ name: "Items looted", type: "attacking", getter: (data) => data.personalstats.itemslooted },
+		{ name: "Highest level beaten", type: "attacking", getter: (data) => data.personalstats.highestbeaten },
+		{ name: "Total respect", type: "attacking", getter: (data) => data.personalstats.respectforfaction },
+		{ name: "Territory wall joins", type: "attacking", getter: (data) => data.personalstats.territoryjoins },
+		{ name: "Territory wall time", type: "attacking", getter: (data) => data.personalstats.territorytime }, // FIXME - Improve formatting.
+		// Jobs
+		{ name: "Job points used", type: "jobs", getter: (data) => data.personalstats.jobpointsused },
+		{ name: "Times trained", type: "jobs", getter: (data) => data.personalstats.trainsreceived },
+		// Trading
+		{ name: "Market buys", type: "trading", getter: (data) => data.personalstats.itemsbought },
+		{ name: "Auctions won", type: "trading", getter: (data) => data.personalstats.auctionswon },
+		{ name: "Items auctioned", type: "trading", getter: (data) => data.personalstats.auctionsells },
+		{ name: "Item sends", type: "trading", getter: (data) => data.personalstats.itemssent },
+		{ name: "Shop purchases", type: "trading", getter: (data) => data.personalstats.cityitemsbought },
+		{ name: "Weapons bought", type: "trading", getter: (data) => data.personalstats.weaponsbought },
+		{ name: "Points bought", type: "trading", getter: (data) => data.personalstats.pointsbought },
+		// Jail
+		{ name: "Times jailed", type: "jail", getter: (data) => data.personalstats.jailed },
+		{ name: "People busted", type: "jail", getter: (data) => data.personalstats.peoplebusted },
+		{ name: "Failed busts", type: "jail", getter: (data) => data.personalstats.failedbusts },
+		{ name: "People bailed", type: "jail", getter: (data) => data.personalstats.peoplebought },
+		{ name: "Bail fees", type: "jail", getter: (data) => data.personalstats.peopleboughtspent, formatter: "currency" },
+		// Hospital
+		{ name: "Times in hospital", type: "hospital", getter: (data) => data.personalstats.hospital },
+		{ name: "Meds used", type: "hospital", getter: (data) => data.personalstats.medicalitemsused },
+		{ name: "Blood withdrawn", type: "hospital", getter: (data) => data.personalstats.bloodwithdrawn },
+		{ name: "Revive skill", type: "hospital", getter: (data) => data.personalstats.reviveskill },
+		{ name: "Revives given", type: "hospital", getter: (data) => data.personalstats.revives },
+		{ name: "Revives received", type: "hospital", getter: (data) => data.personalstats.revivesreceived },
+		// Finishing hits
+		{ name: "Heavy artillery", type: "finishing hits", getter: (data) => data.personalstats.heahits }, // FIXME - Rename.
+		{ name: "Machine guns", type: "finishing hits", getter: (data) => data.personalstats.machits }, // FIXME - Rename.
+		{ name: "Rifles", type: "finishing hits", getter: (data) => data.personalstats.rifhits }, // FIXME - Rename.
+		{ name: "Sub machine guns", type: "finishing hits", getter: (data) => data.personalstats.smghits }, // FIXME - Rename.
+		{ name: "Shotguns", type: "finishing hits", getter: (data) => data.personalstats.shohits }, // FIXME - Rename.
+		{ name: "Pistols", type: "finishing hits", getter: (data) => data.personalstats.pishits }, // FIXME - Rename.
+		{ name: "Temporary weapons", type: "finishing hits", getter: (data) => data.personalstats.grehits }, // FIXME - Rename.
+		{ name: "Piercing weapons", type: "finishing hits", getter: (data) => data.personalstats.piehits }, // FIXME - Rename.
+		{ name: "Slashing weapons", type: "finishing hits", getter: (data) => data.personalstats.slahits }, // FIXME - Rename.
+		{ name: "Clubbing weapons", type: "finishing hits", getter: (data) => data.personalstats.axehits }, // FIXME - Rename.
+		{ name: "Mechanical weapons", type: "finishing hits", getter: (data) => data.personalstats.chahits }, // FIXME - Rename.
+		{ name: "Hand-to-hand", type: "finishing hits", getter: (data) => data.personalstats.h2hhits }, // FIXME - Rename.
+		// Communication
+		{ name: "Mails sent", type: "communication", getter: (data) => data.personalstats.mailssent },
+		{ name: "Mails to friends", type: "communication", getter: (data) => data.personalstats.friendmailssent }, // FIXME - Rename.
+		{ name: "Mails to faction", type: "communication", getter: (data) => data.personalstats.factionmailssent }, // FIXME - Rename.
+		{ name: "Mails to colleagues", type: "communication", getter: (data) => data.personalstats.companymailssent }, // FIXME - Rename.
+		{ name: "Mails to spouse", type: "communication", getter: (data) => data.personalstats.spousemailssent }, // FIXME - Rename.
+		{ name: "Classified ads", type: "communication", getter: (data) => data.personalstats.classifiedadsplaced },
+		{ name: "Personals placed", type: "communication", getter: (data) => data.personalstats.personalsplaced },
+		// Criminal offenses
+		{ name: "Criminal offenses", type: "criminal offenses", getter: (data) => data.criminalrecord.total },
+		{ name: "Selling illegal goods", type: "criminal offenses", getter: (data) => data.criminalrecord.selling_illegal_products }, // FIXME - Rename.
+		{ name: "Theft", type: "criminal offenses", getter: (data) => data.criminalrecord.theft }, // FIXME - Rename.
+		{ name: "Auto theft", type: "criminal offenses", getter: (data) => data.criminalrecord.auto_theft }, // FIXME - Rename.
+		{ name: "Drug deals", type: "criminal offenses", getter: (data) => data.criminalrecord.drug_deals }, // FIXME - Rename.
+		{ name: "Computer crimes", type: "criminal offenses", getter: (data) => data.criminalrecord.computer_crimes }, // FIXME - Rename.
+		{ name: "Fraud", type: "criminal offenses", getter: (data) => data.criminalrecord.fraud_crimes }, // FIXME - Rename.
+		{ name: "Murder", type: "criminal offenses", getter: (data) => data.criminalrecord.murder }, // FIXME - Rename.
+		{ name: "Other", type: "criminal offenses", getter: (data) => data.criminalrecord.other }, // FIXME - Rename.
+		{ name: "Organized Crimes", type: "criminal offenses", getter: (data) => data.personalstats.organisedcrimes },
+		// Bounties
+		{ name: "Bounties placed", type: "bounties", getter: (data) => data.personalstats.bountiesplaced },
+		{ name: "Spent on bounties", type: "bounties", getter: (data) => data.personalstats.totalbountyspent, formatter: "currency" },
+		{ name: "Bounties collected", type: "bounties", getter: (data) => data.personalstats.bountiescollected },
+		{ name: "Money rewarded", type: "bounties", getter: (data) => data.personalstats.totalbountyreward, formatter: "currency" }, // FIXME - Rename.
+		{ name: "Bounties received", type: "bounties", getter: (data) => data.personalstats.bountiesreceived },
+		{ name: "Received value", type: "bounties", getter: (data) => data.personalstats.receivedbountyvalue, formatter: "currency" }, // FIXME - Rename.
+		// Items
+		{ name: "Items found", type: "items", getter: (data) => data.personalstats.cityfinds }, // FIXME - Rename.
+		{ name: "Items trashed", type: "items", getter: (data) => data.personalstats.itemsdumped },
+		{ name: "Items found in dump", type: "items", getter: (data) => data.personalstats.dumpfinds },
+		{ name: "Items searched in dump", type: "items", getter: (data) => data.personalstats.dumpsearches },
+		{ name: "Books read", type: "items", getter: (data) => data.personalstats.booksread },
+		{ name: "Boosters used", type: "items", getter: (data) => data.personalstats.boostersused },
+		{ name: "Consumables used", type: "items", getter: (data) => data.personalstats.consumablesused },
+		{ name: "Candy eaten", type: "items", getter: (data) => data.personalstats.candyused },
+		{ name: "Alcohol drunk", type: "items", getter: (data) => data.personalstats.alcoholused },
+		{ name: "Energy drinks drunk", type: "items", getter: (data) => data.personalstats.energydrinkused },
+		{ name: "Stat enhancers used", type: "items", getter: (data) => data.personalstats.statenhancersused },
+		{ name: "Viruses coded", type: "items", getter: (data) => data.personalstats.virusescoded },
+		// Travel
+		{ name: "Times traveled", type: "travel", getter: (data) => data.personalstats.traveltimes },
+		{ name: "Time spent traveling", type: "travel", getter: (data) => data.personalstats.traveltime }, // FIXME - Improve formatting.
+		{ name: "Items bought abroad", type: "travel", getter: (data) => data.personalstats.itemsboughtabroad },
+		// { name: "Hunting skill", type: "travel", getter: (data) => 0 },
+		{ name: "Attacks won abroad", type: "travel", getter: (data) => data.personalstats.attackswonabroad },
+		{ name: "Defends lost abroad", type: "travel", getter: (data) => data.personalstats.defendslostabroad },
+		{ name: "Argentina", type: "travel", getter: (data) => data.personalstats.argtravel },
+		{ name: "Mexico", type: "travel", getter: (data) => data.personalstats.mextravel },
+		{ name: "United Arab Emirates", type: "travel", getter: (data) => data.personalstats.dubtravel },
+		{ name: "Hawaii", type: "travel", getter: (data) => data.personalstats.hawtravel },
+		{ name: "Japan", type: "travel", getter: (data) => data.personalstats.japtravel },
+		{ name: "United Kingdom", type: "travel", getter: (data) => data.personalstats.lontravel },
+		{ name: "South Africa", type: "travel", getter: (data) => data.personalstats.soutravel },
+		{ name: "Switzerland", type: "travel", getter: (data) => data.personalstats.switravel },
+		{ name: "China", type: "travel", getter: (data) => data.personalstats.chitravel },
+		{ name: "Canada", type: "travel", getter: (data) => data.personalstats.cantravel },
+		{ name: "Cayman Islands", type: "travel", getter: (data) => data.personalstats.caytravel },
+		// Drugs
+		{ name: "Drugs used", type: "drugs", getter: (data) => data.personalstats.drugsused },
+		{ name: "Times overdosed", type: "drugs", getter: (data) => data.personalstats.overdosed },
+		{ name: "Rehabilitations", type: "drugs", getter: (data) => data.personalstats.rehabs },
+		{ name: "Rehabilitation fees", type: "drugs", getter: (data) => data.personalstats.rehabcost, formatter: "currency" },
+		{ name: "Cannabis taken", type: "drugs", getter: (data) => data.personalstats.cantaken },
+		{ name: "Ecstasy taken", type: "drugs", getter: (data) => data.personalstats.exttaken },
+		{ name: "Ketamine taken", type: "drugs", getter: (data) => data.personalstats.kettaken },
+		{ name: "LSD taken", type: "drugs", getter: (data) => data.personalstats.lsdtaken },
+		{ name: "Opium taken", type: "drugs", getter: (data) => data.personalstats.opitaken },
+		{ name: "PCP taken", type: "drugs", getter: (data) => data.personalstats.pcptaken },
+		{ name: "Shrooms taken", type: "drugs", getter: (data) => data.personalstats.shrtaken },
+		{ name: "Speed taken", type: "drugs", getter: (data) => data.personalstats.spetaken },
+		{ name: "Vicodin taken", type: "drugs", getter: (data) => data.personalstats.victaken },
+		{ name: "Xanax taken", type: "drugs", getter: (data) => data.personalstats.xantaken },
+		// Missions
+		{ name: "Missions completed", type: "missions", getter: (data) => data.personalstats.missionscompleted },
+		{ name: "Duke contracts completed", type: "missions", getter: (data) => data.personalstats.dukecontractscompleted },
+		{ name: "Contracts completed", type: "missions", getter: (data) => data.personalstats.contractscompleted },
+		{ name: "Mission credits earned", type: "missions", getter: (data) => data.personalstats.missioncreditsearned },
+		// Racing
+		{ name: "Racing points earned", type: "racing", getter: (data) => data.personalstats.racingpointsearned },
+		{ name: "Races entered", type: "racing", getter: (data) => data.personalstats.racesentered },
+		{ name: "Races won", type: "racing", getter: (data) => data.personalstats.raceswon },
+		// Networth
+		{ name: "Networth", type: "networth", getter: (data) => data.personalstats.networth },
+		// Other
+		{ name: "Time played", type: "other", getter: (data) => data.personalstats.useractivity }, // FIXME - Improve formatting.
+		{ name: "Current activity streak", type: "other", getter: (data) => data.personalstats.activestreak },
+		{ name: "Best activity streak", type: "other", getter: (data) => data.personalstats.bestactivestreak },
+		{ name: "Awards", type: "other", getter: (data) => data.personalstats.awards },
+		{ name: "Energy refills", type: "other", getter: (data) => data.personalstats.refills },
+		{ name: "Nerve refills", type: "other", getter: (data) => data.personalstats.nerverefills },
+		{ name: "Token refills", type: "other", getter: (data) => data.personalstats.tokenrefills },
+		{ name: "Merits bought", type: "other", getter: (data) => data.personalstats.meritsbought },
+		{ name: "Days been a donator", type: "other", getter: (data) => data.personalstats.daysbeendonator },
 	];
-
-	const key_dict = {
-		attacks: {
-			attackswon: "Attacks: Won",
-			attackslost: "Attacks: Lost",
-			attacksdraw: "Attacks: Draw",
-			attacksstealthed: "Attacks: Stealthed",
-			attackhits: "Attacks: Total Hits",
-			attackmisses: "Attacks: Misses",
-			attacksassisted: "Attacks: Assisted",
-			attackswonabroad: "Attacks: Won Abroad",
-			highestbeaten: "Attacks: Highest Lvl Beaten",
-			largestmug: "Attacks: Largest Mug",
-			moneymugged: "Attacks: Money Mugged",
-			onehitkills: "Attacks: One Hit Kills",
-			attackdamage: "Attacks: Total Damage",
-			yourunaway: "Attacks: Escaped",
-			unarmoredwon: "Attacks: Unarmored Wins",
-			weaponsbought: "Attacks: Weapons Bought",
-			attackcriticalhits: "Attacks: Critical Hits",
-			bestdamage: "Attacks: Best Damage",
-			bestkillstreak: "Attacks: Best Killstreak",
-			arrestsmade: "Attacks: Arrests",
-			roundsfired: "Attacks: Ammo: Fired",
-			incendiaryammoused: "Attacks: Ammo: Incendiary",
-			piercingammoused: "Attacks: Ammo: Piercing",
-			tracerammoused: "Attacks: Ammo: Tracer",
-			specialammoused: "Attacks: Ammo: Special Total",
-			hollowammoused: "Attacks: Ammo: Hollow Point",
-			elo: "Attacks: Elo rating",
-		},
-		bounties: {
-			bountiesplaced: "Bounties: Placed",
-			bountiescollected: "Bounties: Completed",
-			totalbountyreward: "Bounties: Rewards",
-			totalbountyspent: "Bounties: Spent On",
-			receivedbountyvalue: "Bounties: Received",
-			bountiesreceived: "Bounties: Times Bountied",
-		},
-		crimes: {
-			selling_illegal_products: "Crimes: Sell illegal products",
-			theft: "Crimes: Theft",
-			auto_theft: "Crimes: Auto theft",
-			drug_deals: "Crimes: Drug deals",
-			computer_crimes: "Crimes: Computer",
-			murder: "Crimes: Murder",
-			fraud_crimes: "Crimes: Fraud",
-			other: "Crimes: Other",
-			total: "Crimes: Total",
-			organisedcrimes: "Crimes: Organised Crimes",
-		},
-		consumables: {
-			candyused: "Consumables: Candy",
-			energydrinkused: "Consumables: Energy Drinks",
-			consumablesused: "Consumables: Total",
-			alcoholused: "Consumables: Alcohol",
-			boostersused: "Consumables: Boosters",
-		},
-		contracts: {
-			contractscompleted: "Contracts: Completed",
-			dukecontractscompleted: "Contracts: Duke",
-			missionscompleted: "Contracts: Missions Completed",
-			missioncreditsearned: "Contracts: Miss. Credits Earned",
-		},
-		defends: {
-			defendswon: "Defends: Won",
-			defendslost: "Defends: Lost",
-			defendsstalemated: "Defends: Stalemated",
-			defendslostabroad: "Defends: Lost Abroad",
-		},
-		drugs: {
-			cantaken: "Drugs: Cannabis",
-			exttaken: "Drugs: Ecstasy",
-			lsdtaken: "Drugs: LSD",
-			shrtaken: "Drugs: Shrooms",
-			xantaken: "Drugs: Xanax",
-			victaken: "Drugs: Vicodin",
-			drugsused: "Drugs: Total",
-			kettaken: "Drugs: Ketamine",
-			opitaken: "Drugs: Opium",
-			spetaken: "Drugs: Speed",
-			pcptaken: "Drugs: PCP",
-			overdosed: "Drugs: Overdosed",
-		},
-		finishers: {
-			chahits: "Finishers: Mechanical",
-			axehits: "Finishers: Clubbing",
-			grehits: "Finishers: Temporary",
-			pishits: "Finishers: Pistol",
-			rifhits: "Finishers: Rifle",
-			smghits: "Finishers: SMG",
-			piehits: "Finishers: Piercing",
-			slahits: "Finishers: Slashing",
-			shohits: "Finishers: Shotgun",
-			heahits: "Finishers: Heavy Artillery",
-			machits: "Finishers: Machine Guns",
-			h2hhits: "Finishers: Unarmed",
-		},
-		items: {
-			itemsbought: "Items: Bought",
-			itemsboughtabroad: "Items: Bought Abroad",
-			itemssent: "Items: Sent",
-			auctionsells: "Items: Auctioned",
-			cityfinds: "Items: Found in City",
-			itemsdumped: "Items: Dumped",
-		},
-		refills: {
-			nerverefills: "Refills: Nerve",
-			tokenrefills: "Refills: Token",
-			refills: "Refills: Energy",
-		},
-		revives: {
-			revives: "Revives: Given",
-			reviveskill: "Revives: Skill",
-			revivesreceived: "Revives: Received",
-		},
-		travel: {
-			argtravel: "Travel: Argentina",
-			mextravel: "Travel: Mexico",
-			dubtravel: "Travel: UAE",
-			hawtravel: "Travel: Hawaii",
-			japtravel: "Travel: Japan",
-			lontravel: "Travel: UK",
-			soutravel: "Travel: South Africa",
-			switravel: "Travel: Switzerland",
-			chitravel: "Travel: China",
-			cantravel: "Travel: Canada",
-			caytravel: "Travel: Cayman Islands",
-			traveltimes: "Travel: Total",
-			traveltime: "Travel: Time Spent",
-		},
-		other: {
-			auctionswon: "Auctions Won",
-
-			peopleboughtspent: "Bail Fees Spent",
-			booksread: "Books Read",
-			bloodwithdrawn: "Blood Bags Filled",
-
-			classifiedadsplaced: "Classified Ads Placed",
-			companymailssent: "Company Mail Sent",
-
-			dumpfinds: "Dump Finds",
-			dumpsearches: "Dump Searches",
-			daysbeendonator: "Days Been A Donator",
-
-			failedbusts: "Failed Busts",
-			theyrunaway: "Foes Escaped",
-			friendmailssent: "Friend Mail Sent",
-			factionmailssent: "Faction Mail Sent",
-
-			peoplebusted: "Jail: Busted",
-			peoplebought: "Jail: Bailed",
-			jailed: "Jail: Total",
-
-			medicalitemsused: "Meds Used",
-			medstolen: "Meds Stolen",
-			meritsbought: "Merits Bought",
-			rehabcost: "Money Spent On Rehab",
-
-			pointsbought: "Points Bought",
-			personalsplaced: "Personal Ads Placed",
-
-			respectforfaction: "Respect Earned",
-			rehabs: "Rehabs Done",
-			racingpointsearned: "Racing: Points Earned",
-			raceswon: "Racing: Won",
-			racesentered: "Racing: Entered",
-
-			spousemailssent: "Spouse Mail Sent",
-			spydone: "Spies Done",
-			cityitemsbought: "Shop Purchases",
-
-			trainsreceived: "Times Trained",
-			mailssent: "Total Mail Sent",
-			hospital: "Times In Hospital",
-			territorytime: "Territory Time",
-
-			virusescoded: "Viruses Coded",
-		},
-	};
 
 	featureManager.registerFeature(
 		"Profile Box",
@@ -376,7 +357,7 @@
 			function createStatsTable(id, rows, hidden = false, hasHeaders = false) {
 				return createTable(
 					[
-						{ id: "stat", title: "Stat", width: 60, cellRenderer: "string" },
+						{ id: "stat", title: "Stat", width: 140, cellRenderer: "string" },
 						{ id: "them", title: "Them", class: "their-stat", width: 80, cellRenderer: "number" },
 						{ id: "you", title: "You", class: "your-stat", width: 80, cellRenderer: "number" },
 					],
