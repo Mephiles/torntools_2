@@ -665,6 +665,7 @@ const DEFAULT_STORAGE = {
 		},
 		profile: {
 			relative: new DefaultSetting({ type: "boolean", defaultValue: false }),
+			stats: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),

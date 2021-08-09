@@ -427,8 +427,7 @@
 			}
 
 			function buildCustom() {
-				// FIXME - Decide what to show.
-				const stats = ["Networth"];
+				const stats = filters.profile.stats;
 
 				const rows = stats
 					.map((name) => {
@@ -456,8 +455,7 @@
 			}
 
 			function buildOthers() {
-				// FIXME - Decide what to show.
-				const stats = ["Networth"];
+				const stats = filters.profile.stats;
 
 				const _stats = STATS.filter((stat) => !stats.includes(stat.name))
 					.map((stat) => {
@@ -480,7 +478,7 @@
 				const types = [...new Set(_stats.map((stat) => stat.type))];
 
 				const rows = types.flatMap((type) => {
-					return [{ header: capitalizeText(type) }, ..._stats.filter((stat) => stat.type === type).sort((a, b) => a.stat.localeCompare(b.stat))];
+					return [{ header: capitalizeText(type) }, ..._stats.filter((stat) => stat.type === type)];
 				});
 
 				const table = createStatsTable("other-stats", rows, true, true);
