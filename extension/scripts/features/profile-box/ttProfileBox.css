@@ -221,3 +221,8 @@ body.dark-mode .attack-history .tt-table .neutral {
 .stats-error-message {
 	color: var(--tt-color-red);
 }
+
+body:not(.dark-mode) .edit-stats.tt-overlay-item:hover,
+body:not(.dark-mode) .edit-stats.tt-overlay-item:focus {
+	color: black;
+}

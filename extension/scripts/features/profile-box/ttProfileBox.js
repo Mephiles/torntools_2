@@ -335,12 +335,15 @@
 						click() {
 							const overlay = document.find(".tt-overlay");
 
+							const button = content.find(".edit-stats");
 							if (overlay.classList.toggle("hidden")) {
 								// Overlay is now hidden.
 								// FIXME - Remove click listener.
+								[button].forEach((element) => element.classList.remove("tt-overlay-item"));
 							} else {
 								// Overlay is now shown.
 								// FIXME - Handle stat click.
+								[button].forEach((element) => element.classList.add("tt-overlay-item"));
 							}
 						},
 					},
