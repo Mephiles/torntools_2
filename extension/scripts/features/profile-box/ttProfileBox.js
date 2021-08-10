@@ -310,6 +310,26 @@
 				buildCustom();
 				buildOthers();
 
+				const moveButton = document.newElement({
+					type: "button",
+					class: "move-stats",
+					children: [document.newElement({ type: "i", class: "fas fa-arrows-alt" })],
+					events: {
+						click() {
+							if (moveButton.classList.toggle("active")) {
+								// Enable movement.
+								section.find(".other-stats-button").setAttribute("disabled", "");
+
+								// FIXME - Actually enable movement.
+							} else {
+								// Disable movement.
+								section.find(".other-stats-button").removeAttribute("disabled");
+								// FIXME - Actually disable movement.
+							}
+						},
+					},
+				});
+
 				const otherList = document.newElement({
 					type: "button",
 					class: "tt-btn other-stats-button",
@@ -320,9 +340,11 @@
 
 							if (isCustom) {
 								content.find(".other-stats").classList.add("hidden");
+								content.find(".move-stats").classList.remove("hidden");
 								otherList.innerText = "View other stats.";
 							} else {
 								content.find(".other-stats").classList.remove("hidden");
+								content.find(".move-stats").classList.add("hidden");
 								otherList.innerText = "View custom list.";
 							}
 						},
@@ -358,7 +380,7 @@
 					},
 				});
 
-				const actions = document.newElement({ type: "div", class: "stat-actions", children: [otherList, editButton] });
+				const actions = document.newElement({ type: "div", class: "stat-actions", children: [moveButton, otherList, editButton] });
 				section.appendChild(actions);
 			} else {
 				section.appendChild(document.newElement({ type: "div", class: "stats-error-message", text: "Failed to fetch data." }));
