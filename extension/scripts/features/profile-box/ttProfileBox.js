@@ -41,7 +41,7 @@
 		{ name: "Highest level beaten", type: "attacking", getter: (data) => data.personalstats.highestbeaten },
 		{ name: "Total respect", type: "attacking", getter: (data) => data.personalstats.respectforfaction },
 		{ name: "Territory wall joins", type: "attacking", getter: (data) => data.personalstats.territoryjoins },
-		{ name: "Territory wall time", type: "attacking", getter: (data) => data.personalstats.territorytime }, // FIXME - Improve formatting.
+		{ name: "Territory wall time", type: "attacking", getter: (data) => data.personalstats.territorytime },
 		// Jobs
 		{ name: "Job points used", type: "jobs", getter: (data) => data.personalstats.jobpointsused },
 		{ name: "Times trained", type: "jobs", getter: (data) => data.personalstats.trainsreceived },
@@ -67,46 +67,46 @@
 		{ name: "Revives given", type: "hospital", getter: (data) => data.personalstats.revives },
 		{ name: "Revives received", type: "hospital", getter: (data) => data.personalstats.revivesreceived },
 		// Finishing hits
-		{ name: "Heavy artillery", type: "finishing hits", getter: (data) => data.personalstats.heahits }, // FIXME - Rename.
-		{ name: "Machine guns", type: "finishing hits", getter: (data) => data.personalstats.machits }, // FIXME - Rename.
-		{ name: "Rifles", type: "finishing hits", getter: (data) => data.personalstats.rifhits }, // FIXME - Rename.
-		{ name: "Sub machine guns", type: "finishing hits", getter: (data) => data.personalstats.smghits }, // FIXME - Rename.
-		{ name: "Shotguns", type: "finishing hits", getter: (data) => data.personalstats.shohits }, // FIXME - Rename.
-		{ name: "Pistols", type: "finishing hits", getter: (data) => data.personalstats.pishits }, // FIXME - Rename.
-		{ name: "Temporary weapons", type: "finishing hits", getter: (data) => data.personalstats.grehits }, // FIXME - Rename.
-		{ name: "Piercing weapons", type: "finishing hits", getter: (data) => data.personalstats.piehits }, // FIXME - Rename.
-		{ name: "Slashing weapons", type: "finishing hits", getter: (data) => data.personalstats.slahits }, // FIXME - Rename.
-		{ name: "Clubbing weapons", type: "finishing hits", getter: (data) => data.personalstats.axehits }, // FIXME - Rename.
-		{ name: "Mechanical weapons", type: "finishing hits", getter: (data) => data.personalstats.chahits }, // FIXME - Rename.
-		{ name: "Hand-to-hand", type: "finishing hits", getter: (data) => data.personalstats.h2hhits }, // FIXME - Rename.
+		{ name: "Heavy artillery", type: "finishing hits", getter: (data) => data.personalstats.heahits },
+		{ name: "Machine guns", type: "finishing hits", getter: (data) => data.personalstats.machits },
+		{ name: "Rifles", type: "finishing hits", getter: (data) => data.personalstats.rifhits },
+		{ name: "Sub machine guns", type: "finishing hits", getter: (data) => data.personalstats.smghits },
+		{ name: "Shotguns", type: "finishing hits", getter: (data) => data.personalstats.shohits },
+		{ name: "Pistols", type: "finishing hits", getter: (data) => data.personalstats.pishits },
+		{ name: "Temporary weapons", type: "finishing hits", getter: (data) => data.personalstats.grehits },
+		{ name: "Piercing weapons", type: "finishing hits", getter: (data) => data.personalstats.piehits },
+		{ name: "Slashing weapons", type: "finishing hits", getter: (data) => data.personalstats.slahits },
+		{ name: "Clubbing weapons", type: "finishing hits", getter: (data) => data.personalstats.axehits },
+		{ name: "Mechanical weapons", type: "finishing hits", getter: (data) => data.personalstats.chahits },
+		{ name: "Hand-to-hand", type: "finishing hits", getter: (data) => data.personalstats.h2hhits },
 		// Communication
 		{ name: "Mails sent", type: "communication", getter: (data) => data.personalstats.mailssent },
-		{ name: "Mails to friends", type: "communication", getter: (data) => data.personalstats.friendmailssent }, // FIXME - Rename.
-		{ name: "Mails to faction", type: "communication", getter: (data) => data.personalstats.factionmailssent }, // FIXME - Rename.
-		{ name: "Mails to colleagues", type: "communication", getter: (data) => data.personalstats.companymailssent }, // FIXME - Rename.
-		{ name: "Mails to spouse", type: "communication", getter: (data) => data.personalstats.spousemailssent }, // FIXME - Rename.
+		{ name: "Mails to friends", type: "communication", getter: (data) => data.personalstats.friendmailssent },
+		{ name: "Mails to faction", type: "communication", getter: (data) => data.personalstats.factionmailssent },
+		{ name: "Mails to colleagues", type: "communication", getter: (data) => data.personalstats.companymailssent },
+		{ name: "Mails to spouse", type: "communication", getter: (data) => data.personalstats.spousemailssent },
 		{ name: "Classified ads", type: "communication", getter: (data) => data.personalstats.classifiedadsplaced },
 		{ name: "Personals placed", type: "communication", getter: (data) => data.personalstats.personalsplaced },
 		// Criminal offenses
 		{ name: "Criminal offenses", type: "criminal offenses", getter: (data) => data.criminalrecord.total },
-		{ name: "Selling illegal goods", type: "criminal offenses", getter: (data) => data.criminalrecord.selling_illegal_products }, // FIXME - Rename.
-		{ name: "Theft", type: "criminal offenses", getter: (data) => data.criminalrecord.theft }, // FIXME - Rename.
-		{ name: "Auto theft", type: "criminal offenses", getter: (data) => data.criminalrecord.auto_theft }, // FIXME - Rename.
-		{ name: "Drug deals", type: "criminal offenses", getter: (data) => data.criminalrecord.drug_deals }, // FIXME - Rename.
-		{ name: "Computer crimes", type: "criminal offenses", getter: (data) => data.criminalrecord.computer_crimes }, // FIXME - Rename.
-		{ name: "Fraud", type: "criminal offenses", getter: (data) => data.criminalrecord.fraud_crimes }, // FIXME - Rename.
-		{ name: "Murder", type: "criminal offenses", getter: (data) => data.criminalrecord.murder }, // FIXME - Rename.
-		{ name: "Other", type: "criminal offenses", getter: (data) => data.criminalrecord.other }, // FIXME - Rename.
+		{ name: "Selling illegal goods", type: "criminal offenses", getter: (data) => data.criminalrecord.selling_illegal_products },
+		{ name: "Theft", type: "criminal offenses", getter: (data) => data.criminalrecord.theft },
+		{ name: "Auto theft", type: "criminal offenses", getter: (data) => data.criminalrecord.auto_theft },
+		{ name: "Drug deals", type: "criminal offenses", getter: (data) => data.criminalrecord.drug_deals },
+		{ name: "Computer crimes", type: "criminal offenses", getter: (data) => data.criminalrecord.computer_crimes },
+		{ name: "Fraud", type: "criminal offenses", getter: (data) => data.criminalrecord.fraud_crimes },
+		{ name: "Murder", type: "criminal offenses", getter: (data) => data.criminalrecord.murder },
+		{ name: "Other", type: "criminal offenses", getter: (data) => data.criminalrecord.other },
 		{ name: "Organized Crimes", type: "criminal offenses", getter: (data) => data.personalstats.organisedcrimes },
 		// Bounties
 		{ name: "Bounties placed", type: "bounties", getter: (data) => data.personalstats.bountiesplaced },
 		{ name: "Spent on bounties", type: "bounties", getter: (data) => data.personalstats.totalbountyspent, formatter: "currency" },
 		{ name: "Bounties collected", type: "bounties", getter: (data) => data.personalstats.bountiescollected },
-		{ name: "Money rewarded", type: "bounties", getter: (data) => data.personalstats.totalbountyreward, formatter: "currency" }, // FIXME - Rename.
+		{ name: "Money rewarded", type: "bounties", getter: (data) => data.personalstats.totalbountyreward, formatter: "currency" },
 		{ name: "Bounties received", type: "bounties", getter: (data) => data.personalstats.bountiesreceived },
-		{ name: "Received value", type: "bounties", getter: (data) => data.personalstats.receivedbountyvalue, formatter: "currency" }, // FIXME - Rename.
+		{ name: "Received value", type: "bounties", getter: (data) => data.personalstats.receivedbountyvalue, formatter: "currency" },
 		// Items
-		{ name: "Items found", type: "items", getter: (data) => data.personalstats.cityfinds }, // FIXME - Rename.
+		{ name: "Items found", type: "items", getter: (data) => data.personalstats.cityfinds },
 		{ name: "Items trashed", type: "items", getter: (data) => data.personalstats.itemsdumped },
 		{ name: "Items found in dump", type: "items", getter: (data) => data.personalstats.dumpfinds },
 		{ name: "Items searched in dump", type: "items", getter: (data) => data.personalstats.dumpsearches },
@@ -120,7 +120,7 @@
 		{ name: "Viruses coded", type: "items", getter: (data) => data.personalstats.virusescoded },
 		// Travel
 		{ name: "Times traveled", type: "travel", getter: (data) => data.personalstats.traveltimes },
-		{ name: "Time spent traveling", type: "travel", getter: (data) => data.personalstats.traveltime }, // FIXME - Improve formatting.
+		{ name: "Time spent traveling", type: "travel", getter: (data) => data.personalstats.traveltime },
 		{ name: "Items bought abroad", type: "travel", getter: (data) => data.personalstats.itemsboughtabroad },
 		// { name: "Hunting skill", type: "travel", getter: (data) => 0 },
 		{ name: "Attacks won abroad", type: "travel", getter: (data) => data.personalstats.attackswonabroad },
@@ -163,7 +163,7 @@
 		// Networth
 		{ name: "Networth", type: "networth", getter: (data) => data.personalstats.networth, formatter: "currency" },
 		// Other
-		{ name: "Time played", type: "other", getter: (data) => data.personalstats.useractivity }, // FIXME - Improve formatting.
+		{ name: "Time played", type: "other", getter: (data) => data.personalstats.useractivity },
 		{ name: "Current activity streak", type: "other", getter: (data) => data.personalstats.activestreak },
 		{ name: "Best activity streak", type: "other", getter: (data) => data.personalstats.bestactivestreak },
 		{ name: "Awards", type: "other", getter: (data) => data.personalstats.awards },
