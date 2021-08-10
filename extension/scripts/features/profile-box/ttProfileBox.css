@@ -69,14 +69,12 @@ body.tt-mobile #userInformation main {
 }
 
 .other-stats-button {
-	background-color: var(--tt-color-light-green);
 	text-align: center;
 	border-radius: 5px 5px 0 0;
 	line-height: 20px;
 	width: 80%;
 	align-self: center;
 	cursor: pointer;
-	color: black;
 	border: 0;
 	padding: 0;
 }

@@ -312,7 +312,7 @@
 
 				const otherList = document.newElement({
 					type: "button",
-					class: "other-stats-button",
+					class: "tt-btn other-stats-button",
 					text: "View other stats.",
 					events: {
 						click() {
