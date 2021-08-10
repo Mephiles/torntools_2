@@ -238,6 +238,7 @@ body:not(.dark-mode) .edit-stats.tt-overlay-item:focus {
 	background-color: var(--default-bg-panel-color) !important;
 }
 
+.user-stats .tt-table-row.tt-sortable,
 .user-stats .tt-table.tt-overlay-item .tt-table-row:not(.tt-table-row-header) {
 	cursor: pointer;
 }

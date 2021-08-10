@@ -310,6 +310,13 @@
 				buildCustom();
 				buildOthers();
 
+				// noinspection JSUnusedGlobalSymbols
+				const sortable = new Sortable(section.find(".custom-stats .tt-table-body"), {
+					animation: 150,
+					disabled: true,
+					onEnd: () => saveStats(),
+				});
+
 				const moveButton = document.newElement({
 					type: "button",
 					class: "move-stats",
@@ -319,12 +326,15 @@
 							if (moveButton.classList.toggle("active")) {
 								// Enable movement.
 								section.find(".other-stats-button").setAttribute("disabled", "");
+								section.findAll(".custom-stats .tt-table-row").forEach((row) => row.classList.add("tt-sortable"));
 
-								// FIXME - Actually enable movement.
+								sortable.option("disabled", false);
 							} else {
 								// Disable movement.
 								section.find(".other-stats-button").removeAttribute("disabled");
-								// FIXME - Actually disable movement.
+								section.findAll(".custom-stats .tt-table-row").forEach((row) => row.classList.remove("tt-sortable"));
+
+								sortable.option("disabled", true);
 							}
 						},
 					},

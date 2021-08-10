@@ -449,6 +449,7 @@
 				"scripts/features/profile-box/ttProfileBox.css"
 			],
 			"js": [
+				"vendor/sortable/sortable.js",
 				"scripts/features/profile-id/ttProfileID.js",
 				"scripts/features/profile-notes/ttProfileNotes.js",
 				"scripts/features/status-indicator/ttStatusIndicator.js",
