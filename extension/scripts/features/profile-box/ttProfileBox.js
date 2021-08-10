@@ -198,6 +198,8 @@
 		}
 	);
 
+	let overlayStatus = false;
+
 	async function showBox() {
 		await requireElement(".basic-information .info-table .user-info-value");
 
@@ -335,15 +337,22 @@
 						click() {
 							const overlay = document.find(".tt-overlay");
 
-							const button = content.find(".edit-stats");
+							const button = section.find(".edit-stats");
+							const otherStatsButton = section.find(".other-stats-button");
+
+							const customStats = section.find(".custom-stats");
+							const otherStats = section.find(".other-stats");
+
 							if (overlay.classList.toggle("hidden")) {
 								// Overlay is now hidden.
-								// FIXME - Remove click listener.
-								[button].forEach((element) => element.classList.remove("tt-overlay-item"));
+								[button, otherStatsButton, customStats, otherStats].forEach((element) => element.classList.remove("tt-overlay-item"));
+								section.findAll(".tt-table-row:not(.tt-table-row-header)").forEach((row) => row.removeEventListener("click", onStatClick));
+								overlayStatus = false;
 							} else {
 								// Overlay is now shown.
-								// FIXME - Handle stat click.
-								[button].forEach((element) => element.classList.add("tt-overlay-item"));
+								[button, otherStatsButton, customStats, otherStats].forEach((element) => element.classList.add("tt-overlay-item"));
+								section.findAll(".tt-table-row:not(.tt-table-row-header)").forEach((row) => row.addEventListener("click", onStatClick));
+								overlayStatus = true;
 							}
 						},
 					},
@@ -356,6 +365,29 @@
 			}
 
 			showLoadingPlaceholder(section, false);
+
+			async function onStatClick(event) {
+				const row = event.target.closest(".tt-table-row");
+				if (!row) return;
+
+				const table = row.closest(".tt-table");
+				const isCustom = table.classList.contains("custom-stats");
+				const otherTable = isCustom ? table.nextElementSibling : table.previousElementSibling;
+				if (isCustom) {
+					row.remove();
+					await saveStats();
+					buildOthers(true);
+				} else {
+					otherTable.appendChild(row);
+					await saveStats();
+				}
+			}
+
+			function saveStats() {
+				const stats = [...section.findAll(".custom-stats .tt-table-row")].map((row) => row.children[0].innerText);
+
+				return ttStorage.change({ filters: { profile: { stats } } });
+			}
 
 			function createStatsTable(id, rows, hidden = false, hasHeaders = false) {
 				return createTable(
@@ -457,7 +489,7 @@
 				section.appendChild(table.element);
 			}
 
-			function buildOthers() {
+			function buildOthers(requireCleanup) {
 				const stats = filters.profile.stats;
 
 				const _stats = STATS.filter((stat) => !stats.includes(stat.name))
@@ -485,7 +517,20 @@
 				});
 
 				const table = createStatsTable("other-stats", rows, true, true);
-				section.appendChild(table.element);
+
+				if (requireCleanup) {
+					section.find(".other-stats")?.remove();
+
+					if (overlayStatus) {
+						table.element.classList.add("tt-overlay-item");
+						table.element.findAll(".tt-table-row:not(.tt-table-row-header)").forEach((row) => row.removeEventListener("click", onStatClick));
+					}
+
+					const actions = section.find(".stat-actions");
+					actions.parentElement.insertBefore(table.element, actions);
+				} else {
+					section.appendChild(table.element);
+				}
 			}
 		}
 

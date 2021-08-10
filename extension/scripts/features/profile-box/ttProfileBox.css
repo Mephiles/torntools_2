@@ -64,7 +64,7 @@ body.tt-mobile #userInformation main {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: -4px;
+	margin: 4px -4px -4px -4px;
 	position: relative;
 }
 
@@ -74,7 +74,6 @@ body.tt-mobile #userInformation main {
 	border-radius: 5px 5px 0 0;
 	line-height: 20px;
 	width: 80%;
-	margin: 4px 0 0 0;
 	align-self: center;
 	cursor: pointer;
 	color: black;
@@ -83,7 +82,7 @@ body.tt-mobile #userInformation main {
 }
 
 .edit-stats {
-	position: absolute;
+	position: absolute !important;
 	right: 1px;
 	bottom: 1px;
 	margin: 0;
@@ -95,6 +94,7 @@ body.tt-mobile #userInformation main {
 
 #userInformation .user-stats .tt-table {
 	margin-bottom: auto;
+	padding: 0 5px 2px 5px;
 }
 
 #userInformation .spy-information .tt-table {
@@ -146,7 +146,6 @@ body:not(.dark-mode) .attack-history .tt-table .positive {
 
 body.dark-mode .attack-history .tt-table .positive {
 	background-color: #408624;
-	/*background-color: green;*/
 }
 
 body:not(.dark-mode) .attack-history .tt-table .negative {
@@ -154,7 +153,6 @@ body:not(.dark-mode) .attack-history .tt-table .negative {
 }
 
 body.dark-mode .attack-history .tt-table .negative {
-	/*background-color: #a71f1f;*/
 	background-color: darkred;
 }
 
@@ -225,4 +223,16 @@ body.dark-mode .attack-history .tt-table .neutral {
 body:not(.dark-mode) .edit-stats.tt-overlay-item:hover,
 body:not(.dark-mode) .edit-stats.tt-overlay-item:focus {
 	color: black;
+}
+
+#userInformation .user-stats .tt-table.tt-overlay-item {
+	background-color: var(--default-bg-panel-color) !important;
+}
+
+.user-stats .tt-table.tt-overlay-item .tt-table-row:not(.tt-table-row-header) {
+	cursor: pointer;
+}
+
+.user-stats .tt-table.tt-overlay-item .tt-table-row:not(.tt-table-row-header):hover {
+	background-color: #ff000047;
 }
