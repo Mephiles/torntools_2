@@ -253,7 +253,7 @@ async function updateUserdata() {
 	if (updateEssential) {
 		selections.push("profile", "timestamp");
 
-		for (const selection of ["bars", "cooldowns", "travel", "events", "messages", "money", "refills"]) {
+		for (const selection of ["bars", "cooldowns", "travel", "newevents", "newmessages", "money", "refills"]) {
 			if (!settings.apiUsage.user[selection]) continue;
 
 			selections.push(selection);
@@ -467,7 +467,7 @@ async function updateUserdata() {
 
 	async function notifyEventMessages() {
 		let eventCount = 0;
-		if (settings.apiUsage.user.events) {
+		if (settings.apiUsage.user.newevents) {
 			const events = [];
 			for (const key of Object.keys(userdata.events).reverse()) {
 				const event = userdata.events[key];
@@ -489,7 +489,7 @@ async function updateUserdata() {
 		}
 
 		let messageCount = 0;
-		if (settings.apiUsage.user.messages) {
+		if (settings.apiUsage.user.newmessages) {
 			const messages = [];
 			for (const key of Object.keys(userdata.messages).reverse()) {
 				const message = userdata.messages[key];
