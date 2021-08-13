@@ -36,22 +36,40 @@
 			data = ttCache.get("profile-stats", id);
 		} else {
 			if (settings.pages.profile.box && settings.pages.profile.boxStats && settings.apiUsage.user.personalstats && settings.apiUsage.user.crimes) {
-				// TODO - Wait on stats.
-				console.log("DKK showEstimate - wait on profile box");
-				return;
+				data = await new Promise((resolve) => CUSTOM_LISTENERS[EVENT_CHANNELS.PROFILE_FETCHED].push(({ data }) => resolve(data)));
 			} else {
-				console.log("DKK showEstimate - load required stats");
+				try {
+					data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
+
+					ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
+				} catch (error) {
+					console.log("TT - Couldn't fetch users stats.", error);
+				}
+				return;
 			}
-			// try {
-			// 	data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
-			//
-			// 	ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
-			// } catch (error) {
-			// 	console.log("TT - Couldn't fetch users stats.", error);
-			// }
 		}
 
-		console.log("DKK showEstimate", id, stats, data);
+		if (!stats) {
+			if (data) {
+				const {
+					rank,
+					level,
+					criminalrecord: { total: crimes },
+					personalstats: { networth },
+				} = data;
+
+				stats = calculateEstimateBattleStats(rank, level, crimes, networth);
+
+				//	FIXME - Cache result.
+			} else {
+				// FIXME - Show error.
+				console.log("DKK no data");
+				return;
+			}
+		}
+
+		// FIXME - Show estimate.
+		console.log("DKK hasStats", id, stats);
 	}
 
 	function removeEstimate() {
