@@ -699,7 +699,63 @@ const DEFAULT_STORAGE = {
 		jail: new DefaultSetting({ type: "array", defaultValue: [] }),
 	},
 	cache: new DefaultSetting({ type: "object", defaultValue: {} }),
+	usage: {
+		torn: new DefaultSetting({ type: "object", defaultValue: {} }),
+		tornstats: new DefaultSetting({ type: "object", defaultValue: {} }),
+		yata: new DefaultSetting({ type: "object", defaultValue: {} }),
+	},
 };
+
+const ttUsage = new (class {
+	constructor() {
+		this.torn = {};
+		this.tornstats = {};
+		this.yata = {};
+	}
+
+	async add(location, section) {
+		if (location === "torn_direct") return;
+		const minute = (Date.now() / TO_MILLIS.MINUTES).dropDecimals();
+		if (location === "torn") {
+			if (minute in this.torn) this.torn[minute].push(section);
+			else this.torn[minute] = [section];
+		} else if (location === "tornstats") {
+			if (minute in this.tornstats) this.tornstats[minute].push(section);
+			else this.tornstats[minute] = [section];
+		} else if (location === "yata") {
+			if (minute in this.yata) this.yata[minute].push(section);
+			else this.yata[minute] = [section];
+		}
+		await ttStorage.set({ usage: { torn: this.torn, tornstats: this.tornstats, yata: this.yata } });
+	}
+
+	async refresh() {
+		const nowTime = ((Date.now() + (24 * TO_MILLIS.HOURS)) / TO_MILLIS.MINUTES).dropDecimals();
+		for (const key in this.torn) {
+			if (key > nowTime) {
+				delete this.torn[key];
+			}
+		}
+		for (const key in this.tornstats) {
+			if (key > nowTime) {
+				delete this.tornstats[key];
+			}
+		}
+		for (const key in this.yata) {
+			if (key > nowTime) {
+				delete this.yata[key];
+			}
+		}
+		await ttStorage.set({ usage: { torn: this.torn, tornstats: this.tornstats, yata: this.yata } });
+	}
+
+	async clear() {
+		this.torn = {};
+		this.tornstats = {};
+		this.yata = {};
+		await ttStorage.set({ usage: { torn: this.torn, tornstats: this.tornstats, yata: this.yata } });
+	}
+})();
 
 const CUSTOM_LINKS_PRESET = {
 	"Bazaar : Management": { link: "https://www.torn.com/bazaar.php#/manage" },

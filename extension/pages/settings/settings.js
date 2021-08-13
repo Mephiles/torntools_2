@@ -1037,6 +1037,140 @@ async function setupAPIInfo() {
 				document.find("#api_key").value = api.torn.key || "";
 			});
 	});
+
+	const yataSvg = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/yata.svg"))).text();
+	document.find(".current-usage .yata .icon").innerHTML = yataSvg;
+
+	document.findAll(".current-usage .averages > div.per-minute").forEach((usageDiv, index) => {
+		let key;
+		if (index === 0) key = "torn";
+		else if (index === 1) key = "tornstats";
+		else if (index === 2) key = "yata";
+		const minutesUsage = Object.values(ttUsage[key]).map(minuteUsage => minuteUsage.length);
+		usageDiv.innerText = `Average calls per minute: ${minutesUsage.length ? (minutesUsage.reduce((a, b) => a + b, 0) / minutesUsage.length).dropDecimals() : 0}`;
+	});
+	document.findAll(".current-usage .averages > div.per-hour").forEach((usageDiv, index) => {
+		let key;
+		if (index === 0) key = "torn";
+		else if (index === 1) key = "tornstats";
+		else if (index === 2) key = "yata";
+		let hours = {};
+		for (const minute of Object.keys(ttUsage[key])) {
+			const hourOfMinute = (minute / 60).dropDecimals();
+			if (!(hourOfMinute in hours)) hours[hourOfMinute] = 1;
+			else hours[hourOfMinute] += 1;
+		}
+		hours = Object.values(hours);
+		usageDiv.innerText = `Average calls per hour: ${hours.length ? (hours.reduce((a, b) => a + b, 0) / hours.length).dropDecimals() : 0}`;
+	});
+
+	const canvas = document.find("#current-usage-chart");
+	document.find(".current-usage").appendChild(canvas);
+
+	const usageChart = new Chart(canvas, {
+		type: "bar",
+		data: {
+			labels: [],
+			datasets: [
+				{
+					label: "Torn",
+					data: [],
+					backgroundColor: "#666",
+				},
+				{
+					label: "Tornstats",
+					data: [],
+					backgroundColor: "#8abeef",
+				},
+				{
+					label: "YATA",
+					data: [],
+					backgroundColor: "#447e9b",
+				},
+			],
+		},
+		options: {
+			scales: {
+				x: {
+					type: "time",
+					stacked: true,
+					time: {
+						tooltipFormat: "dd.LLL HH:mm",
+						unit: "minute",
+					},
+				},
+				y: {
+					stacked: true,
+					ticks: {
+						min: 0,
+						max: 100,
+						stepSize: 1,
+					}
+				},
+			},
+		},
+	});
+	await ttUsage.refresh();
+	updateUsage(usageChart, "Last 5");
+	document.find(".current-usage .buttons .last-5").addEventListener("click", () => updateUsage(usageChart, "Last 5"));
+	document.find(".current-usage .buttons .last-1hr").addEventListener("click", () => updateUsage(usageChart, "Last 1hr"));
+	document.find(".current-usage .buttons .last-24hrs").addEventListener("click", () => updateUsage(usageChart, "Last 24hrs"));
+	function updateUsage(usageChart, position) {
+		if (position === "Last 5") {
+			const tornUsage = Object.keys(ttUsage.torn);
+			const tornLabels = tornUsage.slice(Math.max(tornUsage.length - 5, 0));
+			const tornChartData = tornLabels.map(minute => ttUsage.torn[minute].length);
+			usageChart.data.datasets[0].data = tornChartData;
+
+			const tornstatsUsage = Object.keys(ttUsage.tornstats);
+			const tornstatsLabels = tornstatsUsage.slice(Math.max(tornstatsUsage.length - 5, 0));
+			const tornstatsChartData = tornstatsLabels.map(minute => ttUsage.tornstats[minute].length);
+			usageChart.data.datasets[1].data = tornstatsChartData;
+
+			const yataUsage = Object.keys(ttUsage.yata);
+			const yataLabels = yataUsage.slice(Math.max(yataUsage.length - 5, 0));
+			const yataChartData = yataLabels.map(minute => ttUsage.yata[minute].length);
+			usageChart.data.datasets[2].data = yataChartData;
+
+			usageChart.data.labels = tornLabels.map(minute => new Date(minute * TO_MILLIS.MINUTES));
+			usageChart.options.barThickness = 30;
+			usageChart.update();
+		} else {
+			let inLastHours, barThickness;
+			if (position === "Last 1hr") {
+				inLastHours = 1;
+				barThickness = 10;
+			} else if (position === "Last 24hrs") {
+				inLastHours = 24;
+				barThickness = 5;
+			}
+
+			const nowDate = Date.now() / TO_MILLIS.HOURS;
+			const tornUsage = Object.keys(ttUsage.torn);
+			const tornLabels = tornUsage.filter(filtering);
+			usageChart.data.datasets[0].data = tornLabels.map(minute => {
+				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.torn[minute].length };
+			});
+
+			const tornstatsUsage = Object.keys(ttUsage.tornstats);
+			usageChart.data.datasets[1].data = tornstatsUsage.filter(filtering).map(minute => {
+				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.tornstats[minute].length };
+			});
+
+			const yataUsage = Object.keys(ttUsage.yata);
+			usageChart.data.datasets[2].data = yataUsage.filter(filtering).map(minute => {
+				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.yata[minute].length };
+			});
+
+			usageChart.data.labels = tornLabels.map(minute => minute * TO_MILLIS.MINUTES);
+			usageChart.options.barThickness = barThickness;
+			usageChart.update();
+
+			function filtering(minute) {
+				return nowDate - (minute / 60) <= inLastHours;
+			}
+		}
+	}
 }
 
 async function setupExport() {

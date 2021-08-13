@@ -122,6 +122,7 @@ async function fetchData(location, options = {}) {
 							result = await response.clone().text();
 
 							resolve(result);
+							await ttUsage.add(location, options.section);
 							return;
 						} else {
 							if (response.status === 200) {
@@ -151,6 +152,7 @@ async function fetchData(location, options = {}) {
 						}
 
 						resolve(result);
+						await ttUsage.add(location, options.section);
 					}
 				})
 				.catch((error) => handleError(error))
@@ -161,6 +163,7 @@ async function fetchData(location, options = {}) {
 			async function handleError(result) {
 				if (options.succeedOnError) {
 					resolve(result);
+					await ttUsage.add(location, options.section);
 					return;
 				}
 
@@ -213,6 +216,14 @@ async function fetchData(location, options = {}) {
 					}
 				} else {
 					reject({ error: result.error });
+				}
+			}
+
+			function updateCurrentAPIUsage(second) {
+				if (second in CURRENT_API_USAGE) {
+					CURRENT_API_USAGE[second].push(location);
+				} else {
+					CURRENT_API_USAGE[second] = [location];
 				}
 			}
 		}

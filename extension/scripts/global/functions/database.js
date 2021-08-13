@@ -40,6 +40,9 @@ async function loadDatabase() {
 	factiondata = database.factiondata;
 	quick = database.quick;
 	ttCache.cache = database.cache;
+	ttUsage.torn = database.usage.torn;
+	ttUsage.tornstats = database.usage.tornstats;
+	ttUsage.yata = database.usage.yata;
 
 	console.log("TT - Database loaded.", database);
 	databaseLoaded = true;
