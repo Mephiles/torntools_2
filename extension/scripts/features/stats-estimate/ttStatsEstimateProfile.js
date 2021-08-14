@@ -86,6 +86,6 @@
 	}
 
 	function removeEstimate() {
-		document.find(".tt-stat-estimate")?.remove();
+		document.find(".tt-stats-estimate-profile")?.remove();
 	}
 })();
