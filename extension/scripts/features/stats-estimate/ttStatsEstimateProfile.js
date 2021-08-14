@@ -22,6 +22,8 @@
 	async function showEstimate() {
 		await requireElement(".basic-information .info-table .user-info-value");
 
+		if (settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < getLevel()) return;
+
 		const id = parseInt(
 			document
 				.find(".basic-information .info-table .user-info-value > *:first-child")
@@ -56,20 +58,31 @@
 					level,
 					criminalrecord: { total: crimes },
 					personalstats: { networth },
+					last_action: { timestamp: lastAction },
 				} = data;
 
 				stats = calculateEstimateBattleStats(rank, level, crimes, networth);
 
-				//	FIXME - Cache result.
+				cacheStatsEstimate(id, stats, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
 			} else {
-				// FIXME - Show error.
-				console.log("DKK no data");
+				console.log("TT - Failed to load estimates.");
 				return;
 			}
 		}
 
-		// FIXME - Show estimate.
-		console.log("DKK hasStats", id, stats);
+		document
+			.find(".profile-right-wrapper > .profile-action .title-black")
+			.appendChild(document.newElement({ type: "span", class: "tt-stats-estimate-profile", text: stats }));
+
+		function getLevel() {
+			const levelWrap = document.find(".box-info .box-value");
+
+			return (
+				(parseInt(levelWrap.find(".digit-r .digit").innerText) || 0) * 100 +
+				(parseInt(levelWrap.find(".digit-m .digit").innerText) || 0) * 10 +
+				parseInt(levelWrap.find(".digit-l .digit").innerText)
+			);
+		}
 	}
 
 	function removeEstimate() {

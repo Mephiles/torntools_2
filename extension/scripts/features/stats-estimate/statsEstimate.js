@@ -36,6 +36,8 @@ const RANK_TRIGGERS = {
 };
 
 function calculateEstimateBattleStats(rank, level, crimes, networth) {
+	rank = rank.match(/[A-Z][a-z ]+/g)[0].trim();
+
 	const triggersLevel = RANK_TRIGGERS.level.filter((x) => x <= level).length;
 	const triggersCrimes = RANK_TRIGGERS.crimes.filter((x) => x <= crimes).length;
 	const triggersNetworth = RANK_TRIGGERS.networth.filter((x) => x <= networth).length;
@@ -43,4 +45,14 @@ function calculateEstimateBattleStats(rank, level, crimes, networth) {
 	const triggersStats = RANKS[rank] - triggersLevel - triggersCrimes - triggersNetworth - 1;
 
 	return RANK_TRIGGERS.stats[triggersStats] ?? "N/A";
+}
+
+function cacheStatsEstimate(id, estimate, lastAction) {
+	let days = 7;
+
+	if (estimate === RANK_TRIGGERS.stats.last()) days = 31;
+	else if (lastAction && lastAction <= Date.now() - TO_MILLIS.DAYS * 180) days = 31;
+	else if (estimate === "N/A") days = 1;
+
+	return ttCache.set({ [id]: estimate }, TO_MILLIS.DAYS * days, "stats-estimate");
 }
