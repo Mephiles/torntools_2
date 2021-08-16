@@ -55,7 +55,12 @@ async function retrieveStatsEstimate(id, isList, count) {
 
 			ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
 		} catch (error) {
-			throw { message: error, show: true };
+			let message;
+			if (error.error) message = error.error;
+			else if (error.code) message = `Unknown (code ${error.code})`;
+			else message = error;
+
+			throw { message, show: true };
 		}
 	}
 
@@ -68,6 +73,9 @@ async function retrieveStatsEstimate(id, isList, count) {
 				personalstats: { networth },
 				last_action: { timestamp: lastAction },
 			} = data;
+
+			if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
+				throw { message: "Too high of a level.", show: false };
 
 			stats = calculateEstimateBattleStats(rank, level, crimes, networth);
 
