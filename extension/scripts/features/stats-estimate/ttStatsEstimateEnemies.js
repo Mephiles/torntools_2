@@ -38,36 +38,34 @@
 
 		let estimated = 0;
 		for (const row of document.findAll(".user-info-blacklist-wrap > li[data-id]:not(.tt-estimated)")) {
-			// FIXME - Don't break when honors are disabled.
 			const id = row
-				.find(".user.name")
-				.dataset.placeholder.match(/([0-9]+)/g)
+				.find(".user.name > [title]")
+				.getAttribute("title")
+				.match(/([0-9]+)/g)
 				.last();
-			// FIXME - Calculate level.
-			const level = false;
+			const level = parseInt(row.find(".level").innerText.replaceAll("\n", "").split(":").last().trim());
 
 			if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level) continue;
 
 			row.classList.add(".tt-estimated");
 
-			// FIXME - Show loading placeholder.
+			const section = document.newElement({ type: "div", class: "tt-stats-estimate" });
+			row.insertAdjacentElement("afterend", section);
+
+			showLoadingPlaceholder(section, true);
+
 			if (!ttCache.hasValue("stats-estimate", id) && !ttCache.hasValue("profile-stats", id)) estimated++;
 
 			retrieveStatsEstimate(id, true, estimated - 1)
-				.then((estimate) => {
-					console.log("DKK estimate", id, estimate);
-					// FIXME - Actually show estimate
-					// FIXME - Remove loading placeholder.
-				})
+				.then((estimate) => (section.innerText = `Stats Estimate: ${estimate}`))
 				.catch((error) => {
-					// FIXME - Remove loading placeholder.
-
 					if (error.show) {
-						// FIXME - Show error.
+						section.innerText = error.message;
 					} else {
-						// FIXME - Show error.
+						section.remove();
 					}
-				});
+				})
+				.then(() => showLoadingPlaceholder(section, false));
 		}
 	}
 
