@@ -552,6 +552,7 @@ const DEFAULT_STORAGE = {
 				maxLevel: new DefaultSetting({ type: "number", defaultValue: 100 }),
 				profiles: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				enemies: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				hof: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {

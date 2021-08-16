@@ -47,9 +47,6 @@ async function retrieveStatsEstimate(id, isList, count, options = {}) {
 	} else if (ttCache.hasValue("profile-stats", id)) {
 		data = ttCache.get("profile-stats", id);
 	} else {
-		// if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
-		// 	throw { message: "Too high of a level.", show: false };
-
 		if (isList && settings.scripts.statsEstimate.cachedOnly)
 			throw { message: "No cached result found!", show: settings.scripts.statsEstimate.displayNoResult };
 
