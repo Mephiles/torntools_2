@@ -553,6 +553,7 @@ const DEFAULT_STORAGE = {
 				profiles: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				enemies: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				hof: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				attacks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {

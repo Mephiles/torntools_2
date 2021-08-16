@@ -78,8 +78,8 @@ async function retrieveStatsEstimate(id, isList, count, options = {}) {
 				last_action: { timestamp: lastAction },
 			} = data;
 
-			if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
-				throw { message: "Too high of a level.", show: false };
+			// if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
+			// 	throw { message: "Too high of a level.", show: false };
 
 			stats = calculateEstimateBattleStats(rank, level, crimes, networth);
 

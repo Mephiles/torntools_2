@@ -626,6 +626,12 @@
 			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
 			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateHOF.js"],
 			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/loader.php?sid=attack*"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateAttacks.js"],
+			"run_at": "document_end"
 		}
 	]
 }
