@@ -614,6 +614,12 @@
 			"css": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.css"],
 			"js": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.js"],
 			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/blacklist.php*"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateEnemies.js"],
+			"run_at": "document_end"
 		}
 	]
 }

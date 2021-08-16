@@ -47,7 +47,6 @@
 				} catch (error) {
 					console.log("TT - Couldn't fetch users stats.", error);
 				}
-				return;
 			}
 		}
 

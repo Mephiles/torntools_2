@@ -35,6 +35,51 @@ const RANK_TRIGGERS = {
 	stats: ["under 2k", "2k - 25k", "20k - 250k", "200k - 2.5m", "2m - 25m", "20m - 250m", "over 200m"],
 };
 
+async function retrieveStatsEstimate(id, isList, count) {
+	let stats, data;
+	if (ttCache.hasValue("stats-estimate", id)) {
+		stats = ttCache.get("stats-estimate", id);
+	} else if (ttCache.hasValue("profile-stats", id)) {
+		data = ttCache.get("profile-stats", id);
+	} else {
+		// if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
+		// 	throw { message: "Too high of a level.", show: false };
+
+		if (isList && settings.scripts.statsEstimate.cachedOnly)
+			throw { message: "No cached result found!", show: settings.scripts.statsEstimate.displayNoResult };
+
+		if (isList) await sleep(settings.scripts.statsEstimate.delay * count);
+
+		try {
+			data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
+
+			ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
+		} catch (error) {
+			throw { message: error, show: true };
+		}
+	}
+
+	if (!stats) {
+		if (data) {
+			const {
+				rank,
+				level,
+				criminalrecord: { total: crimes },
+				personalstats: { networth },
+				last_action: { timestamp: lastAction },
+			} = data;
+
+			stats = calculateEstimateBattleStats(rank, level, crimes, networth);
+
+			cacheStatsEstimate(id, stats, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
+		} else {
+			throw "Failed to load estimates.";
+		}
+	}
+
+	return stats;
+}
+
 function calculateEstimateBattleStats(rank, level, crimes, networth) {
 	rank = rank.match(/[A-Z][a-z ]+/g)[0].trim();
 
