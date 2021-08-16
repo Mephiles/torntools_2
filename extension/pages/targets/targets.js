@@ -85,15 +85,44 @@ async function setupAttackHistory() {
 				children: [document.newElement({ type: "a", text: id, href: `https://www.torn.com/profiles.php?XID=${id}`, attributes: { target: "_blank" } })],
 			})
 		);
-		row.appendChild(document.newElement({ type: "td", class: "name", text: data.name }));
 		row.appendChild(
 			document.newElement({
 				type: "td",
-				class: "last-attack",
-				text: `${formatDate({ milliseconds: data.lastAttack }, { showYear: true })}, ${formatTime({ milliseconds: data.lastAttack })}`,
-				attributes: { value: data.lastAttack },
+				class: "name",
+				children: [
+					document.newElement({ type: "a", text: data.name, href: `https://www.torn.com/profiles.php?XID=${id}`, attributes: { target: "_blank" } }),
+				],
 			})
 		);
+
+		const lastAttackText = `${formatDate({ milliseconds: data.lastAttack }, { showYear: true })}, ${formatTime({ milliseconds: data.lastAttack })}`;
+		// FIXME - Check date.
+		if (data.lastAttackCode) {
+			row.appendChild(
+				document.newElement({
+					type: "td",
+					class: "last-attack",
+					attributes: { value: data.lastAttack },
+					children: [
+						document.newElement({
+							type: "a",
+							text: lastAttackText,
+							href: `https://www.torn.com/loader.php?sid=attackLog&ID=${data.lastAttackCode}`,
+							attributes: { target: "_blank" },
+						}),
+					],
+				})
+			);
+		} else {
+			row.appendChild(
+				document.newElement({
+					type: "td",
+					class: "last-attack",
+					text: lastAttackText,
+					attributes: { value: data.lastAttack },
+				})
+			);
+		}
 		const totalWins = data.win;
 		row.appendChild(document.newElement({ type: "td", class: `data win`, text: totalWins.toString(), attributes: { value: totalWins } }));
 		for (const type of ["mug", "leave", "hospitalise", "arrest", "special", "stealth"]) {
@@ -201,7 +230,20 @@ async function setupStakeouts() {
 					break;
 			}
 
-			row.appendChild(document.newElement({ type: "td", class: "name", text: data.info.name }));
+			row.appendChild(
+				document.newElement({
+					type: "td",
+					class: "name",
+					children: [
+						document.newElement({
+							type: "a",
+							text: data.info.name,
+							href: `https://www.torn.com/profiles.php?XID=${id}`,
+							attributes: { target: "_blank" },
+						}),
+					],
+				})
+			);
 			row.appendChild(
 				document.newElement({
 					type: "td",
