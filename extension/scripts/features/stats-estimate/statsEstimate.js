@@ -35,7 +35,12 @@ const RANK_TRIGGERS = {
 	stats: ["under 2k", "2k - 25k", "20k - 250k", "200k - 2.5m", "2m - 25m", "20m - 250m", "over 200m"],
 };
 
-async function retrieveStatsEstimate(id, isList, count) {
+async function retrieveStatsEstimate(id, isList, count, options = {}) {
+	options = {
+		uuid: false,
+		...options,
+	};
+
 	let stats, data;
 	if (ttCache.hasValue("stats-estimate", id)) {
 		stats = ttCache.get("stats-estimate", id);
@@ -49,6 +54,8 @@ async function retrieveStatsEstimate(id, isList, count) {
 			throw { message: "No cached result found!", show: settings.scripts.statsEstimate.displayNoResult };
 
 		if (isList) await sleep(settings.scripts.statsEstimate.delay * count);
+
+		if (options.uuid && options.uuid !== estimatingUUID) throw { message: "Aborted estimate due to another task running.", show: true };
 
 		try {
 			data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
@@ -108,4 +115,42 @@ function cacheStatsEstimate(id, estimate, lastAction) {
 	else if (estimate === "N/A") days = 1;
 
 	return ttCache.set({ [id]: estimate }, TO_MILLIS.DAYS * days, "stats-estimate");
+}
+
+let estimatingUUID;
+
+function executeStatsEstimate(selector, handler) {
+	let estimated = 0;
+
+	const uuid = getUUID();
+	estimatingUUID = uuid;
+
+	for (const row of document.findAll(selector)) {
+		if (row.classList.contains("tt-estimated")) continue;
+
+		const { id, level } = handler(row);
+
+		if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level) continue;
+		row.classList.add(".tt-estimated");
+
+		const section = document.newElement({ type: "div", class: "tt-stats-estimate" });
+		row.insertAdjacentElement("afterend", section);
+
+		showLoadingPlaceholder(section, true);
+
+		if (!ttCache.hasValue("stats-estimate", id) && !ttCache.hasValue("profile-stats", id)) estimated++;
+
+		// FIXME - Cancel requests when on another page.
+		retrieveStatsEstimate(id, true, estimated - 1, { uuid })
+			.then((estimate) => (section.innerText = `Stats Estimate: ${estimate}`))
+			.catch((error) => {
+				if (error.show) {
+					// FIXME - Improve error handling
+					section.innerText = error.message;
+				} else {
+					section.remove();
+				}
+			})
+			.then(() => showLoadingPlaceholder(section, false));
+	}
 }

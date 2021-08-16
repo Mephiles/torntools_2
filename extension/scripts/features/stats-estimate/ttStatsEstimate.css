@@ -13,6 +13,7 @@
 	min-height: 11px;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
 .tt-stats-estimate .tt-loading-placeholder {
