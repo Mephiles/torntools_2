@@ -17,8 +17,7 @@
 		async () => {
 			if (!hasAPIData()) return "No API access.";
 
-			await checkMobile();
-			await checkTablet();
+			await checkDevice();
 		}
 	);
 
