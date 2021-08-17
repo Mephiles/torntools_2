@@ -72,6 +72,7 @@
 	}
 
 	function removeEstimate() {
-		document.find(".tt-stats-estimate-profile")?.remove();
+		document.findAll(".tt-stats-estimate-attacks").forEach((estimate) => estimate.remove());
+		document.findAll(".tt-stats-estimate-attacks-wrapper").forEach((wrapper) => wrapper.classList.remove("tt-stats-estimate-attacks-wrapper"));
 	}
 })();

@@ -57,6 +57,6 @@
 	}
 
 	function removeEstimates() {
-		document.findAll(".tt-stat-estimate")?.remove();
+		document.findAll(".tt-stat-estimate").forEach((estimate) => estimate.remove());
 	}
 })();

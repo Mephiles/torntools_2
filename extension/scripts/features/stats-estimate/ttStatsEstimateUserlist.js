@@ -3,40 +3,44 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
+	const statsEstimate = new StatsEstimate(true);
+
 	const feature = featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
-		() => settings.scripts.statsEstimate.global && settings.scripts.statsEstimate.enemies,
+		() => settings.scripts.statsEstimate.global && settings.scripts.statsEstimate.userlist,
 		registerListeners,
 		showEstimates,
 		removeEstimates,
 		{
-			storage: ["settings.scripts.statsEstimate.global", "settings.scripts.statsEstimate.enemies"],
+			storage: ["settings.scripts.statsEstimate.global", "settings.scripts.statsEstimate.userlist"],
 		},
 		() => {
 			if (!hasAPIData()) return "No API access.";
-		}
+		},
+		{ liveReload: true }
 	);
 
 	function registerListeners() {
 		addXHRListener(async ({ detail: { page, xhr } }) => {
 			if (!feature.enabled()) return;
-			if (page !== "userlist") return;
+			if (page !== "page") return;
 
-			const step = new URLSearchParams(xhr.requestBody).get("step");
-			if (step !== "blackList") return;
+			const sid = new URLSearchParams(xhr.requestBody).get("sid");
+			if (sid !== "UserListAjax") return;
 
-			new MutationObserver((mutations, observer) => {
-				showEstimates();
-				observer.disconnect();
-			}).observe(document.find(".blacklist"), { childList: true });
+			await requireElement(".user-info-list-wrap .ajax-placeholder", { invert: true });
+
+			showEstimates().then(() => {});
 		});
 	}
 
 	async function showEstimates() {
-		await requireElement(".user-info-blacklist-wrap");
+		await requireElement(".user-info-list-wrap");
+		await requireElement(".user-info-list-wrap .ajax-placeholder", { invert: true });
 
-		executeStatsEstimate(".user-info-blacklist-wrap > li[data-id]", (row) => ({
+		statsEstimate.clearQueue();
+		statsEstimate.showEstimates(".user-info-list-wrap > li", (row) => ({
 			id: row
 				.find(".user.name > [title]")
 				.getAttribute("title")
@@ -47,6 +51,7 @@
 	}
 
 	function removeEstimates() {
+		statsEstimate.clearQueue();
 		document.findAll(".tt-stat-estimate").forEach((estimate) => estimate.remove());
 	}
 })();
