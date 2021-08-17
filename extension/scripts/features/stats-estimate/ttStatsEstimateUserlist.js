@@ -4,7 +4,6 @@
 	if (!getPageStatus().access) return;
 
 	const statsEstimate = new StatsEstimate(true);
-
 	const feature = featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
@@ -52,6 +51,6 @@
 
 	function removeEstimates() {
 		statsEstimate.clearQueue();
-		document.findAll(".tt-stat-estimate").forEach((estimate) => estimate.remove());
+		document.findAll(".tt-stats-estimate").forEach((estimate) => estimate.remove());
 	}
 })();

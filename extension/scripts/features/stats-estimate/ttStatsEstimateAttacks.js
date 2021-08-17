@@ -4,6 +4,7 @@
 	if (!getPageStatus().access) return;
 	if (isOwnProfile()) return;
 
+	const statsEstimate = new StatsEstimate(false);
 	featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
@@ -30,7 +31,8 @@
 		function handleDefender() {
 			const id = parseInt(getSearchParameters().get("user2ID"));
 
-			retrieveStatsEstimate(id, false)
+			statsEstimate
+				.fetchEstimate(id)
 				.then((estimate) => createElement(estimate, true, "defender"))
 				.catch(() => {});
 		}
@@ -46,7 +48,7 @@
 					personalstats: { networth },
 				} = userdata;
 
-				const estimate = calculateEstimateBattleStats(rank, level, crimes, networth);
+				const estimate = statsEstimate.getEstimate(rank, level, crimes, networth);
 
 				createElement(estimate, true, "attacker");
 			}

@@ -4,6 +4,7 @@
 	if (!getPageStatus().access) return;
 	if (isOwnProfile()) return;
 
+	const statsEstimate = new StatsEstimate(false);
 	featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
@@ -31,9 +32,9 @@
 				.match(/\[([0-9]*)]/i)[1]
 		);
 
-		let stats, data;
+		let estimate, data;
 		if (ttCache.hasValue("stats-estimate", id)) {
-			stats = ttCache.get("stats-estimate", id);
+			estimate = ttCache.get("stats-estimate", id);
 		} else if (ttCache.hasValue("profile-stats", id)) {
 			data = ttCache.get("profile-stats", id);
 		} else {
@@ -50,7 +51,7 @@
 			}
 		}
 
-		if (!stats) {
+		if (!estimate) {
 			if (data) {
 				const {
 					rank,
@@ -60,9 +61,9 @@
 					last_action: { timestamp: lastAction },
 				} = data;
 
-				stats = calculateEstimateBattleStats(rank, level, crimes, networth);
+				estimate = statsEstimate.getEstimate(rank, level, crimes, networth);
 
-				cacheStatsEstimate(id, stats, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
+				statsEstimate.cacheResult(id, estimate, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
 			} else {
 				console.log("TT - Failed to load estimates.");
 				return;
@@ -71,7 +72,7 @@
 
 		document
 			.find(".profile-right-wrapper > .profile-action .title-black")
-			.appendChild(document.newElement({ type: "span", class: "tt-stats-estimate-profile", text: stats }));
+			.appendChild(document.newElement({ type: "span", class: "tt-stats-estimate-profile", text: estimate }));
 
 		function getLevel() {
 			const levelWrap = document.find(".box-info .box-value");

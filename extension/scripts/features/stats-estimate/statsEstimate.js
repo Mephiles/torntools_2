@@ -35,126 +35,6 @@ const RANK_TRIGGERS = {
 	stats: ["under 2k", "2k - 25k", "20k - 250k", "200k - 2.5m", "2m - 25m", "20m - 250m", "over 200m"],
 };
 
-async function retrieveStatsEstimate(id, isList, count, options = {}) {
-	options = {
-		hasUUID: false,
-		...options,
-	};
-
-	let stats, data;
-	if (ttCache.hasValue("stats-estimate", id)) {
-		stats = ttCache.get("stats-estimate", id);
-	} else if (ttCache.hasValue("profile-stats", id)) {
-		data = ttCache.get("profile-stats", id);
-	} else {
-		if (isList && settings.scripts.statsEstimate.cachedOnly)
-			throw { message: "No cached result found!", show: settings.scripts.statsEstimate.displayNoResult };
-
-		if (isList) await sleep(settings.scripts.statsEstimate.delay * count);
-
-		if (options.hasUUID && options.hasUUID.dataset.estimatingUUID !== estimatingUUID)
-			throw { message: "Aborted estimate due to another task running.", show: true };
-
-		try {
-			data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
-
-			ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
-		} catch (error) {
-			let message;
-			if (error.error) message = error.error;
-			else if (error.code) message = `Unknown (code ${error.code})`;
-			else message = error;
-
-			throw { message, show: true };
-		}
-	}
-
-	if (!stats) {
-		if (data) {
-			const {
-				rank,
-				level,
-				criminalrecord: { total: crimes },
-				personalstats: { networth },
-				last_action: { timestamp: lastAction },
-			} = data;
-
-			// if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level)
-			// 	throw { message: "Too high of a level.", show: false };
-
-			stats = calculateEstimateBattleStats(rank, level, crimes, networth);
-
-			cacheStatsEstimate(id, stats, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
-		} else {
-			throw "Failed to load estimates.";
-		}
-	}
-
-	return stats;
-}
-
-function calculateEstimateBattleStats(rank, level, crimes, networth) {
-	rank = rank.match(/[A-Z][a-z ]+/g)[0].trim();
-
-	const triggersLevel = RANK_TRIGGERS.level.filter((x) => x <= level).length;
-	const triggersCrimes = RANK_TRIGGERS.crimes.filter((x) => x <= crimes).length;
-	const triggersNetworth = RANK_TRIGGERS.networth.filter((x) => x <= networth).length;
-
-	const triggersStats = RANKS[rank] - triggersLevel - triggersCrimes - triggersNetworth - 1;
-
-	return RANK_TRIGGERS.stats[triggersStats] ?? "N/A";
-}
-
-function cacheStatsEstimate(id, estimate, lastAction) {
-	let days = 7;
-
-	if (estimate === RANK_TRIGGERS.stats.last()) days = 31;
-	else if (lastAction && lastAction <= Date.now() - TO_MILLIS.DAYS * 180) days = 31;
-	else if (estimate === "N/A") days = 1;
-
-	return ttCache.set({ [id]: estimate }, TO_MILLIS.DAYS * days, "stats-estimate");
-}
-
-let estimatingUUID;
-
-function executeStatsEstimate(selector, handler) {
-	let estimated = 0;
-
-	estimatingUUID = getUUID();
-
-	for (const row of document.findAll(selector)) {
-		if (row.classList.contains("hidden")) continue;
-		if (row.classList.contains("tt-estimated")) {
-			row.dataset.estimatingUUID = estimatingUUID;
-			continue;
-		}
-
-		const { id, level } = handler(row);
-
-		if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level) continue;
-		row.classList.add("tt-estimated");
-		row.dataset.estimatingUUID = estimatingUUID;
-
-		const section = document.newElement({ type: "div", class: "tt-stats-estimate" });
-		row.insertAdjacentElement("afterend", section);
-
-		showLoadingPlaceholder(section, true);
-
-		if (!ttCache.hasValue("stats-estimate", id) && !ttCache.hasValue("profile-stats", id)) estimated++;
-
-		retrieveStatsEstimate(id, true, estimated - 1, { hasUUID: row })
-			.then((estimate) => (section.innerText = `Stats Estimate: ${estimate}`))
-			.catch((error) => {
-				if (error.show) {
-					section.innerText = error.message;
-				} else {
-					section.remove();
-				}
-			})
-			.then(() => showLoadingPlaceholder(section, false));
-	}
-}
-
 class StatsEstimate {
 	constructor(isList) {
 		this.queue = [];
@@ -213,9 +93,7 @@ class StatsEstimate {
 	}
 
 	async runQueue() {
-		console.log("DKK runQueue 1", this.running, this.queue);
 		if (this.running || !this.queue.length) return;
-		console.log("DKK runQueue 2");
 
 		this.running = true;
 

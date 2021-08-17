@@ -3,6 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
+	const statsEstimate = new StatsEstimate(true);
 	const feature = featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
@@ -36,7 +37,8 @@
 	async function showEstimates() {
 		await requireElement(".user-info-blacklist-wrap");
 
-		executeStatsEstimate(".user-info-blacklist-wrap > li[data-id]", (row) => ({
+		statsEstimate.clearQueue();
+		statsEstimate.showEstimates(".user-info-blacklist-wrap > li[data-id]", (row) => ({
 			id: row
 				.find(".user.name > [title]")
 				.getAttribute("title")
@@ -47,6 +49,7 @@
 	}
 
 	function removeEstimates() {
-		document.findAll(".tt-stat-estimate").forEach((estimate) => estimate.remove());
+		statsEstimate.clearQueue();
+		document.findAll(".tt-stats-estimate").forEach((estimate) => estimate.remove());
 	}
 })();

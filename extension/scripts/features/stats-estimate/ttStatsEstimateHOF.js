@@ -3,6 +3,7 @@
 (async () => {
 	if (!getPageStatus().access) return;
 
+	const statsEstimate = new StatsEstimate(true);
 	const feature = featureManager.registerFeature(
 		"Stats Estimate",
 		"stat estimates",
@@ -46,7 +47,8 @@
 			levelSelector = ".player-info .col-small";
 		}
 
-		executeStatsEstimate(".players-list > li", (row) => ({
+		statsEstimate.clearQueue();
+		statsEstimate.showEstimates(".players-list > li", (row) => ({
 			id: row
 				.find(".user.name > [title]")
 				.getAttribute("title")
@@ -57,6 +59,7 @@
 	}
 
 	function removeEstimates() {
-		document.findAll(".tt-stat-estimate").forEach((estimate) => estimate.remove());
+		statsEstimate.clearQueue();
+		document.findAll(".tt-stats-estimate").forEach((estimate) => estimate.remove());
 	}
 })();
