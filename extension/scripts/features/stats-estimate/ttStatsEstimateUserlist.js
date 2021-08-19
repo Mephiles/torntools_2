@@ -22,13 +22,18 @@
 
 	function registerListeners() {
 		addXHRListener(async ({ detail: { page, xhr } }) => {
-			if (!feature.enabled()) return;
+			if (!feature.enabled() || settings.pages.userlist.filter) return;
 			if (page !== "page") return;
 
 			const sid = new URLSearchParams(xhr.requestBody).get("sid");
 			if (sid !== "UserListAjax") return;
 
 			await requireElement(".user-info-list-wrap .ajax-placeholder", { invert: true });
+
+			showEstimates().then(() => {});
+		});
+		CUSTOM_LISTENERS[EVENT_CHANNELS.FILTER_APPLIED].push(() => {
+			if (!feature.enabled()) return;
 
 			showEstimates().then(() => {});
 		});
@@ -44,7 +49,7 @@
 				.find(".user.name > [title]")
 				.getAttribute("title")
 				.match(/([0-9]+)/g)
-				.last(),
+				?.last(),
 			level: parseInt(row.find(".level").innerText.replaceAll("\n", "").split(":").last().trim()),
 		}));
 	}

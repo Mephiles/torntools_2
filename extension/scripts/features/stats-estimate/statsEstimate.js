@@ -48,6 +48,7 @@ class StatsEstimate {
 			if (row.classList.contains("hidden") || row.classList.contains("tt-estimated")) continue;
 
 			const { id, level } = handler(row);
+			if (!id) continue;
 
 			if (level && settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < level) continue;
 
@@ -75,17 +76,18 @@ class StatsEstimate {
 				this.cacheResult(id, estimate, lastAction * 1000).catch((error) => console.error("Failed to cache stat estimate.", error));
 			}
 
-			if (settings.scripts.statsEstimate.cachedOnly) {
-				if (settings.scripts.statsEstimate.displayNoResult) section.innerText = "No cached result found!";
-				continue;
-			}
-
 			if (estimate) {
 				section.innerText = `Stats Estimate: ${estimate}`;
 
 				showLoadingPlaceholder(section, false);
 			} else if (settings.scripts.statsEstimate.cachedOnly) {
+				showLoadingPlaceholder(section, false);
+
 				if (settings.scripts.statsEstimate.displayNoResult) section.innerText = "No cached result found!";
+				else {
+					row.classList.remove("tt-estimated");
+					section.remove();
+				}
 			} else this.queue.push({ row, section, id });
 		}
 
@@ -114,7 +116,6 @@ class StatsEstimate {
 				if (error.show) {
 					section.innerText = error.message;
 				} else {
-					console.log("DKK e2", error);
 					section.remove();
 				}
 			}
@@ -127,6 +128,11 @@ class StatsEstimate {
 	}
 
 	clearQueue() {
+		for (const { row, section } of this.queue) {
+			row.classList.remove("tt-estimated");
+			section.remove();
+		}
+
 		this.queue = [];
 	}
 

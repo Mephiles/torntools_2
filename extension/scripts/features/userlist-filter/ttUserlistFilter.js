@@ -157,7 +157,7 @@
 			}
 		}
 
-		// triggerCustomListener(EVENT_CHANNELS.FILTER_APPLIED);
+		triggerCustomListener(EVENT_CHANNELS.FILTER_APPLIED);
 
 		function showRow(li) {
 			li.classList.remove("hidden");
