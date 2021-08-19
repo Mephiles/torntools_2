@@ -27,14 +27,6 @@ const RANKS = {
 	Invincible: 26,
 };
 
-const RANK_TRIGGERS = {
-	level: [2, 6, 11, 26, 31, 50, 71, 100],
-	crimes: [100, 5000, 10000, 20000, 30000, 50000],
-	networth: [5000000, 50000000, 500000000, 5000000000, 50000000000],
-
-	stats: ["under 2k", "2k - 25k", "20k - 250k", "200k - 2.5m", "2m - 25m", "20m - 250m", "over 200m"],
-};
-
 class StatsEstimate {
 	constructor(isList) {
 		this.queue = [];
@@ -43,7 +35,7 @@ class StatsEstimate {
 		this.isList = isList;
 	}
 
-	showEstimates(selector, handler) {
+	showEstimates(selector, handler, hasFilter) {
 		for (const row of document.findAll(selector)) {
 			if (row.classList.contains("hidden") || row.classList.contains("tt-estimated")) continue;
 
@@ -78,18 +70,20 @@ class StatsEstimate {
 
 			if (estimate) {
 				section.innerText = `Stats Estimate: ${estimate}`;
+				if (hasFilter) row.dataset.estimate = estimate;
 
 				showLoadingPlaceholder(section, false);
 			} else if (settings.scripts.statsEstimate.cachedOnly) {
-				showLoadingPlaceholder(section, false);
-
 				if (settings.scripts.statsEstimate.displayNoResult) section.innerText = "No cached result found!";
 				else {
 					row.classList.remove("tt-estimated");
 					section.remove();
 				}
-			} else this.queue.push({ row, section, id });
+
+				showLoadingPlaceholder(section, false);
+			} else this.queue.push({ row, section, id, hasFilter });
 		}
+		if (hasFilter) triggerCustomListener(EVENT_CHANNELS.STATS_ESTIMATED, { global: true });
 
 		this.runQueue().then(() => {});
 	}
@@ -100,7 +94,7 @@ class StatsEstimate {
 		this.running = true;
 
 		while (this.queue.length) {
-			const { row, section, id } = this.queue.shift();
+			const { row, section, id, hasFilter } = this.queue.shift();
 
 			if (row.classList.contains("hidden")) {
 				row.classList.remove("tt-estimated");
@@ -112,12 +106,17 @@ class StatsEstimate {
 				const estimate = await this.fetchEstimate(id);
 
 				section.innerText = `Stats Estimate: ${estimate}`;
+				if (hasFilter) {
+					row.dataset.estimate = estimate;
+					triggerCustomListener(EVENT_CHANNELS.STATS_ESTIMATED, { row, estimate });
+				}
 			} catch (error) {
 				if (error.show) {
 					section.innerText = error.message;
 				} else {
 					section.remove();
 				}
+				if (hasFilter) triggerCustomListener(EVENT_CHANNELS.STATS_ESTIMATED, { row });
 			}
 			showLoadingPlaceholder(section, false);
 

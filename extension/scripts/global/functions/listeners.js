@@ -37,6 +37,7 @@ const EVENT_CHANNELS = {
 	TRADE: "trade",
 	PROFILE_FETCHED: "profile-fetched",
 	FILTER_APPLIED: "filter-applied",
+	STATS_ESTIMATED: "stats-estimated",
 };
 
 const CUSTOM_LISTENERS = (() => {

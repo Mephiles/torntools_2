@@ -44,14 +44,18 @@
 		await requireElement(".user-info-list-wrap .ajax-placeholder", { invert: true });
 
 		statsEstimate.clearQueue();
-		statsEstimate.showEstimates(".user-info-list-wrap > li", (row) => ({
-			id: row
-				.find(".user.name > [title]")
-				.getAttribute("title")
-				.match(/([0-9]+)/g)
-				?.last(),
-			level: parseInt(row.find(".level").innerText.replaceAll("\n", "").split(":").last().trim()),
-		}));
+		statsEstimate.showEstimates(
+			".user-info-list-wrap > li",
+			(row) => ({
+				id: row
+					.find(".user.name > [title]")
+					.getAttribute("title")
+					.match(/([0-9]+)/g)
+					?.last(),
+				level: parseInt(row.find(".level").innerText.replaceAll("\n", "").split(":").last().trim()),
+			}),
+			true
+		);
 	}
 
 	function removeEstimates() {
