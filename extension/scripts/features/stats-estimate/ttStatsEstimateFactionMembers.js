@@ -59,7 +59,11 @@
 				),
 				level: parseInt(row.find(".lvl").innerText.trim()),
 			}),
-			true
+			true,
+			(row) =>
+				row.nextElementSibling?.classList.contains("tt-last-action") || row.nextElementSibling?.classList.contains("tt-member-info")
+					? row.nextElementSibling
+					: row
 		);
 	}
 
