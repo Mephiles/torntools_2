@@ -555,6 +555,7 @@ const DEFAULT_STORAGE = {
 				hof: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				attacks: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				userlist: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				bounties: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {

@@ -213,8 +213,13 @@
 		},
 		{
 			"matches": ["https://www.torn.com/bounties.php*"],
-			"css": ["scripts/features/bounty-filter/ttBountyFilter.css"],
-			"js": ["scripts/features/bounty-filter/ttBountyFilter.js"],
+			"css": ["scripts/features/bounty-filter/ttBountyFilter.css", "scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": [
+				"scripts/content/bounties/ttBounties.js",
+				"scripts/features/bounty-filter/ttBountyFilter.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateBounties.js"
+			],
 			"run_at": "document_end"
 		},
 		{
