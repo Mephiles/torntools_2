@@ -48,7 +48,10 @@ class StatsEstimate {
 
 			const section = document.newElement({ type: "div", class: "tt-stats-estimate" });
 			const parent = placement ? placement(row) ?? row : row;
-			parent.insertAdjacentElement("afterend", section);
+			new Promise((resolve) => {
+				parent.insertAdjacentElement("afterend", section);
+				resolve();
+			}).then(() => {});
 
 			showLoadingPlaceholder(section, true);
 
