@@ -214,8 +214,13 @@
 		},
 		{
 			"matches": ["https://www.torn.com/bounties.php*"],
-			"css": ["scripts/features/bounty-filter/ttBountyFilter.css"],
-			"js": ["scripts/features/bounty-filter/ttBountyFilter.js"],
+			"css": ["scripts/features/bounty-filter/ttBountyFilter.css", "scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": [
+				"scripts/content/bounties/ttBounties.js",
+				"scripts/features/bounty-filter/ttBountyFilter.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateBounties.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -285,7 +290,8 @@
 				"scripts/features/last-action/ttLastAction.css",
 				"scripts/features/faction-member-filter/ttFactionMemberFilter.css",
 				"scripts/features/faction-member-info/ttFactionMemberInfo.css",
-				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.css"
+				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.css",
+				"scripts/features/stats-estimate/ttStatsEstimate.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
@@ -312,7 +318,9 @@
 				"scripts/features/armory-filter/ttArmoryFilter.js",
 				"scripts/features/upgrade-required-respect/ttUpgradeRequiredRespect.js",
 				"scripts/features/faction-member-info/ttFactionMemberInfo.js",
-				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js"
+				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js"
 			],
 			"run_at": "document_end"
 		},
@@ -446,7 +454,8 @@
 				"scripts/features/friendly-fire/ttFriendlyFire.css",
 				"scripts/features/age-to-words/ttAgeToWords.css",
 				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css",
-				"scripts/features/profile-box/ttProfileBox.css"
+				"scripts/features/profile-box/ttProfileBox.css",
+				"scripts/features/stats-estimate/ttStatsEstimate.css"
 			],
 			"js": [
 				"vendor/sortable/sortable.js",
@@ -456,7 +465,9 @@
 				"scripts/features/friendly-fire/ttFriendlyFire.js",
 				"scripts/features/age-to-words/ttAgeToWords.js",
 				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.js",
-				"scripts/features/profile-box/ttProfileBox.js"
+				"scripts/features/profile-box/ttProfileBox.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateProfile.js"
 			],
 			"run_at": "document_end"
 		},
@@ -492,8 +503,14 @@
 		},
 		{
 			"matches": ["https://www.torn.com/page.php?sid=UserList*"],
-			"css": ["scripts/global/functions/filters.css"],
-			"js": ["scripts/global/functions/filters.js", "scripts/content/userlist/ttUserlist.js", "scripts/features/userlist-filter/ttUserlistFilter.js"],
+			"css": ["scripts/global/functions/filters.css", "scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": [
+				"scripts/global/functions/filters.js",
+				"scripts/content/userlist/ttUserlist.js",
+				"scripts/features/userlist-filter/ttUserlistFilter.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateUserlist.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -611,6 +628,24 @@
 			"matches": ["https://www.torn.com/loader.php?sid=blackjack*"],
 			"css": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.css"],
 			"js": ["scripts/features/blackjack-strategy/ttBlackjackStrategy.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/blacklist.php*"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateEnemies.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/halloffame.php*"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateHOF.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/loader.php?sid=attack*"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateAttacks.js"],
 			"run_at": "document_end"
 		}
 	]

@@ -162,14 +162,17 @@ function createFilterSection(options) {
 		}
 
 		function updateCounter(string, content) {
-			content.find(`.${ccTitle} .slider-counter`).innerText = string;
+			const counter = content.find(`.${ccTitle} .slider-counter`);
+			if (!counter) return;
+
+			counter.innerText = string;
 		}
 	}
 
 	return { element: section };
 }
 
-function createStatistics(text = "items") {
+function createStatistics(name = "entries") {
 	const statistics = document.newElement({
 		type: "div",
 		class: "statistics",
@@ -178,7 +181,7 @@ function createStatistics(text = "items") {
 			document.newElement({ type: "strong", class: "count", text: "X" }),
 			" of ",
 			document.newElement({ type: "strong", class: "total", text: "Y" }),
-			` ${text}`,
+			` ${name}.`,
 		],
 	});
 

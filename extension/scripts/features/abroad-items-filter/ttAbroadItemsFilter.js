@@ -23,7 +23,7 @@
 			nextElement: document.find(".travel-agency-market"),
 		});
 
-		const statistics = createStatistics();
+		const statistics = createStatistics("items");
 		content.appendChild(statistics.element);
 
 		const filterContent = document.newElement({
@@ -40,7 +40,7 @@
 		filterContent.appendChild(profitOnlyFilter.element);
 
 		const categoryFilter = createFilterSection({
-			title: "Status",
+			title: "Category",
 			checkboxes: [
 				{ id: "plushie", description: "Plushies" },
 				{ id: "flower", description: "Flowers" },

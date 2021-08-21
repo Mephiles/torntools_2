@@ -55,7 +55,9 @@ body.dark .row:hover {
 	background-color: #555;
 }
 
-.id a {
+.id a,
+.name a,
+.last-attack a {
 	text-decoration: none;
 	color: inherit;
 }

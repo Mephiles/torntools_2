@@ -6,6 +6,13 @@ class FeatureManager {
 
 		this.popupLoaded = false;
 		this.resultQueue = [];
+
+		this.isDisconnected = false;
+		this.port = chrome.runtime.connect({ name: "status-check" });
+		this.port.onDisconnect.addListener(() => {
+			this.features.forEach((feature) => this.executeFunction(feature.cleanup));
+			this.isDisconnected = true;
+		});
 	}
 
 	registerFeature(name, scope, enabled, initialise, execute, cleanup, loadListeners, requirements, options) {
@@ -18,7 +25,17 @@ class FeatureManager {
 		const oldFeature = this.findFeature(name);
 		if (oldFeature) throw "Feature already registered.";
 
-		const newFeature = { name, scope, enabled, initialise, execute, cleanup, loadListeners, requirements, options };
+		const newFeature = {
+			name,
+			scope,
+			enabled: () => !this.isDisconnected && getValue(enabled),
+			initialise,
+			execute,
+			cleanup,
+			loadListeners,
+			requirements,
+			options,
+		};
 
 		console.log("[TornTools] FeatureManager - Registered new feature.", newFeature);
 		this.features.push(newFeature);
@@ -183,7 +200,7 @@ class FeatureManager {
 		}
 
 		new Promise(async (resolve) => {
-			if (await checkMobile()) return resolve();
+			if ((await checkDevice()).mobile) return resolve();
 
 			let row = document.find(`#tt-page-status-feature-${feature.name.toLowerCase().replace(/ /g, "-")}`);
 			if (row) {
@@ -276,7 +293,7 @@ class FeatureManager {
 
 	async createPopup() {
 		await loadDatabase();
-		if (await checkMobile()) return;
+		if ((await checkDevice()).mobile) return;
 
 		const collapsed = this.containerID in filters.containers ? filters.containers[this.containerID] : false;
 

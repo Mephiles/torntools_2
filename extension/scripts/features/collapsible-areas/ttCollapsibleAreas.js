@@ -1,7 +1,7 @@
 "use strict";
 
 (async () => {
-	if (await checkMobile()) return "Not supported on mobile!";
+	if ((await checkDevice()).mobile) return "Not supported on mobile!";
 
 	featureManager.registerFeature(
 		"Collapse Areas",
@@ -40,7 +40,7 @@
 	}
 
 	async function removeCollapseIcon() {
-		if (!observer) observer.disconnect();
+		if (observer) observer.disconnect();
 
 		const header = document.find("h2=Areas");
 		if (!header) return;

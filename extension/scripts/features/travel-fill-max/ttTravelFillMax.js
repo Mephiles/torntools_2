@@ -44,14 +44,14 @@
 						(companyType === 3 &&
 							itemType === "flower" &&
 							userdata.company_perks.some((perk) => perk.includes("special flowers") && perk.includes("5 additional"))) ||
-						(companyType === 0 &&
+						(companyType === 9 &&
 							itemType === "plushie" &&
-							userdata.company_perks.some((perk) => perk.includes("plushies") && perk.includes("5 additional")))
+							userdata.company_perks.some((perk) => perk.includes("+5 plushies") && perk.includes("from abroad")))
 					)
 						limit += 5;
 				}
 
-				max = max > limit ? limit : max;
+				max = Math.max(limit, max);
 				max = Math.floor(userMoney / price) < max ? Math.floor(userMoney / price) : max;
 
 				buyBtn.parentElement.find("input[name='amount']").value = max;

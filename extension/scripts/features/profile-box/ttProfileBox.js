@@ -300,6 +300,8 @@
 				try {
 					data = await fetchData("torn", { section: "user", id, selections: ["profile", "personalstats", "crimes"], silent: true });
 
+					triggerCustomListener(EVENT_CHANNELS.PROFILE_FETCHED, { data });
+
 					ttCache.set({ [id]: data }, TO_MILLIS.HOURS * 6, "profile-stats").catch(() => {});
 				} catch (error) {
 					console.log("TT - Couldn't fetch users stats.", error);
@@ -575,7 +577,7 @@
 
 			showLoadingPlaceholder(section, true);
 
-			let errors = [];
+			const errors = [];
 			let spy = false;
 			if (settings.external.yata) {
 				try {
@@ -611,6 +613,7 @@
 					}
 				} catch (error) {
 					if (error.code === 2 && error.error === "Player not found") errors.push({ service: "YATA", message: "You don't have an account." });
+					else if (error.code === 502) errors.push({ service: "YATA", message: "YATA appears to be down." });
 					else errors.push({ service: "YATA", message: `Unknown (${error.code}) - ${error.error}` });
 
 					console.log("Couldn't load stat spy from YATA.", error);
@@ -658,7 +661,9 @@
 						}
 					}
 				} catch (error) {
-					errors.push({ service: "TornStats", message: `Unknown - ${error}` });
+					if (error.code === 429) errors.push({ service: "TornStats", message: `You've exceeded your API limit. Try again in a minute.` });
+					else errors.push({ service: "TornStats", message: `Unknown - ${error}` });
+
 					console.log("Couldn't load stat spy from TornStats.", error);
 				}
 			}

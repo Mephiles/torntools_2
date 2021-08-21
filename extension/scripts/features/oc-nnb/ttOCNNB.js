@@ -20,7 +20,7 @@
 			if (!hasAPIData()) return "No API access.";
 			else if (!settings.external.yata && !settings.external.tornstats) return "YATA or TornStats not enabled";
 
-			await checkMobile();
+			await checkDevice();
 		}
 	);
 
@@ -189,6 +189,6 @@
 
 	function removeNNBs() {
 		for (const nnb of document.findAll(".tt-nnb")) nnb.remove();
-		for (const nnb of document.findAll(". crimes-list ul.plans-list .tt-modified")) nnb.remove();
+		for (const nnb of document.findAll(".crimes-list ul.plans-list .tt-modified")) nnb.remove();
 	}
 })();

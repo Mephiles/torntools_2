@@ -98,7 +98,7 @@
 						<li name="no-confirm">No Confirm</li>
 						<li name="vault-sharing">Vault Sharing</li>
 						<li name="last-action">Last Action</li>
-						<!-- <li>Stats Estimate</li> -->
+						<li name="stats-estimate">Stats Estimate</li>
 
 						<li class="header">Pages</li>
 						<li name="home">Home</li>
@@ -436,7 +436,6 @@
 						<div class="option no-mobile">
 							<input id="sidebar-ocTimer" type="checkbox" />
 							<label for="sidebar-ocTimer">Show OC ready time in sidebar.</label>
-							<label for="sidebar-ocTimer" class="note tabbed">(requires faction API access)</label>
 						</div>
 						<div class="option">
 							<input id="sidebar-hideGymHighlight" type="checkbox" />
@@ -574,7 +573,7 @@
 							<i id="notification-sound-play" class="fas fa-play"></i>
 							<i id="notification-sound-stop" class="fas fa-stop"></i>
 							<input id="notification-sound-upload" class="hidden" type="file" accept=".mp3,.ogg,.wav" />
-							<label for="notification-sound" class="tabbed note">(Mute only works in Chrome, OS default might not work in all browsers)</label>
+							<label for="notification-sound" class="tabbed note">Mute and OS default might not work in all browsers.</label>
 						</div>
 						<div class="option">
 							<input id="notification-tts" type="checkbox" />
@@ -785,6 +784,7 @@
 						<div class="option">
 							<input id="faction-armoryWorth" type="checkbox" />
 							<label for="faction-armoryWorth">Show total worth of faction armory.</label>
+							<label for="faction-armoryWorth" class="note tabbed">Requires faction API access.</label>
 						</div>
 						<div class="option">
 							<input id="faction-upgradeRequiredRespect" type="checkbox" />
@@ -793,6 +793,7 @@
 						<div class="option">
 							<input id="faction-memberInfo" type="checkbox" />
 							<label for="faction-memberInfo">Show money and points balance of members.</label>
+							<label for="faction-memberInfo" class="note tabbed">Requires faction API access.</label>
 						</div>
 
 						<div class="header">OCs</div>
@@ -1187,9 +1188,26 @@
 							<label for="travel-computer">Show a computer link while flying or abroad.</label>
 						</div>
 						<div class="option">
-							<input id="travel-cleanFlight" type="checkbox" />
-							<label for="travel-cleanFlight">Hide plane & funfact box on Flying page.</label>
+							<input id="travel-table" type="checkbox" />
+							<label for="travel-table">Show a table of all countries with their item and their stocks.</label>
+							<label class="note" for="travel-table">Requires YATA to be enabled as external service.</label>
 						</div>
+						<div class="option">
+							<input id="travel-flyingTime" type="checkbox" />
+							<label for="travel-flyingTime">Show the time when you would land when flying now.</label>
+						</div>
+
+						<div class="header">Flying</div>
+						<div class="option">
+							<input id="travel-landingTime" type="checkbox" />
+							<label for="travel-landingTime">Show the landing time when flying.</label>
+						</div>
+						<div class="option">
+							<input id="travel-cleanFlight" type="checkbox" />
+							<label for="travel-cleanFlight">Hide plane & funfact box while flying.</label>
+						</div>
+
+						<div class="header">Abroad</div>
 						<div class="option">
 							<input id="travel-travelProfits" type="checkbox" />
 							<label for="travel-travelProfits">Show profits of items in market.</label>
@@ -1209,19 +1227,6 @@
 						<div class="option">
 							<input id="travel-sortable" type="checkbox" />
 							<label for="travel-sortable">Make market table sortable.</label>
-						</div>
-						<div class="option">
-							<input id="travel-table" type="checkbox" />
-							<label for="travel-table">Show a table of all countries with their item and their stocks.</label>
-							<label class="note" for="travel-table">Requires YATA to be enabled as external service.</label>
-						</div>
-						<div class="option">
-							<input id="travel-landingTime" type="checkbox" />
-							<label for="travel-landingTime">Show the landing time when flying.</label>
-						</div>
-						<div class="option">
-							<input id="travel-flyingTime" type="checkbox" />
-							<label for="travel-flyingTime">Show the time when you would land when flying now.</label>
 						</div>
 					</section>
 					<section name="attack">
@@ -1336,6 +1341,63 @@
 							</label>
 						</div>
 					</section>
+					<section name="stats-estimate">
+						<div class="option header">
+							<input id="statsEstimate-global" type="checkbox" />
+							<label for="statsEstimate-global">Stats Estimate</label>
+						</div>
+						<div class="option">
+							<label for="statsEstimate-maxLevel">Show estimates for users up to level </label>
+							<input id="statsEstimate-maxLevel" type="number" min="1" max="100" />
+						</div>
+						<div class="option">
+							<label for="statsEstimate-delay">Delay requests for </label>
+							<input id="statsEstimate-delay" type="number" min="1" />
+							<label for="statsEstimate-delay">ms.</label>
+							<label class="tabbed note" for="statsEstimate-delay">
+								Lowering this value might risk using too many api requests and getting blocked.
+							</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-cachedOnly" type="checkbox" />
+							<label for="statsEstimate-cachedOnly">Only show cached results.</label>
+							<label class="tabbed note" for="statsEstimate-cachedOnly">Ignored on profiles.</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-displayNoResult" type="checkbox" />
+							<label for="statsEstimate-displayNoResult">Show a notice when there was no cached result.</label>
+						</div>
+
+						<div class="header">Pages</div>
+						<div class="option">
+							<input id="statsEstimate-profiles" type="checkbox" />
+							<label for="statsEstimate-profiles">Profiles</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-enemies" type="checkbox" />
+							<label for="statsEstimate-enemies">Enemies list</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-hof" type="checkbox" />
+							<label for="statsEstimate-hof">Hall of Fame</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-attacks" type="checkbox" />
+							<label for="statsEstimate-attacks">Attacks page</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-userlist" type="checkbox" />
+							<label for="statsEstimate-userlist">Userlist</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-bounties" type="checkbox" />
+							<label for="statsEstimate-bounties">Bounties</label>
+						</div>
+						<div class="option">
+							<input id="statsEstimate-factions" type="checkbox" />
+							<label for="statsEstimate-factions">Faction members</label>
+						</div>
+					</section>
 				</div>
 			</section>
 			<section>
@@ -1407,6 +1469,7 @@
 							<li>Last Action - companies: 1 or 2 requests per visit</li>
 							<li>Profile Box - stats: 1 request per profile visit</li>
 							<li>Profile Box - spy report: 1 request to YATA and 1 request to TornStats per profile visit</li>
+							<li>Stats Estimate: 1 request per estimate</li>
 						</ul>
 					</li>
 					<li>
@@ -1414,6 +1477,8 @@
 						<ul>
 							<li>NNB: 1 hour</li>
 							<li>Bank interest: till new day</li>
+							<li>Profile Box - stats: 6 hour</li>
+							<li>Stats Estimate: 7 days, or 31 days if 'over 200' or inactive for over 180 days, or 1 day if not able to calculate it</li>
 						</ul>
 					</li>
 				</ul>
