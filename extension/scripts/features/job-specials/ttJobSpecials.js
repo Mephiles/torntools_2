@@ -49,9 +49,9 @@
 						class: "tt-company-info-wrap",
 						children: [
 							document.newElement({ type: "div", class: "heading", text: `${name} (${stars}★)` }),
-							document.newElement({ type: "hr" }),
+							document.newElement({ type: "hr", class: "first-hr" }),
 							document.newElement({ type: "div", text: `${cost} ${cost === "Passive" ? "" : cost === "1" ? "job point" : "job points"}` }),
-							document.newElement({ type: "hr" }),
+							document.newElement({ type: "hr", class: "second-hr" }),
 							document.newElement({ type: "div", text: effect }),
 						],
 					})
