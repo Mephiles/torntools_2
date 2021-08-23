@@ -219,7 +219,7 @@
 			}
 
 			// Level
-			const level = parseInt(li.find(".lvl").innerText);
+			const level = parseInt(li.find(".lvl").textContent);
 			if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
 				hideRow(li);
 				continue;
@@ -227,7 +227,7 @@
 
 			// Position
 			if (position) {
-				const liPosition = li.find(".position .ellipsis").innerText.trim();
+				const liPosition = li.find(".position .ellipsis").textContent.trim();
 				if (liPosition !== position) {
 					hideRow(li);
 					continue;
@@ -319,8 +319,11 @@
 	}
 
 	function getPositions() {
-		const _positions = new Set();
-		document.findAll(".members-list .table-body > li > .position").forEach((x) => _positions.add(x.innerText.trim()));
+		const _positions = [];
+		document.findAll(".members-list .table-body > li > .position .ellipsis").forEach((x) => {
+			const position = x.textContent.trim();
+			if (!_positions.includes(position)) _positions.push(position);
+		});
 		const positions = [
 			{
 				value: "",
@@ -332,7 +335,7 @@
 				disabled: true,
 			},
 		];
-		[..._positions].forEach((position) => positions.push({ value: position, description: position }));
+		_positions.forEach((position) => positions.push({ value: position, description: position }));
 		return positions;
 	}
 
