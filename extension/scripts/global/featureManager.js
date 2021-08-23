@@ -336,11 +336,16 @@ class FeatureManager {
 	}
 
 	async checkScopes() {
+		if (!settings.featureDisplay) return;
 		let hasContent = false;
 		for (const scope of document.findAll(".tt-page-status-content > div")) {
-			let isEmpty = [...scope.findAll(".tt-page-status-feature:not(.features-list)")].every(
-				(element) => window.getComputedStyle(element).display === "none"
-			);
+			const isEmpty = settings.featureDisplayOnlyFailed || settings.featureDisplayHideDisabled
+			? [...scope.findAll(".tt-page-status-feature:not(.features-list)")].every(
+				(element) =>
+					(settings.featureDisplayOnlyFailed && !element.classList.contains("failed")) ||
+					(settings.featureDisplayHideDisabled && !element.classList.contains("disabled"))
+			)
+			: false;
 
 			if (isEmpty) {
 				scope.classList.add("no-content");
