@@ -568,4 +568,8 @@ body.dark .hide-items span {
 	cursor: pointer;
 }
 
+#hide-icons .tooltip-text {
+	margin-left: -17.5px;
+}
+
 /* endregion */
