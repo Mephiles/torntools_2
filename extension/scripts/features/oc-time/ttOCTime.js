@@ -40,7 +40,7 @@
 
 				timeLeftElement.dataset.seconds = (timeLeft / 1000).dropDecimals();
 				timeLeftElement.dataset.timeSettings = JSON.stringify({ type: "wordTimer", extraShort: true, showDays: true });
-				timeLeftElement.classList.add("automatic");
+				countdownTimers.push(timeLeftElement);
 			} else {
 				timeLeftElement.innerText = "Ready";
 			}
