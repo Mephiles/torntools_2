@@ -319,7 +319,8 @@
 				"scripts/features/faction-member-info/ttFactionMemberInfo.js",
 				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js",
 				"scripts/features/stats-estimate/statsEstimate.js",
-				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js"
+				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js",
+				"scripts/features/stats-estimate/ttStatsEstimateFactionWars.js"
 			],
 			"run_at": "document_end"
 		},

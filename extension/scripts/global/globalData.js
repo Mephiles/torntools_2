@@ -557,6 +557,7 @@ const DEFAULT_STORAGE = {
 				userlist: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				bounties: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				factions: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				wars: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
