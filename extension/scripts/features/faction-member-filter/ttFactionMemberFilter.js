@@ -236,7 +236,7 @@
 
 			// Status
 			if (status && status.length > 0 && status.length !== 4) {
-				const liStatus = li.find(".status").innerText.toLowerCase().trim();
+				const liStatus = li.find(".status").textContent.trim().toLowerCase();
 				if (!status.includes(liStatus)) {
 					hideRow(li);
 					continue;

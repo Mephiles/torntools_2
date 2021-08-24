@@ -47,10 +47,9 @@
 				else return ally.trim() === factionName;
 			})
 		) {
-			const crossSvg = await fetch(chrome.runtime.getURL("resources/images/svg-icons/cross.svg")).then((x) => x.text());
-			const attackButton = document.find(".profile-buttons .profile-button-attack");
-			attackButton.insertAdjacentHTML("beforeend", crossSvg);
-			attackButton.find(".tt-cross").addEventListener("click", listenerFunction, { capture: true });
+			const crossSvgNode = crossSvg();
+			document.find(".profile-buttons .profile-button-attack").insertAdjacentElement("beforeend", crossSvgNode);
+			crossSvgNode.addEventListener("click", listenerFunction, { capture: true });
 		}
 	}
 

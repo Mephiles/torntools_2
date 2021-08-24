@@ -124,7 +124,7 @@ function _find(element, selector, options = {}) {
 		const value = selector.split("=")[1];
 
 		for (const element of document.querySelectorAll(key)) {
-			if (element.innerText === value) {
+			if (element.textContent.trim() === value.trim()) {
 				return element;
 			}
 		}
