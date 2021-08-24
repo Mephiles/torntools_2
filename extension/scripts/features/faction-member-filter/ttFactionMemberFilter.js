@@ -14,8 +14,8 @@
 		null
 	);
 
-	let filterContent;
-	let lastActionState = settings.scripts.lastAction.factionMember;
+	let filterContent, lastActionState;
+
 	function addListener() {
 		if (isOwnFaction) {
 			CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_INFO].push(async () => {
@@ -44,6 +44,7 @@
 	}
 
 	let localFilters = {};
+
 	async function addFilter() {
 		await requireElement("#faction-info-members .members-list .table-row");
 
@@ -127,6 +128,11 @@
 		content.appendChild(filterContent);
 
 		applyFilter().then(() => {});
+
+		if (settings.scripts.lastAction.factionMember && !lastActionState) {
+			lastActionState = true;
+			showLastAction().then(() => {});
+		}
 	}
 
 	async function showLastAction() {
@@ -134,8 +140,9 @@
 
 		await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
 
-		let upperLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours")) || 1000;
-		if (upperLimit === filters.faction.lastActionStart) upperLimit = 1000;
+		if (filterContent.find(".lastActiveFilter__section-class")) return;
+
+		const upperLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours")) || 1000;
 
 		// noinspection JSIncompatibleTypesComparison
 		const lastActiveFilter = createFilterSection({
@@ -146,7 +153,7 @@
 				max: upperLimit,
 				step: 1,
 				valueLow: filters.faction.lastActionStart > upperLimit ? 0 : filters.faction.lastActionStart,
-				valueHigh: filters.faction.lastActionEnd === "max" || filters.faction.lastActionEnd > upperLimit ? upperLimit : filters.faction.lastActionEnd,
+				valueHigh: filters.faction.lastActionEnd === -1 || filters.faction.lastActionEnd > upperLimit ? upperLimit : filters.faction.lastActionEnd,
 			},
 			callback: applyFilter,
 		});
@@ -194,7 +201,7 @@
 		const special = localFilters["Special"].getSelections(content);
 
 		localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
-		if (lastActionState) {
+		if (lastActionState && localFilters["Last Active Filter"]) {
 			await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
 			if (localFilters["Last Active Filter"])
 				localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
@@ -211,8 +218,8 @@
 					lastActionStart,
 					lastActionEnd:
 						lastActionState && localFilters["Last Active Filter"] && lastActionEnd === localFilters["Last Active Filter"].upperLimit
-							? "max"
-							: lastActionEnd,
+							? -1
+							: filters.faction.lastActionEnd,
 					special,
 				},
 			},
@@ -290,7 +297,7 @@
 			// Last Action
 			if (lastActionState && li.nextSibling && li.nextSibling.className && li.nextSibling.className.includes("tt-last-action")) {
 				const liLastAction = parseInt(li.nextElementSibling.getAttribute("hours"));
-				if ((lastActionStart && liLastAction < lastActionStart) || (lastActionEnd !== 1000 && liLastAction > lastActionEnd)) {
+				if ((lastActionStart && liLastAction < lastActionStart) || (lastActionEnd !== -1 && liLastAction > lastActionEnd)) {
 					hideRow(li, "last-action");
 					continue;
 				}
