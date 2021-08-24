@@ -133,17 +133,20 @@
 		if (!lastActionState || (localFilters["Last Active Filter"] && localFilters["Last Active Filter"].element)) return;
 
 		await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
-		let lastActionEndLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours"));
-		if (!lastActionEndLimit || lastActionEndLimit === filters.faction.lastActionStart || lastActionEndLimit > 1000) lastActionEndLimit = 1000;
+
+		let upperLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours")) || 1000;
+		if (upperLimit === filters.faction.lastActionStart) upperLimit = 1000;
+
+		// noinspection JSIncompatibleTypesComparison
 		const lastActiveFilter = createFilterSection({
 			title: "Last Active Filter",
 			noTitle: true,
 			slider: {
 				min: 0,
-				max: lastActionEndLimit,
+				max: upperLimit,
 				step: 1,
-				valueLow: filters.faction.lastActionStart >= lastActionEndLimit ? 0 : filters.faction.lastActionStart,
-				valueHigh: filters.faction.lastActionEnd >= lastActionEndLimit ? lastActionEndLimit : filters.faction.lastActionEnd,
+				valueLow: filters.faction.lastActionStart > upperLimit ? 0 : filters.faction.lastActionStart,
+				valueHigh: filters.faction.lastActionEnd === "max" || filters.faction.lastActionEnd > upperLimit ? upperLimit : filters.faction.lastActionEnd,
 			},
 			callback: applyFilter,
 		});
@@ -151,6 +154,7 @@
 		localFilters["Last Active Filter"] = {
 			getStartEnd: lastActiveFilter.getStartEnd,
 			updateCounter: lastActiveFilter.updateCounter,
+			upperLimit,
 			element: lastActiveFilter.element,
 		};
 		applyFilter().then(() => {});
@@ -197,7 +201,22 @@
 		}
 
 		// Save filters
-		await ttStorage.change({ filters: { faction: { activity, status, levelStart, levelEnd, lastActionStart, lastActionEnd, special } } });
+		await ttStorage.change({
+			filters: {
+				faction: {
+					activity,
+					status,
+					levelStart,
+					levelEnd,
+					lastActionStart,
+					lastActionEnd:
+						lastActionState && localFilters["Last Active Filter"] && lastActionEnd === localFilters["Last Active Filter"].upperLimit
+							? "max"
+							: lastActionEnd,
+					special,
+				},
+			},
+		});
 
 		for (const li of document.findAll(".members-list .table-body > li")) {
 			// Activity
