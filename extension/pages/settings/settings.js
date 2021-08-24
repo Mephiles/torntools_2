@@ -362,13 +362,12 @@ async function setupPreferences() {
 
 	const hideIconsParent = _preferences.find("#hide-icons");
 	for (const { icon, description } of ALL_ICONS) {
-		// FIXME - Get a proper tooltip.
 		const iconsWrap = document.newElement({
 			type: "div",
-			class: "icon tooltip",
-			children: [document.newElement({ type: "div", class: icon }), document.newElement({ type: "span", class: "tooltip-text", text: description })],
-			dataset: { description },
+			class: "icon",
+			children: [document.newElement({ type: "div", class: icon })],
 		});
+		tippy(iconsWrap, { content: description });
 
 		hideIconsParent.appendChild(iconsWrap);
 
