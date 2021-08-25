@@ -558,6 +558,7 @@ const DEFAULT_STORAGE = {
 				bounties: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				factions: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				wars: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				abroad: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
