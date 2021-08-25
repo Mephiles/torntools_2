@@ -21,13 +21,12 @@
 	);
 
 	async function showEstimate() {
-		await requireElement(".basic-information .info-table .user-info-value");
+		const userInfoValue = await requireElement(".basic-information .info-table .user-info-value > *:first-child");
 
 		if (settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < getLevel()) return;
 
 		const id = parseInt(
-			document
-				.find(".basic-information .info-table .user-info-value > *:first-child")
+				userInfoValue
 				.textContent.trim()
 				.match(/\[([0-9]*)]/i)[1]
 		);

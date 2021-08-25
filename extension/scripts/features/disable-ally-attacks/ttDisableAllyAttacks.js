@@ -18,11 +18,9 @@
 	);
 
 	async function startObserver() {
-		await requireElement(".profile-container");
-
 		new MutationObserver(() => {
 			if (feature.enabled()) disableAttackButton();
-		}).observe(document.find(".profile-container"), { childList: true });
+		}).observe(await requireElement(".profile-container"), { childList: true });
 	}
 
 	function listenerFunction(event) {
@@ -34,12 +32,12 @@
 	}
 
 	async function disableAttackButton() {
-		await requireElement(".user-info-value [href*='/factions.php']");
+		const factionLink = await requireElement(".user-info-value [href*='/factions.php']");
 
 		enableButton();
 
-		const factionID = parseInt(document.find(".user-info-value [href*='/factions.php']").href.replace(/\D+/g, ""));
-		const factionName = document.find(".user-info-value [href*='/factions.php']").innerText.trim();
+		const factionID = factionLink.href.getNumber();
+		const factionName = factionLink.textContent.trim();
 		if (
 			(hasAPIData() && factionID === userdata.faction.faction_id) ||
 			settings.alliedFactions.some((ally) => {

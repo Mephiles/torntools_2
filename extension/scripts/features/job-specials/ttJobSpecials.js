@@ -19,12 +19,11 @@
 	);
 
 	async function addListener() {
-		await requireElement(".content #mainContainer .employees-wrap");
 		new MutationObserver((mutations) => {
 			if (!feature.enabled() || !mutations.some((mutation) => mutation.addedNodes && mutation.addedNodes.length)) return;
 
 			showSpecials();
-		}).observe(document.find(".content #mainContainer .content-wrapper"), { childList: true });
+		}).observe(await requireElement(".content #mainContainer .employees-wrap"), { childList: true });
 	}
 
 	async function showSpecials() {
@@ -36,7 +35,7 @@
 			spacer: true,
 		});
 
-		const companyType = document.find(".details-wrap ul.info .m-title .m-show:not(.arrow-left)").innerText.trim();
+		const companyType = document.find(".details-wrap ul.info .m-title .m-show:not(.arrow-left)").textContent.trim();
 		const companyInfo = COMPANY_INFORMATION[companyType];
 
 		for (const stars of [1, 3, 5, 7, 10]) {
