@@ -3,7 +3,7 @@
 (async () => {
 	if (!isAbroad()) return;
 
-	featureManager.registerFeature(
+	const feature = featureManager.registerFeature(
 		"People Filter",
 		"travel",
 		() => settings.pages.travel.peopleFilter,
@@ -110,7 +110,7 @@
 					...RANK_TRIGGERS.stats.map((trigger) => ({ id: trigger, description: trigger })),
 					{ id: "n/a", description: "N/A" },
 				],
-				defaults: filters.userlist.estimates,
+				defaults: filters.abroadPeople.estimates,
 				callback: () => applyFilters(true),
 			});
 			filterContent.appendChild(estimatesFilter.element);
@@ -130,7 +130,7 @@
 		const faction = localFilters["Faction"].getSelected(content).trim();
 		const special = localFilters["Special"].getSelections(content);
 		const status = localFilters["Status"].getSelections(content);
-		const levels = localFilters["Level Filter"].getStartEnd();
+		const levels = localFilters["Level Filter"].getStartEnd(content);
 		const levelStart = parseInt(levels.start);
 		const levelEnd = parseInt(levels.end);
 		const statsEstimates =
@@ -151,7 +151,7 @@
 					status,
 					levelStart,
 					levelEnd,
-					estimates: statsEstimates ?? filters.userlist.estimates,
+					estimates: statsEstimates ?? filters.abroadPeople.estimates,
 				},
 			},
 		});
@@ -252,8 +252,8 @@
 		}
 		if (filters.statsEstimates) {
 			if (filters.statsEstimates.length) {
-				const estimate = row.dataset.estimate?.toLowerCase() ?? "none";
-				if ((estimate !== "none" || !row.classList.contains("tt-estimated")) && !filters.statsEstimates.includes(estimate)) {
+				const estimate = row.dataset.estimate?.toLowerCase();
+				if ((estimate || !row.classList.contains("tt-estimated")) && !filters.statsEstimates.includes(estimate)) {
 					hide("stats-estimate");
 					return;
 				}
@@ -271,11 +271,11 @@
 			}
 
 			if (individual) {
-				const content = findContainer("Userlist Filter", { selector: "main" });
+				const content = findContainer("People Filter", { selector: "main" });
 
 				localFilters["Statistics"].updateStatistics(
-					document.findAll(".user-info-list-wrap > li:not(.hidden)").length,
-					document.findAll(".user-info-list-wrap > li").length,
+					document.findAll(".users-list > li:not(.hidden)").length,
+					document.findAll(".users-list > li").length,
 					content
 				);
 			}
@@ -290,11 +290,11 @@
 			}
 
 			if (individual) {
-				const content = findContainer("Userlist Filter", { selector: "main" });
+				const content = findContainer("People Filter", { selector: "main" });
 
 				localFilters["Statistics"].updateStatistics(
-					document.findAll(".user-info-list-wrap > li:not(.hidden)").length,
-					document.findAll(".user-info-list-wrap > li").length,
+					document.findAll(".users-list > li:not(.hidden)").length,
+					document.findAll(".users-list > li").length,
 					content
 				);
 			}

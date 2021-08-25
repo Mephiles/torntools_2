@@ -609,6 +609,7 @@ const DEFAULT_STORAGE = {
 				inFaction: new DefaultSetting({ type: "string", defaultValue: "both" }),
 				isDonator: new DefaultSetting({ type: "string", defaultValue: "both" }),
 			},
+			estimates: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
 		abroadItems: {
 			categories: new DefaultSetting({ type: "array", defaultValue: [] }),

@@ -38,24 +38,18 @@
 	}
 
 	async function startFeature() {
-		// FIXME - Handle filter.
-		// if (settings.pages.userlist.filter) {
-		// 	const list = document.find(".user-info-list-wrap");
-		// 	if (!list || list.find(".ajax-placeholder")) return;
-		// }
+		if (settings.pages.travel.peopleFilter) {
+			const list = document.find(".user-info-list-wrap");
+			if (!list) return;
+		}
 
 		await showEstimates();
 	}
 
 	async function showEstimates() {
-		console.log("DKK showEstimates 1");
-
-		// FIXME - Handle estimates.
 		await requireElement(".users-list");
-		// await requireElement(".user-info-list-wrap .ajax-placeholder", { invert: true });
 
 		statsEstimate.clearQueue();
-		console.log("DKK showEstimates 2", document.findAll(".users-list > li"));
 		statsEstimate.showEstimates(
 			".users-list > li",
 			(row) => ({
