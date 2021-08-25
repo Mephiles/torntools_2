@@ -136,6 +136,8 @@
 				"scripts/features/collapsible-areas/ttCollapsibleAreas.css"
 			],
 			"js": [
+				"resources/images/svg-icons/back.js",
+				"resources/images/svg-icons/icon_128.js",
 				"scripts/content/global/ttGlobal.js",
 				"scripts/features/hide-level-upgrade/ttHideLevelUpgrade.js",
 				"scripts/features/oc-time/ttOCTime.js",
@@ -320,7 +322,8 @@
 				"scripts/features/faction-member-info/ttFactionMemberInfo.js",
 				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js",
 				"scripts/features/stats-estimate/statsEstimate.js",
-				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js"
+				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js",
+				"scripts/features/stats-estimate/ttStatsEstimateFactionWars.js"
 			],
 			"run_at": "document_end"
 		},
@@ -351,8 +354,7 @@
 				"scripts/features/travel-item-profits/ttTravelItemProfits.css",
 				"scripts/features/travel-fill-max/ttTravelFillMax.css",
 				"scripts/features/sort-travel-market/ttSortTravelMarket.css",
-				"scripts/features/landing-time/ttLandingTime.css",
-				"scripts/features/abroad-items-filter/ttAbroadItemsFilter.css"
+				"scripts/features/landing-time/ttLandingTime.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
@@ -372,8 +374,12 @@
 		},
 		{
 			"matches": ["https://www.torn.com/index.php?page=people*"],
-			"css": ["scripts/global/functions/filters.css"],
-			"js": ["scripts/features/abroad-people-filter/ttPeopleFilter.js"],
+			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
+			"js": [
+				"scripts/features/abroad-people-filter/ttPeopleFilter.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateAbroad.js"
+			],
 			"run_at": "document_end"
 		},
 		{
@@ -455,10 +461,13 @@
 				"scripts/features/age-to-words/ttAgeToWords.css",
 				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.css",
 				"scripts/features/profile-box/ttProfileBox.css",
-				"scripts/features/stats-estimate/ttStatsEstimate.css"
+				"scripts/features/stats-estimate/ttStatsEstimate.css",
+				"scripts/features/creators/ttCreators.css"
 			],
 			"js": [
+				"resources/images/svg-icons/cross.js",
 				"vendor/sortable/sortable.js",
+				"scripts/global/team.js",
 				"scripts/features/profile-id/ttProfileID.js",
 				"scripts/features/profile-notes/ttProfileNotes.js",
 				"scripts/features/status-indicator/ttStatusIndicator.js",
@@ -467,7 +476,8 @@
 				"scripts/features/disable-ally-attacks/ttDisableAllyAttacks.js",
 				"scripts/features/profile-box/ttProfileBox.js",
 				"scripts/features/stats-estimate/statsEstimate.js",
-				"scripts/features/stats-estimate/ttStatsEstimateProfile.js"
+				"scripts/features/stats-estimate/ttStatsEstimateProfile.js",
+				"scripts/features/creators/ttCreators.js"
 			],
 			"run_at": "document_end"
 		},

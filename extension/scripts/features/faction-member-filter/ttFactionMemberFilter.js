@@ -14,8 +14,8 @@
 		null
 	);
 
-	let filterContent;
-	let lastActionState = settings.scripts.lastAction.factionMember;
+	let filterContent, lastActionState;
+
 	function addListener() {
 		if (isOwnFaction) {
 			CUSTOM_LISTENERS[EVENT_CHANNELS.FACTION_INFO].push(async () => {
@@ -44,6 +44,7 @@
 	}
 
 	let localFilters = {};
+
 	async function addFilter() {
 		await requireElement("#faction-info-members .members-list .table-row");
 
@@ -127,23 +128,32 @@
 		content.appendChild(filterContent);
 
 		applyFilter().then(() => {});
+
+		if (settings.scripts.lastAction.factionMember && !lastActionState) {
+			lastActionState = true;
+			showLastAction().then(() => {});
+		}
 	}
 
 	async function showLastAction() {
 		if (!lastActionState || (localFilters["Last Active Filter"] && localFilters["Last Active Filter"].element)) return;
 
 		await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
-		let lastActionEndLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours"));
-		if (!lastActionEndLimit || lastActionEndLimit === filters.faction.lastActionStart || lastActionEndLimit > 1000) lastActionEndLimit = 1000;
+
+		if (filterContent.find(".lastActiveFilter__section-class")) return;
+
+		const upperLimit = parseInt(document.find(".members-list .table-body.tt-modified").getAttribute("max-hours")) || 1000;
+
+		// noinspection JSIncompatibleTypesComparison
 		const lastActiveFilter = createFilterSection({
 			title: "Last Active Filter",
 			noTitle: true,
 			slider: {
 				min: 0,
-				max: lastActionEndLimit,
+				max: upperLimit,
 				step: 1,
-				valueLow: filters.faction.lastActionStart >= lastActionEndLimit ? 0 : filters.faction.lastActionStart,
-				valueHigh: filters.faction.lastActionEnd >= lastActionEndLimit ? lastActionEndLimit : filters.faction.lastActionEnd,
+				valueLow: filters.faction.lastActionStart > upperLimit ? 0 : filters.faction.lastActionStart,
+				valueHigh: filters.faction.lastActionEnd === -1 || filters.faction.lastActionEnd > upperLimit ? upperLimit : filters.faction.lastActionEnd,
 			},
 			callback: applyFilter,
 		});
@@ -151,6 +161,7 @@
 		localFilters["Last Active Filter"] = {
 			getStartEnd: lastActiveFilter.getStartEnd,
 			updateCounter: lastActiveFilter.updateCounter,
+			upperLimit,
 			element: lastActiveFilter.element,
 		};
 		applyFilter().then(() => {});
@@ -190,14 +201,29 @@
 		const special = localFilters["Special"].getSelections(content);
 
 		localFilters["Level Filter"].updateCounter(`Level ${levelStart} - ${levelEnd}`, content);
-		if (lastActionState) {
+		if (lastActionState && localFilters["Last Active Filter"]) {
 			await requireElement(".members-list .table-body.tt-modified > .tt-last-action");
 			if (localFilters["Last Active Filter"])
 				localFilters["Last Active Filter"].updateCounter(`Last action ${lastActionStart}h - ${lastActionEnd}h`, content);
 		}
 
 		// Save filters
-		await ttStorage.change({ filters: { faction: { activity, status, levelStart, levelEnd, lastActionStart, lastActionEnd, special } } });
+		await ttStorage.change({
+			filters: {
+				faction: {
+					activity,
+					status,
+					levelStart,
+					levelEnd,
+					lastActionStart,
+					lastActionEnd:
+						lastActionState && localFilters["Last Active Filter"] && lastActionEnd === localFilters["Last Active Filter"].upperLimit
+							? -1
+							: filters.faction.lastActionEnd,
+					special,
+				},
+			},
+		});
 
 		for (const li of document.findAll(".members-list .table-body > li")) {
 			// Activity
@@ -219,7 +245,7 @@
 			}
 
 			// Level
-			const level = parseInt(li.find(".lvl").innerText);
+			const level = parseInt(li.find(".lvl").textContent);
 			if ((levelStart && level < levelStart) || (levelEnd !== 100 && level > levelEnd)) {
 				hideRow(li);
 				continue;
@@ -227,7 +253,7 @@
 
 			// Position
 			if (position) {
-				const liPosition = li.find(".position .ellipsis").innerText.trim();
+				const liPosition = li.find(".position .ellipsis").textContent.trim();
 				if (liPosition !== position) {
 					hideRow(li);
 					continue;
@@ -236,7 +262,7 @@
 
 			// Status
 			if (status && status.length > 0 && status.length !== 4) {
-				const liStatus = li.find(".status").innerText.toLowerCase().trim();
+				const liStatus = li.find(".status").textContent.trim().toLowerCase();
 				if (!status.includes(liStatus)) {
 					hideRow(li);
 					continue;
@@ -271,7 +297,7 @@
 			// Last Action
 			if (lastActionState && li.nextSibling && li.nextSibling.className && li.nextSibling.className.includes("tt-last-action")) {
 				const liLastAction = parseInt(li.nextElementSibling.getAttribute("hours"));
-				if ((lastActionStart && liLastAction < lastActionStart) || (lastActionEnd !== 1000 && liLastAction > lastActionEnd)) {
+				if ((lastActionStart && liLastAction < lastActionStart) || (lastActionEnd !== -1 && liLastAction > lastActionEnd)) {
 					hideRow(li, "last-action");
 					continue;
 				}
@@ -319,8 +345,11 @@
 	}
 
 	function getPositions() {
-		const _positions = new Set();
-		document.findAll(".members-list .table-body > li > .position").forEach((x) => _positions.add(x.innerText.trim()));
+		const _positions = [];
+		document.findAll(".members-list .table-body > li > .position .ellipsis").forEach((x) => {
+			const position = x.textContent.trim();
+			if (!_positions.includes(position)) _positions.push(position);
+		});
 		const positions = [
 			{
 				value: "",
@@ -332,7 +361,7 @@
 				disabled: true,
 			},
 		];
-		[..._positions].forEach((position) => positions.push({ value: position, description: position }));
+		_positions.forEach((position) => positions.push({ value: position, description: position }));
 		return positions;
 	}
 

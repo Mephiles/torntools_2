@@ -24,7 +24,7 @@
 		});
 	}
 
-	function showHints() {
+	async function showHints() {
 		const MISSION_HINTS = {
 			a_good_day_to_get_hard: {
 				task: "Achieve a killstreak of 3 - 10.",
@@ -61,7 +61,8 @@
 				hint: "Unequip everything. Residual effects from previous fights will fail this mission!",
 			},
 			batshit_crazy: {
-				task: () => {
+				task: async () => {
+					await requireSidebar();
 					const max = parseInt(document.find("#barLife [class*='bar-value___']").innerText.split("/")[1]);
 
 					return `Inflict ${formatNumber(max * 0.5, { decimals: 0 })} - ${formatNumber(max * 2.5, {
@@ -350,7 +351,12 @@
 			if (key in MISSION_HINTS) {
 				const mission = MISSION_HINTS[key];
 
-				task = typeof mission.task === "function" ? mission.task() : mission.task;
+				task =
+					typeof mission.task === "function"
+						? mission.task.constructor.name === "AsyncFunction"
+							? await mission.task()
+							: mission.task()
+						: mission.task;
 				hint = mission.hint;
 			} else {
 				if (title.includes("{name}")) {

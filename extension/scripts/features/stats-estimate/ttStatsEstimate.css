@@ -8,8 +8,8 @@
 	text-align: center;
 	padding: 5px;
 	border-bottom: 1px solid var(--default-panel-divider-outer-side-color);
-	font-size: 11px;
-	color: #7b7b7b;
+	/*font-size: 11px;*/
+	/*color: #7b7b7b;*/
 	min-height: 11px;
 	display: flex;
 	align-items: center;
@@ -46,4 +46,8 @@
 
 body.dark-mode .bounties-list .tt-stats-estimate {
 	color: #aaa;
+}
+
+.faction-war .tt-stats-estimate {
+	border-bottom: unset;
 }
