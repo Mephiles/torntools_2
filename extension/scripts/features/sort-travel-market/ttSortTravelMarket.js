@@ -19,10 +19,8 @@
 	);
 
 	async function makeSortable() {
-		await requireElement(".items-list-title");
-		const headers = [
-			...document.find(".items-list-title").findAll(".type-b, .name-b, .cost-b, .item-profit, .tt-travel-market-heading, .stock-b, .circulation-b"),
-		];
+		const itemsListTitle = await requireElement(".items-list-title");
+		const headers = [...itemsListTitle.findAll(".type-b, .name-b, .cost-b, .item-profit, .tt-travel-market-heading, .stock-b, .circulation-b")];
 
 		for (const header of headers) {
 			header.classList.add("sortable");

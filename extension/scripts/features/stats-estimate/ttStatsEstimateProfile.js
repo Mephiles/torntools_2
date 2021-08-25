@@ -21,16 +21,11 @@
 	);
 
 	async function showEstimate() {
-		await requireElement(".basic-information .info-table .user-info-value");
+		const userInfoValue = await requireElement(".basic-information .info-table .user-info-value > *:first-child");
 
 		if (settings.scripts.statsEstimate.maxLevel && settings.scripts.statsEstimate.maxLevel < getLevel()) return;
 
-		const id = parseInt(
-			document
-				.find(".basic-information .info-table .user-info-value > *:first-child")
-				.innerText.trim()
-				.match(/\[([0-9]*)]/i)[1]
-		);
+		const id = parseInt(userInfoValue.textContent.trim().match(/\[([0-9]*)]/i)[1]);
 
 		let estimate, data;
 		if (ttCache.hasValue("stats-estimate", id)) {
@@ -78,9 +73,9 @@
 			const levelWrap = document.find(".box-info .box-value");
 
 			return (
-				(parseInt(levelWrap.find(".digit-r .digit").innerText) || 0) * 100 +
-				(parseInt(levelWrap.find(".digit-m .digit").innerText) || 0) * 10 +
-				parseInt(levelWrap.find(".digit-l .digit").innerText)
+				(parseInt(levelWrap.find(".digit-r .digit").textContent) || 0) * 100 +
+				(parseInt(levelWrap.find(".digit-m .digit").textContent) || 0) * 10 +
+				parseInt(levelWrap.find(".digit-l .digit").textContent)
 			);
 		}
 	}
