@@ -127,7 +127,7 @@ async function fetchData(location, options = {}) {
 							result = await response.clone().text();
 
 							resolve(result);
-							await ttUsage.add(location, options.section);
+							await ttUsage.add(location);
 							return;
 						} else {
 							if (response.status === 200) {
@@ -157,7 +157,7 @@ async function fetchData(location, options = {}) {
 						}
 
 						resolve(result);
-						await ttUsage.add(location, options.section);
+						await ttUsage.add(location);
 					}
 				})
 				.catch((error) => handleError(error))
@@ -168,7 +168,7 @@ async function fetchData(location, options = {}) {
 			async function handleError(result) {
 				if (options.succeedOnError) {
 					resolve(result);
-					await ttUsage.add(location, options.section);
+					await ttUsage.add(location);
 					return;
 				}
 

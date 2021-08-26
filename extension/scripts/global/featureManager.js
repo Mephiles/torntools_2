@@ -226,7 +226,7 @@ class FeatureManager {
 					},
 				});
 
-				let scopeElement = this.container.find(`.tt-page-status-content #scope-${feature.scope}`);
+				let scopeElement = this.container.find(`.tt-page-status-content [id*="scope-${feature.scope}"]`);
 				if (!scopeElement) {
 					const scopeHeading = document.newElement({
 						type: "div",

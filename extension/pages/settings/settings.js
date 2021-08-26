@@ -1047,32 +1047,46 @@ async function setupAPIInfo() {
 	const yataSvg = await (await fetch(chrome.runtime.getURL("resources/images/svg-icons/yata.svg"))).text();
 	document.find(".current-usage .yata .icon").innerHTML = yataSvg;
 
+	const apiUsageLocations = ["torn", "tornstats", "yata"];
+	const perMinuteUsage = {
+		torn: { count: 0, usage: 0 },
+		tornstats: { count: 0, usage: 0 },
+		yata: { count: 0, usage: 0 },
+	};
+	const perHourUsage = {
+		torn: { hours: new Set() },
+		tornstats: { hours: new Set() },
+		yata: { hours: new Set() },
+	};
+
+	Object.keys(ttUsage.usage).forEach((minute, index) => {
+		const localUsage = ttUsage.usage[minute];
+		const hourOfMinute = (minute / 60).dropDecimals();
+		for (const location of apiUsageLocations) {
+			if (localUsage[location] !== undefined && localUsage[location] !== null) {
+				perMinuteUsage[location].usage += localUsage[location];
+				perHourUsage[location].hours.add(hourOfMinute);
+			}
+			perMinuteUsage[location].count += 1;
+		}
+	});
+	for (const location of apiUsageLocations) {
+		perHourUsage[location].count = perHourUsage[location].hours.size;
+		delete perHourUsage[location].hours;
+	}
 	document.findAll(".current-usage .averages > div.per-minute").forEach((usageDiv, index) => {
-		let key;
-		if (index === 0) key = "torn";
-		else if (index === 1) key = "tornstats";
-		else if (index === 2) key = "yata";
-		const minutesUsage = Object.values(ttUsage[key]).map(minuteUsage => minuteUsage.length);
-		usageDiv.innerText = `Average calls per minute: ${minutesUsage.length ? (minutesUsage.reduce((a, b) => a + b, 0) / minutesUsage.length).dropDecimals() : 0}`;
+		const key = apiUsageLocations[index];
+		usageDiv.textContent = `Average calls per minute: ${perMinuteUsage[key].count ? (perMinuteUsage[key].usage / perMinuteUsage[key].count).dropDecimals() : 0}`;
 	});
 	document.findAll(".current-usage .averages > div.per-hour").forEach((usageDiv, index) => {
-		let key;
-		if (index === 0) key = "torn";
-		else if (index === 1) key = "tornstats";
-		else if (index === 2) key = "yata";
-		let hours = {};
-		for (const minute of Object.keys(ttUsage[key])) {
-			const hourOfMinute = (minute / 60).dropDecimals();
-			if (!(hourOfMinute in hours)) hours[hourOfMinute] = 1;
-			else hours[hourOfMinute] += 1;
-		}
-		hours = Object.values(hours);
-		usageDiv.innerText = `Average calls per hour: ${hours.length ? (hours.reduce((a, b) => a + b, 0) / hours.length).dropDecimals() : 0}`;
+		const key = apiUsageLocations[index];
+		usageDiv.innerText = `Average calls per hour: ${perHourUsage[key].count ? (perMinuteUsage[key].usage / perHourUsage[key].count).dropDecimals() : 0}`;
 	});
 
 	const canvas = document.find("#current-usage-chart");
 	document.find(".current-usage").appendChild(canvas);
 
+	const darkMode = hasDarkMode();
 	const usageChart = new Chart(canvas, {
 		type: "bar",
 		data: {
@@ -1096,13 +1110,14 @@ async function setupAPIInfo() {
 			],
 		},
 		options: {
+			animation: {
+				duration: 0
+			},
 			scales: {
 				x: {
-					type: "time",
 					stacked: true,
-					time: {
-						tooltipFormat: "dd.LLL HH:mm",
-						unit: "minute",
+					ticks: {
+						color: darkMode ? "#fff" : "#000",
 					},
 				},
 				y: {
@@ -1111,71 +1126,66 @@ async function setupAPIInfo() {
 						min: 0,
 						max: 100,
 						stepSize: 1,
+						color: darkMode ? "#fff" : "#000",
 					}
+				},
+			},
+			plugins: {
+				legend: {
+					labels: {
+						color: darkMode ? "#fff" : "#000",
+					},
 				},
 			},
 		},
 	});
+	darkModeObserver.addListener((darkMode) => {
+		const color = darkMode ? "#fff" : "#000";
+		usageChart.options.scales.x.ticks.color = color;
+		usageChart.options.scales.y.ticks.color = color;
+		usageChart.options.plugins.legend.labels.color = color;
+		usageChart.update();
+	});
 	await ttUsage.refresh();
+
 	updateUsage(usageChart, "Last 5");
 	document.find(".current-usage .buttons .last-5").addEventListener("click", () => updateUsage(usageChart, "Last 5"));
 	document.find(".current-usage .buttons .last-1hr").addEventListener("click", () => updateUsage(usageChart, "Last 1hr"));
 	document.find(".current-usage .buttons .last-24hrs").addEventListener("click", () => updateUsage(usageChart, "Last 24hrs"));
+
 	function updateUsage(usageChart, position) {
+		let maxIndex, barThickness, lastMinute;
 		if (position === "Last 5") {
-			const tornUsage = Object.keys(ttUsage.torn);
-			const tornLabels = tornUsage.slice(Math.max(tornUsage.length - 5, 0));
-			const tornChartData = tornLabels.map(minute => ttUsage.torn[minute].length);
-			usageChart.data.datasets[0].data = tornChartData;
-
-			const tornstatsUsage = Object.keys(ttUsage.tornstats);
-			const tornstatsLabels = tornstatsUsage.slice(Math.max(tornstatsUsage.length - 5, 0));
-			const tornstatsChartData = tornstatsLabels.map(minute => ttUsage.tornstats[minute].length);
-			usageChart.data.datasets[1].data = tornstatsChartData;
-
-			const yataUsage = Object.keys(ttUsage.yata);
-			const yataLabels = yataUsage.slice(Math.max(yataUsage.length - 5, 0));
-			const yataChartData = yataLabels.map(minute => ttUsage.yata[minute].length);
-			usageChart.data.datasets[2].data = yataChartData;
-
-			usageChart.data.labels = tornLabels.map(minute => new Date(minute * TO_MILLIS.MINUTES));
-			usageChart.options.barThickness = 30;
-			usageChart.update();
-		} else {
-			let inLastHours, barThickness;
-			if (position === "Last 1hr") {
-				inLastHours = 1;
-				barThickness = 10;
-			} else if (position === "Last 24hrs") {
-				inLastHours = 24;
-				barThickness = 5;
-			}
-
-			const nowDate = Date.now() / TO_MILLIS.HOURS;
-			const tornUsage = Object.keys(ttUsage.torn);
-			const tornLabels = tornUsage.filter(filtering);
-			usageChart.data.datasets[0].data = tornLabels.map(minute => {
-				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.torn[minute].length };
-			});
-
-			const tornstatsUsage = Object.keys(ttUsage.tornstats);
-			usageChart.data.datasets[1].data = tornstatsUsage.filter(filtering).map(minute => {
-				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.tornstats[minute].length };
-			});
-
-			const yataUsage = Object.keys(ttUsage.yata);
-			usageChart.data.datasets[2].data = yataUsage.filter(filtering).map(minute => {
-				return { x: minute * TO_MILLIS.MINUTES, y: ttUsage.yata[minute].length };
-			});
-
-			usageChart.data.labels = tornLabels.map(minute => minute * TO_MILLIS.MINUTES);
-			usageChart.options.barThickness = barThickness;
-			usageChart.update();
-
-			function filtering(minute) {
-				return nowDate - (minute / 60) <= inLastHours;
-			}
+			maxIndex = 5;
+			barThickness = 30;
+		} else if (position === "Last 1hr") {
+			maxIndex = 60;
+			barThickness = 10;
+		} else if (position === "Last 24hrs") {
+			maxIndex = 1440;
+			barThickness = 2;
 		}
+
+		usageChart.data.labels = [];
+		usageChart.options.barThickness = barThickness;
+		let i = 0;
+		const offset = (new Date()).getTimezoneOffset();
+		let minutesArray = Object.keys(ttUsage.usage).slice(-maxIndex);
+		if (position === "Last 1hr") {
+			lastMinute = parseInt(minutesArray.at(-1)) - 60;
+			minutesArray = minutesArray.filter(minute => minute >= lastMinute);
+		}
+		for (const minute of minutesArray) {
+			const seconds = (parseInt(minute) - offset) * 60;
+			const hour = (seconds % 86400 / 3600).dropDecimals();
+			usageChart.data.labels.push(`${toMultipleDigits(hour)}:${toMultipleDigits((seconds % 3600 / 60).dropDecimals())}`);
+			usageChart.data.datasets[0].data[i] = ttUsage.usage[minute].torn ?? 0;
+			usageChart.data.datasets[1].data[i] = ttUsage.usage[minute].tornstats ?? 0;
+			usageChart.data.datasets[2].data[i] = ttUsage.usage[minute].yata ?? 0;
+			i++;
+		}
+		i = null;
+		usageChart.update(false);
 	}
 }
 
