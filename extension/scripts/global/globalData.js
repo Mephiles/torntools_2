@@ -358,6 +358,7 @@ const DEFAULT_STORAGE = {
 				hideGymHighlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				upkeepPropHighlight: new DefaultSetting({ type: "number", defaultValue: 0 }),
 				barLinks: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				pointsValue: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			popup: {
 				dashboard: new DefaultSetting({ type: "boolean", defaultValue: true }),
