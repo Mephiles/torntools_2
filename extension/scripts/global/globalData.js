@@ -1232,6 +1232,9 @@ const API_USAGE = {
 				description: true,
 			},
 		},
+		stats: {
+			points_averagecost: true,
+		},
 	},
 };
 
@@ -1272,7 +1275,7 @@ const API_SELECTIONS = {
 		"profile", // target
 	],
 	item_market: ["bazaar", "itemmarket"],
-	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks"],
+	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks", "stats"],
 };
 
 const CHAT_TITLE_COLORS = {

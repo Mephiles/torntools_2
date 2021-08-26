@@ -1,6 +1,8 @@
 "use strict";
 
 (async () => {
+	if ((await checkDevice()).mobile) return "Not supported on mobile!";
+
 	featureManager.registerFeature(
 		"Points Value",
 		"sidebar",
@@ -21,11 +23,16 @@
 
 		block.classList.add("tt-points-value");
 
-		// FIXME - Use the actual value instead of a fixed one.
-		for (const elements of block.findAll(":scope > span")) elements.setAttribute("title", formatNumber(45475, { currency: true }));
+		const value = torndata.stats.points_averagecost;
+		const points = block.find("span[class*='value___']").textContent.getNumber();
 
-		// FIXME - Use Torn's styling.
-		// initializeTooltip(".tt-points-value", "white-tooltip");
+		for (const elements of block.findAll(":scope > span"))
+			elements.setAttribute(
+				"title",
+				`${formatNumber(value, { currency: true })} | ${formatNumber(points)}x = ${formatNumber(value * points, { currency: true, shorten: 2 })}`
+			);
+
+		executeScript((wrapped) => wrapped.initializeTooltip(".tt-points-value", "white-tooltip"), "initializeTooltip('.tt-points-value', 'white-tooltip')");
 	}
 
 	function removeValue() {
