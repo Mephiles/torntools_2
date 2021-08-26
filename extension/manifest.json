@@ -157,7 +157,8 @@
 				"scripts/features/highlight-properties/ttHighlightProperties.js",
 				"scripts/features/settings-link/ttSettingsLink.js",
 				"scripts/features/bar-links/ttBarLinks.js",
-				"scripts/features/collapsible-areas/ttCollapsibleAreas.js"
+				"scripts/features/collapsible-areas/ttCollapsibleAreas.js",
+				"scripts/features/points-value/ttPointsValue.js"
 			],
 			"run_at": "document_end"
 		},
@@ -236,13 +237,15 @@
 			"css": [
 				"scripts/features/company-specials/ttCompanySpecials.css",
 				"scripts/features/last-action/ttLastAction.css",
-				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.css"
+				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.css",
+				"scripts/features/employee-effectiveness/ttEmployeeEffectiveness.css"
 			],
 			"js": [
 				"scripts/content/company/ttCompany.js",
 				"scripts/features/company-specials/ttCompanySpecials.js",
 				"scripts/features/last-action/ttCompanyLastAction.js",
-				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.js"
+				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.js",
+				"scripts/features/employee-effectiveness/ttEmployeeEffectiveness.js"
 			],
 			"run_at": "document_end"
 		},
@@ -293,7 +296,8 @@
 				"scripts/features/faction-member-filter/ttFactionMemberFilter.css",
 				"scripts/features/faction-member-info/ttFactionMemberInfo.css",
 				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.css",
-				"scripts/features/stats-estimate/ttStatsEstimate.css"
+				"scripts/features/stats-estimate/ttStatsEstimate.css",
+				"scripts/features/abroad-energy-warning/ttAbroadEnergyWarning.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
@@ -323,7 +327,8 @@
 				"scripts/features/faction-inactivity-warning/ttFactionInactivityWarning.js",
 				"scripts/features/stats-estimate/statsEstimate.js",
 				"scripts/features/stats-estimate/ttStatsEstimateFactionMembers.js",
-				"scripts/features/stats-estimate/ttStatsEstimateFactionWars.js"
+				"scripts/features/stats-estimate/ttStatsEstimateFactionWars.js",
+				"scripts/features/abroad-energy-warning/ttAbroadEnergyWarning.js"
 			],
 			"run_at": "document_end"
 		},
@@ -354,7 +359,8 @@
 				"scripts/features/travel-item-profits/ttTravelItemProfits.css",
 				"scripts/features/travel-fill-max/ttTravelFillMax.css",
 				"scripts/features/sort-travel-market/ttSortTravelMarket.css",
-				"scripts/features/landing-time/ttLandingTime.css"
+				"scripts/features/landing-time/ttLandingTime.css",
+				"scripts/features/abroad-energy-warning/ttAbroadEnergyWarning.css"
 			],
 			"js": [
 				"scripts/global/functions/filters.js",
@@ -368,7 +374,8 @@
 				"scripts/features/travel-fill-max/ttTravelFillMax.js",
 				"scripts/features/sort-travel-market/ttSortTravelMarket.js",
 				"scripts/features/landing-time/ttLandingTime.js",
-				"scripts/features/abroad-items-filter/ttAbroadItemsFilter.js"
+				"scripts/features/abroad-items-filter/ttAbroadItemsFilter.js",
+				"scripts/features/abroad-energy-warning/ttAbroadEnergyWarning.js"
 			],
 			"run_at": "document_end"
 		},
@@ -427,11 +434,16 @@
 		},
 		{
 			"matches": ["https://www.torn.com/joblist.php*"],
-			"css": ["scripts/features/job-specials/ttJobSpecials.css", "scripts/features/last-action/ttLastAction.css"],
+			"css": [
+				"scripts/features/job-specials/ttJobSpecials.css",
+				"scripts/features/last-action/ttLastAction.css",
+				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.css"
+			],
 			"js": [
 				"scripts/content/company/ttCompany.js",
 				"scripts/features/job-specials/ttJobSpecials.js",
-				"scripts/features/last-action/ttCompanyLastAction.js"
+				"scripts/features/last-action/ttCompanyLastAction.js",
+				"scripts/features/employee-inactivity-warning/ttEmployeeInactivityWarning.js"
 			],
 			"run_at": "document_end"
 		},

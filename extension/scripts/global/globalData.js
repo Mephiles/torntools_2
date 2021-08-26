@@ -390,6 +390,7 @@ const DEFAULT_STORAGE = {
 				hideGymHighlight: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				upkeepPropHighlight: new DefaultSetting({ type: "number", defaultValue: 0 }),
 				barLinks: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				pointsValue: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			popup: {
 				dashboard: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -441,6 +442,7 @@ const DEFAULT_STORAGE = {
 			},
 			companies: {
 				specials: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				employeeEffectiveness: new DefaultSetting({ type: "number", defaultValue: 18 }),
 			},
 			travel: {
 				computer: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -453,6 +455,7 @@ const DEFAULT_STORAGE = {
 				landingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				flyingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				itemFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				energyWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -1263,6 +1266,9 @@ const API_USAGE = {
 				description: true,
 			},
 		},
+		stats: {
+			points_averagecost: true,
+		},
 	},
 };
 
@@ -1303,7 +1309,7 @@ const API_SELECTIONS = {
 		"profile", // target
 	],
 	item_market: ["bazaar", "itemmarket"],
-	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks"],
+	torn: ["bank", "education", "honors", "items", "medals", "pawnshop", "properties", "stocks", "stats"],
 };
 
 const CHAT_TITLE_COLORS = {
