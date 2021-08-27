@@ -1059,6 +1059,8 @@ async function updateNPCs() {
 	return { updated, alerts };
 
 	function checkNPCAlerts() {
+		if (!settings.notifications.types.global) return 0;
+
 		let alerts = 0;
 
 		for (const { id, level, minutes } of settings.notifications.types.npcs.filter(({ level, minutes }) => level !== "" && minutes !== "")) {
