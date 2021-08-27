@@ -1022,7 +1022,7 @@ async function updateNPCs() {
 						4: hospital + TO_MILLIS.MINUTES * 210,
 						5: hospital + TO_MILLIS.MINUTES * 450,
 					},
-					name: NPCS[id] ?? `Unknown (${id})`,
+					name: NPCS[id] ?? "Unknown",
 				};
 
 				npcs.targets[id].current =
