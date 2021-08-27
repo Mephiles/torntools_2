@@ -92,13 +92,7 @@
 		for (const row of list.findAll(":scope > li")) {
 			const id =
 				row.dataset.user ??
-				parseInt(
-					row
-						.find(".user.name > [title]")
-						.getAttribute("title")
-						.match(/([0-9]+)/g)
-						?.last()
-				);
+				row.find(".user.name").href.getNumber();
 			const days = ((now - employees[id].last_action.timestamp * 1000) / TO_MILLIS.DAYS).dropDecimals();
 
 			row.insertAdjacentElement(
