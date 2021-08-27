@@ -33,7 +33,6 @@
 	"optional_permissions": ["https://www.tornstats.com/", "https://yata.yt/"],
 	"web_accessible_resources": [
 		"resources/images/*.png",
-		"resources/images/torn.webp",
 		"resources/images/svg-icons/*.svg",
 		"resources/audio/*.wav",
 		"pages/*",

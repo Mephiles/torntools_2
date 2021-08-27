@@ -70,10 +70,7 @@ body.dark .yata svg .yata-fill {
     width: 172px;
     height: 77px;
     margin: auto;
-}
-
-.current-usage .torn .icon, .current-usage .tornstats .icon, .current-usage .yata .icon {
-    display: flex;
+	display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;

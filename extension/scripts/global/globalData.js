@@ -220,8 +220,6 @@ const ttUsage = new (class {
 	}
 
 	async add(location) {
-		if (!location || location === "torn_direct") return;
-
 		const minute = (Date.now() / TO_MILLIS.MINUTES).dropDecimals();
 		if (!(minute in this.usage)) this.usage[minute] = {};
 		if (!(location in this.usage[minute])) this.usage[minute][location] = 0;
