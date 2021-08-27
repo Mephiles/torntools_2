@@ -39,9 +39,9 @@
 			members.forEach((member, index) => {
 				const userNameNode = member.find(".user.name");
 				table +=
-					honorBarsEnabled
+					(honorBarsEnabled
 						? userNameNode.dataset.placeholder
-						: userNameNode.textContent + " " + userNameNode.href.getNumber()
+						: userNameNode.textContent + " " + userNameNode.href.getNumber())
 					+ ";";
 				const memberInfo = info[index];
 				memberInfo.findAll(".members-stats-cols > *").forEach((infoItem) => (table += infoItem.textContent + ";"));

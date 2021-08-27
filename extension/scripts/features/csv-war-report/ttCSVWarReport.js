@@ -36,20 +36,24 @@
 			table += document.find(".faction-war .enemy").textContent + "\r\n";
 			table += "Members;Level;Points;Joins;Clears\r\n";
 			const members = document.findAll(".enemy-faction .members-list > *");
-			isHonorBarsEnabled(members[0]);
-			for (const memberRow of members) {
-				let totalRowString = "";
-				const userNameNode = memberRow.find(".user.name");
-				totalRowString +=
-					honorBarsEnabled
-						? userNameNode.dataset.placeholder.replace(" ", "")
-						: userNameNode.textContent + userNameNode.href.getNumber()
-					+ ";";
-				totalRowString += memberRow.find(".lvl").textContent + ";";
-				totalRowString += memberRow.find(".points").textContent + ";";
-				totalRowString += memberRow.find(".joins").textContent + ";";
-				totalRowString += memberRow.find(".knock-off").textContent + ";";
-				table += totalRowString + "\r\n";
+			if (members.length) {
+				isHonorBarsEnabled(members[0]);
+				for (const memberRow of members) {
+					let totalRowString = "";
+					const userNameNode = memberRow.find(".user.name");
+					totalRowString +=
+						(honorBarsEnabled
+							? userNameNode.dataset.placeholder.replace(" ", "")
+							: userNameNode.textContent + userNameNode.href.getNumber())
+						+ ";";
+					totalRowString += memberRow.find(".lvl").textContent + ";";
+					totalRowString += memberRow.find(".points").textContent + ";";
+					totalRowString += memberRow.find(".joins").textContent + ";";
+					totalRowString += memberRow.find(".knock-off").textContent + ";";
+					table += totalRowString + "\r\n";
+				}
+			} else {
+				table += "None\r\n";
 			}
 			table += document.find(".faction-war .your").textContent + "\r\n";
 			table += "Members;Level;Points;Joins;Clears\r\n";
