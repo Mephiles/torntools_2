@@ -37,12 +37,7 @@
 			const info = document.findAll(".members-stats-rows > *");
 			isHonorBarsEnabled(members[0]);
 			members.forEach((member, index) => {
-				const userNameNode = member.find(".user.name");
-				table +=
-					(honorBarsEnabled
-						? userNameNode.dataset.placeholder
-						: userNameNode.textContent + " " + userNameNode.href.getNumber())
-					+ ";";
+				table += getUsername(member) + ";";
 				const memberInfo = info[index];
 				memberInfo.findAll(".members-stats-cols > *").forEach((infoItem) => (table += infoItem.textContent + ";"));
 				table += "\r\n";

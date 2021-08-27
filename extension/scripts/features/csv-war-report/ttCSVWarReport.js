@@ -40,12 +40,7 @@
 				isHonorBarsEnabled(members[0]);
 				for (const memberRow of members) {
 					let totalRowString = "";
-					const userNameNode = memberRow.find(".user.name");
-					totalRowString +=
-						(honorBarsEnabled
-							? userNameNode.dataset.placeholder.replace(" ", "")
-							: userNameNode.textContent + userNameNode.href.getNumber())
-						+ ";";
+					totalRowString += getUsername(memberRow) + ";";
 					totalRowString += memberRow.find(".lvl").textContent + ";";
 					totalRowString += memberRow.find(".points").textContent + ";";
 					totalRowString += memberRow.find(".joins").textContent + ";";
@@ -59,12 +54,7 @@
 			table += "Members;Level;Points;Joins;Clears\r\n";
 			for (const memberRow of document.findAll(".your-faction ul.members-list > *")) {
 				let totalRowString = "";
-				const userNameNode = memberRow.find(".user.name");
-				totalRowString +=
-					honorBarsEnabled
-						? userNameNode.dataset.placeholder.replace(" ", "")
-						: userNameNode.textContent + userNameNode.href.getNumber()
-					+ ";";
+				totalRowString += getUsername(memberRow) + ";";
 				totalRowString += memberRow.find(".lvl").textContent + ";";
 				totalRowString += memberRow.find(".points").textContent + ";";
 				totalRowString += memberRow.find(".joins").textContent + ";";

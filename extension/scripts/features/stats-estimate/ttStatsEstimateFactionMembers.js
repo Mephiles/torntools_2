@@ -50,7 +50,7 @@
 		statsEstimate.showEstimates(
 			"#faction-info-members .table-body > .table-row",
 			(row) => ({
-				id: row.find(".user.name").href.getNumber(),
+				id: getUsername(row, true),
 				level: parseInt(row.find(".lvl").textContent.trim()),
 			}),
 			true,

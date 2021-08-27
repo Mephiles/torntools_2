@@ -1,7 +1,5 @@
 "use strict";
 
-let honorBarsEnabled;
-
 const ALL_ICONS = [
 	{ icon: "icon1", description: "Online" },
 	{ icon: "icon62", description: "Idle" },
@@ -1660,9 +1658,8 @@ function isOwnProfile() {
 	return (params.has("XID") && parseInt(params.get("XID")) === id) || (params.has("NID") && params.get("NID") === name);
 }
 
-function isHonorBarsEnabled(li) {
-	if (typeof(honorBarsEnabled) !== "boolean") {
-		honorBarsEnabled = li.find(".user.name").dataset.placeholder ? true : false;
-	}
-	return honorBarsEnabled;
+function getUsername(li, onlyID) {
+	const username = li.find(".user.name > [title]").getAttribute("title");
+	if (onlyID) return parseInt(username.match(/(?<=\[)\d+(?=\])/g));
+	return username;
 }
