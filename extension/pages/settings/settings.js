@@ -413,8 +413,6 @@ async function setupPreferences() {
 		const alerts = _preferences.find("#npc-alerts");
 
 		for (const [id, npc] of Object.entries(npcs.targets)) {
-			const notification = settings.notifications.types.npcs[id] ?? { level: "", minutes: "" };
-
 			alerts.appendChild(
 				document.newElement({
 					type: "li",
