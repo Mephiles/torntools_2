@@ -22,7 +22,13 @@
 			msg.appendChild(
 				document.newElement({
 					type: "div",
-					html: "<span class='tt-msg'>Some games have been removed by TornTools. They can be re-enabled in TornTools' settings.</span>",
+					children: [
+						document.newElement({
+							type: "span",
+							class: "tt-msg",
+							text: "Some games have been removed by TornTools. They can be re-enabled in TornTools' settings.",
+						}),
+					],
 				})
 			);
 		}
@@ -37,7 +43,14 @@
 
 			game.parentElement.classList.add("tt-hidden-parent");
 			game.classList.add("hidden");
-			game.insertAdjacentHTML("beforebegin", "<div class='tt-hidden'><span><b>•&nbsp;REMOVED&nbsp;•</b></span></div>");
+			game.insertAdjacentElement(
+				"beforebegin",
+				document.newElement({
+					type: "div",
+					class: "tt-hidden",
+					children: [document.newElement({ type: "b", text: "•&nbsp;REMOVED&nbsp;•" })],
+				})
+			);
 		}
 	}
 

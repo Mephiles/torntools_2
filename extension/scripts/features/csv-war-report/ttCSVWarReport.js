@@ -25,33 +25,34 @@
 		const ttExportButton = document.newElement({
 			type: "div",
 			id: "ttExportButton",
-			html: `
-				<i class="fa fa-table"></i>
-				<span class="text">CSV</span>
-				<a id="ttExportLink"></a>`,
+			children: [
+				document.newElement({ type: "i", class: "fa fa-table" }),
+				document.newElement({ type: "span", class: "text", text: "CSV" }),
+				document.newElement({ type: "a", id: "ttExportLink" }),
+			],
 		});
 		ttExportButton.addEventListener("click", () => {
 			let table = "data:text/csv;charset=utf-8,";
-			table += document.find(".faction-war .enemy").innerText + "\r\n";
+			table += document.find(".faction-war .enemy").textContent + "\r\n";
 			table += "Members;Level;Points;Joins;Clears\r\n";
 			for (const memberRow of document.findAll(".enemy-faction .members-list > *")) {
 				let totalRowString = "";
 				totalRowString += memberRow.find(".user.name").dataset.placeholder.replace(" ", "") + ";";
-				totalRowString += memberRow.find(".lvl").innerText + ";";
-				totalRowString += memberRow.find(".points").innerText + ";";
-				totalRowString += memberRow.find(".joins").innerText + ";";
-				totalRowString += memberRow.find(".knock-off").innerText + ";";
+				totalRowString += memberRow.find(".lvl").textContent + ";";
+				totalRowString += memberRow.find(".points").textContent + ";";
+				totalRowString += memberRow.find(".joins").textContent + ";";
+				totalRowString += memberRow.find(".knock-off").textContent + ";";
 				table += totalRowString + "\r\n";
 			}
-			table += document.find(".faction-war .your").innerText + "\r\n";
+			table += document.find(".faction-war .your").textContent + "\r\n";
 			table += "Members;Level;Points;Joins;Clears\r\n";
 			for (const memberRow of document.findAll(".your-faction ul.members-list > *")) {
 				let totalRowString = "";
 				totalRowString += memberRow.find(".user.name").dataset.placeholder.replace(" ", "") + ";";
-				totalRowString += memberRow.find(".lvl").innerText + ";";
-				totalRowString += memberRow.find(".points").innerText + ";";
-				totalRowString += memberRow.find(".joins").innerText + ";";
-				totalRowString += memberRow.find(".knock-off").innerText + ";";
+				totalRowString += memberRow.find(".lvl").textContent + ";";
+				totalRowString += memberRow.find(".points").textContent + ";";
+				totalRowString += memberRow.find(".joins").textContent + ";";
+				totalRowString += memberRow.find(".knock-off").textContent + ";";
 				table += totalRowString + "\r\n";
 			}
 			const warID = getSearchParameters().get("warID");

@@ -63,7 +63,7 @@
 			batshit_crazy: {
 				task: async () => {
 					await requireSidebar();
-					const max = parseInt(document.find("#barLife [class*='bar-value___']").innerText.split("/")[1]);
+					const max = parseInt(document.find("#barLife [class*='bar-value___']").textContent.split("/")[1]);
 
 					return `Inflict ${formatNumber(max * 0.5, { decimals: 0 })} - ${formatNumber(max * 2.5, {
 						decimals: 0,
@@ -370,10 +370,13 @@
 
 			let children = [
 				document.newElement({ type: "h6", class: "tt-mission-title", text: "TornTools Mission Information" }),
-				document.newElement({ type: "span", html: `<b>Task:</b> ${task}` }),
+				document.newElement({ type: "span", children: [document.newElement({ type: "b", text: "Task: " }), task] }),
 			];
 			if (hint) {
-				children.push(document.newElement("br"), document.newElement({ type: "span", html: `<b>Hint:</b> ${hint}` }));
+				children.push(
+					document.newElement("br"),
+					document.newElement({ type: "span", children: [document.newElement({ type: "b", text: "Hint: " }), hint] })
+				);
 			}
 
 			context.find(".max-height-fix").appendChild(document.newElement({ type: "div", class: "tt-mission-information", children }));

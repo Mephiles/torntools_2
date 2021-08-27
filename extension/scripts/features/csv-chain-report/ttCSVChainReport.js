@@ -23,21 +23,22 @@
 		const ttExportButton = document.newElement({
 			type: "div",
 			id: "ttExportButton",
-			html: `
-				<i class="fa fa-table"></i>
-				<span class="text">CSV</span>
-				<a id="ttExportLink"></a>`,
+			children: [
+				document.newElement({ type: "i", class: "fa fa-table" }),
+				document.newElement({ type: "span", class: "text", text: "CSV" }),
+				document.newElement({ type: "a", id: "ttExportLink" }),
+			],
 		});
 		ttExportButton.addEventListener("click", () => {
 			let table = "data:text/csv;charset=utf-8,";
-			table += document.find(".report-title-faction-name").innerText + "\r\n";
+			table += document.find(".report-title-faction-name").textContent + "\r\n";
 			table += "Members;Respect;Avg;Attacks;Leave;Mug;Hosp;War;Bonus;Assist;Retal;Overseas;Draw;Escape;Loss\r\n";
 			const members = document.findAll(".members-names-rows > *");
 			const info = document.findAll(".members-stats-rows > *");
 			members.forEach((member, index) => {
 				table += member.find(".user.name").dataset.placeholder + ";";
 				const memberInfo = info[index];
-				memberInfo.findAll(".members-stats-cols > *").forEach((infoItem) => (table += infoItem.innerText + ";"));
+				memberInfo.findAll(".members-stats-cols > *").forEach((infoItem) => (table += infoItem.textContent + ";"));
 				table += "\r\n";
 			});
 			const chainID = getSearchParameters().get("chainID");

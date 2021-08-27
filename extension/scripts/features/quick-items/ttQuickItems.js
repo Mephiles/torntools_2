@@ -35,7 +35,7 @@
 				secondsLeft--;
 				if (secondsLeft < 0) secondsLeft = 0;
 
-				timer.innerText = formatTime({ seconds: secondsLeft }, { type: "timer", daysToHours: true });
+				timer.textContent = formatTime({ seconds: secondsLeft }, { type: "timer", daysToHours: true });
 
 				timer.dataset.secondsLeft = `${secondsLeft}`;
 			}
@@ -170,18 +170,18 @@
 
 							responseWrap.style.display = "block";
 							responseWrap.innerHTML = `
-										<div class="action-wrap use-act use-action">
-											<form data-action="useItem" method="post">
-												<p>${result.text}</p>
-												<p>${links.join("")}</p>
-												<div class="clear"></div>
-											</form>
-										</div>
-									`;
+								<div class="action-wrap use-act use-action">
+									<form data-action="useItem" method="post">
+										<p>${result.text}</p>
+										<p>${links.join("")}</p>
+										<div class="clear"></div>
+									</form>
+								</div>
+							`;
 
 							for (const count of responseWrap.findAll(".counter-wrap")) {
 								count.classList.add("tt-modified");
-								count.innerText = formatTime({ seconds: parseInt(count.dataset.time) }, { type: "timer", daysToHours: true });
+								count.textContent = formatTime({ seconds: parseInt(count.dataset.time) }, { type: "timer", daysToHours: true });
 							}
 
 							if (result.success) {
@@ -418,7 +418,7 @@
 			let newQuantity = parseInt(quickQuantity.getAttribute("quantity")) + change;
 			if (newQuantity < 0) newQuantity = 0;
 
-			quickQuantity.innerText = newQuantity + "x";
+			quickQuantity.textContent = newQuantity + "x";
 			quickQuantity.setAttribute("quantity", newQuantity);
 		}
 	}
