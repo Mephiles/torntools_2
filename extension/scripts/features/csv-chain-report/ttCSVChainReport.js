@@ -35,7 +35,6 @@
 			table += "Members;Respect;Avg;Attacks;Leave;Mug;Hosp;War;Bonus;Assist;Retal;Overseas;Draw;Escape;Loss\r\n";
 			const members = document.findAll(".members-names-rows > *");
 			const info = document.findAll(".members-stats-rows > *");
-			isHonorBarsEnabled(members[0]);
 			members.forEach((member, index) => {
 				table += getUsername(member) + ";";
 				const memberInfo = info[index];

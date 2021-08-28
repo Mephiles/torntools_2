@@ -1652,6 +1652,6 @@ function isOwnProfile() {
 
 function getUsername(li, onlyID) {
 	const username = li.find(".user.name > [title]").getAttribute("title");
-	if (onlyID) return parseInt(username.match(/(?<=\[)\d+(?=\])/g));
+	if (onlyID) return parseInt(username.match(/(?<=\[)\d+(?=\])/g)[0]);
 	return username;
 }

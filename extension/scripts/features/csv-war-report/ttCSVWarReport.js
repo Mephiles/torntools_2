@@ -33,33 +33,21 @@
 		});
 		ttExportButton.addEventListener("click", () => {
 			let table = "data:text/csv;charset=utf-8,";
-			table += document.find(".faction-war .enemy").textContent + "\r\n";
-			table += "Members;Level;Points;Joins;Clears\r\n";
-			const members = document.findAll(".enemy-faction .members-list > *");
-			if (members.length) {
-				isHonorBarsEnabled(members[0]);
-				for (const memberRow of members) {
-					let totalRowString = "";
-					totalRowString += getUsername(memberRow) + ";";
-					totalRowString += memberRow.find(".lvl").textContent + ";";
-					totalRowString += memberRow.find(".points").textContent + ";";
-					totalRowString += memberRow.find(".joins").textContent + ";";
-					totalRowString += memberRow.find(".knock-off").textContent + ";";
-					table += totalRowString + "\r\n";
-				}
-			} else {
-				table += "None\r\n";
-			}
-			table += document.find(".faction-war .your").textContent + "\r\n";
-			table += "Members;Level;Points;Joins;Clears\r\n";
-			for (const memberRow of document.findAll(".your-faction ul.members-list > *")) {
-				let totalRowString = "";
-				totalRowString += getUsername(memberRow) + ";";
-				totalRowString += memberRow.find(".lvl").textContent + ";";
-				totalRowString += memberRow.find(".points").textContent + ";";
-				totalRowString += memberRow.find(".joins").textContent + ";";
-				totalRowString += memberRow.find(".knock-off").textContent + ";";
-				table += totalRowString + "\r\n";
+			for (const selector of ["enemy", "your"]) {
+				table += document.find(`.faction-war .${selector}`).textContent + "\r\n";
+				table += "Members;Level;Points;Joins;Clears\r\n";
+				const members = document.findAll(`.${selector}-faction .members-list > *`);
+				if (members.length) {
+					for (const memberRow of members) {
+						let totalRowString = "";
+						totalRowString += getUsername(memberRow) + ";";
+						totalRowString += memberRow.find(".lvl").textContent + ";";
+						totalRowString += memberRow.find(".points").textContent + ";";
+						totalRowString += memberRow.find(".joins").textContent + ";";
+						totalRowString += memberRow.find(".knock-off").textContent + ";";
+						table += totalRowString + "\r\n";
+					}
+				} else table += "None\r\n";
 			}
 			const warID = getSearchParameters().get("warID");
 			const encodedUri = encodeURI(table);
