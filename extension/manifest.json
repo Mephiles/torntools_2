@@ -402,7 +402,8 @@
 				"scripts/features/book-effect/ttBookEffect.css",
 				"scripts/features/can-energy/ttCanEnergy.css",
 				"scripts/features/alcohol-nerve/ttAlcoholNerve.css",
-				"scripts/features/candy-happy/ttCandyHappy.css"
+				"scripts/features/candy-happy/ttCandyHappy.css",
+				"scripts/features/item-e-warning/ttItemEWarning.css"
 			],
 			"js": [
 				"vendor/drag-drop-touch/DragDropTouch.js",
@@ -417,7 +418,8 @@
 				"scripts/features/can-energy/ttCanEnergy.js",
 				"scripts/features/alcohol-nerve/ttAlcoholNerve.js",
 				"scripts/features/candy-happy/ttCandyHappy.js",
-				"scripts/features/no-confirm/ttItemNoConfirm.js"
+				"scripts/features/no-confirm/ttItemNoConfirm.js",
+				"scripts/features/item-e-warning/ttItemEWarning.js"
 			],
 			"run_at": "document_end"
 		},
