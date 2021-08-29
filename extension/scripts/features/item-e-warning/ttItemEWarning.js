@@ -32,8 +32,8 @@
 
 		const useItemMessage = await requireElement(".use-act", { parent: item });
 		if (useItemMessage) {
-			const eBarValues = document.find("#barEnergy [class*='bar-value___']").textContent.split("/").map(x => parseInt(x));
-			const itemE = parseInt(torndata.items[item.dataset.item].effect.match(/(?<=Increases energy by )\d+/)[0]);
+			const eBarValues = getUserE();
+			const itemE = getItemE(item.dataset.item);
 			if (eBarValues[0] > eBarValues[1] && itemE + eBarValues[0] > 1000) {
 				useItemMessage.find("#wai-action-desc").appendChild(
 					document.newElement({
