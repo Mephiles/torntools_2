@@ -1650,11 +1650,11 @@ function isOwnProfile() {
 	return (params.has("XID") && parseInt(params.get("XID")) === id) || (params.has("NID") && params.get("NID") === name);
 }
 
-function getUserE() {
+function getUserEnergy() {
 	return document.find("#barEnergy [class*='bar-value___']").textContent.split("/").map(x => parseInt(x));
 }
 
-function getItemE(itemID) {
+function getItemEnergy(itemID) {
 	return parseInt(torndata.items[itemID].effect.match(/(?<=Increases energy by )\d+/)[0]);
 }
 

@@ -40,8 +40,8 @@
 				? await requireElement(".confirm-wrap", { parent: item })
 				: await requireElement(".use-act", { parent: item });
 		if (useItemMessage) {
-			const eBarValues = getUserE();
-			const itemE = getItemE(factionPage ? item.find(".img-wrap").dataset.itemid : item.dataset.item);
+			const eBarValues = getUserEnergy();
+			const itemE = getItemEnergy(factionPage ? item.find(".img-wrap").dataset.itemid : item.dataset.item);
 			if (eBarValues[0] > eBarValues[1] && itemE + eBarValues[0] > 1000) {
 				if (factionPage) {
 					useItemMessage.find(".confirm").insertAdjacentElement(

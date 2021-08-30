@@ -11,7 +11,7 @@
 		loadQuickItems,
 		() => removeContainer("Quick Items"),
 		{
-			storage: ["settings.pages.items.quickItems", "settings.pages.items.energyWarning"],
+			storage: ["settings.pages.items.quickItems"],
 		},
 		null
 	);
@@ -154,8 +154,8 @@
 
 					const equipItem = isEquipable(id, torndata.items[id].type);
 					if (settings.pages.items.energyWarning && ["Drug", "Energy Drink"].includes(torndata.items[id].type)) {
-						const userE = getUserE();
-						const itemE = getItemE(id);
+						const userE = getUserEnergy();
+						const itemE = getItemEnergy(id);
 						if (!equipItem && userE[0] > userE[1] && itemE + userE[0] > 1000) {
 							if (!confirm("Are you sure to use this item ? It will get you to more than 1000E.")) return;
 						}
