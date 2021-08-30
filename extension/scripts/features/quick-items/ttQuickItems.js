@@ -11,7 +11,7 @@
 		loadQuickItems,
 		() => removeContainer("Quick Items"),
 		{
-			storage: ["settings.pages.items.quickItems", "settings.pages.items.itemEWarning"],
+			storage: ["settings.pages.items.quickItems", "settings.pages.items.energyWarning"],
 		},
 		null
 	);
@@ -153,7 +153,7 @@
 					}
 
 					const equipItem = isEquipable(id, torndata.items[id].type);
-					if (settings.pages.items.itemEWarning && ["Drug", "Energy Drink"].includes(torndata.items[id].type)) {
+					if (settings.pages.items.energyWarning && ["Drug", "Energy Drink"].includes(torndata.items[id].type)) {
 						const userE = getUserE();
 						const itemE = getItemE(id);
 						if (!equipItem && userE[0] > userE[1] && itemE + userE[0] > 1000) {
