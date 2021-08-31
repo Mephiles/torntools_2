@@ -56,10 +56,12 @@
 			const icon = item.find(".buy .buy-link");
 			if (!icon) continue;
 
+			icon.className = "yes-buy t-blue h bold m-left10 tt-modified";
+			/* icon.href = "#"; */
 			icon.dataset.action = "buyItemConfirm";
-			icon.classList.add("yes-buy", "tt-modified");
+			icon.dataset.item = 0;
 
-			if (isItemView) icon.dataset.price = item.find(".cost").textContent.split(": ").pop().substring(1).replaceAll(",", "");
+			if (isItemView) icon.dataset.price = item.find(".cost").textContent.getNumber();
 		}
 	}
 
