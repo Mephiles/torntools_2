@@ -53,6 +53,9 @@
 				thread.classList.remove("tt-forums-hide", "tt-forums-hide-show");
 			}
 
+			if (settings.pages.forums.highlightThreads[userId]) thread.classList.add("tt-forums-highlight");
+			else thread.classList.remove("tt-forums-highlight");
+
 			if (countHiddenThread && (!shouldHideThreads || i === threads.length - 1)) {
 				firstHiddenThread.insertAdjacentElement(
 					"beforebegin",
@@ -113,6 +116,9 @@
 			} else {
 				post.classList.remove("tt-forums-hide", "tt-forums-hide-show");
 			}
+
+			if (settings.pages.forums.highlightPosts[userId]) post.classList.add("tt-forums-highlight");
+			else post.classList.remove("tt-forums-highlight");
 
 			if (countHiddenPost && (!shouldHidePosts || i === posts.length - 1)) {
 				firstHiddenPost.insertAdjacentElement(
@@ -270,6 +276,38 @@
 
 											if (status) delete settings.pages.forums.hidePosts[userId];
 											else settings.pages.forums.hidePosts[userId] = true;
+
+											ttStorage.set({ settings });
+
+											showPosts();
+										},
+									},
+								}),
+								document.newElement({
+									type: "div",
+									text: `${settings.pages.forums.highlightThreads[userId] ? "Unhighlight" : "Highlight"} ${name} threads`,
+									events: {
+										click(event) {
+											const status = settings.pages.forums.highlightThreads[userId];
+
+											if (status) delete settings.pages.forums.highlightThreads[userId];
+											else settings.pages.forums.highlightThreads[userId] = true;
+
+											ttStorage.set({ settings });
+
+											event.target.textContent = `${!status ? "Unhighlight" : "Highlight"} ${name} threads`;
+										},
+									},
+								}),
+								document.newElement({
+									type: "div",
+									text: `${settings.pages.forums.highlightPosts[userId] ? "Unhighlight" : "Highlight"} ${name} posts`,
+									events: {
+										click() {
+											const status = settings.pages.forums.highlightPosts[userId];
+
+											if (status) delete settings.pages.forums.highlightPosts[userId];
+											else settings.pages.forums.highlightPosts[userId] = true;
 
 											ttStorage.set({ settings });
 
