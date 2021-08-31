@@ -1,3 +1,11 @@
-.yes-buy.m-left10.tt-modified {
-    margin-left: 0px;
+.yes-buy.tt-modified {
+	position: relative;
+}
+
+.yes-buy.tt-modified::after {
+	position: absolute;
+	content: "Q";
+	font-size: 10px;
+	top: 0;
+	color: var(--tt-color-light-green);
 }
