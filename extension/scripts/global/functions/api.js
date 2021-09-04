@@ -7,6 +7,15 @@ const CUSTOM_API_ERROR = {
 
 const FETCH_TIMEOUT = 10 * TO_MILLIS.SECONDS;
 
+const FETCH_PLATFORMS = {
+	torn: "https://api.torn.com/",
+	torn_direct: "https://www.torn.com/",
+	yata: "https://yata.yt/",
+	tornstats: "https://www.tornstats.com/",
+	torntools: "https://torntools.gregork.com/",
+	nukefamily: "https://www.nukefamily.org/",
+};
+
 async function fetchData(location, options = {}) {
 	options = {
 		fakeResponse: false,
@@ -32,20 +41,11 @@ async function fetchData(location, options = {}) {
 				else return resolve(response);
 			});
 		} else {
-			const PLATFORMS = {
-				torn: "https://api.torn.com/",
-				torn_direct: "https://www.torn.com/",
-				yata: "https://yata.yt/",
-				tornstats: "https://www.tornstats.com/",
-				torntools: "https://torntools.gregork.com/",
-				nukefamily: "https://www.nukefamily.org/",
-			};
-
 			let url, path, pathSections;
 			const params = new URLSearchParams();
 			switch (location) {
 				case "torn":
-					url = PLATFORMS.torn;
+					url = FETCH_PLATFORMS.torn;
 
 					path = `${options.section}/${options.id || ""}`;
 
@@ -59,14 +59,14 @@ async function fetchData(location, options = {}) {
 					await ttUsage.add(location);
 					break;
 				case "torn_direct":
-					url = PLATFORMS.torn_direct;
+					url = FETCH_PLATFORMS.torn_direct;
 
 					path = options.action;
 
 					params.set("rfcv", getRFC());
 					break;
 				case "tornstats":
-					url = PLATFORMS.tornstats;
+					url = FETCH_PLATFORMS.tornstats;
 
 					pathSections = ["api", "v1", options.key || api.torn.key];
 					if (options.section) pathSections.push(options.section);
@@ -76,7 +76,7 @@ async function fetchData(location, options = {}) {
 					await ttUsage.add(location);
 					break;
 				case "yata":
-					url = PLATFORMS.yata;
+					url = FETCH_PLATFORMS.yata;
 
 					pathSections = ["api", "v1", options.section];
 					if (options.id) pathSections.push(options.id);
