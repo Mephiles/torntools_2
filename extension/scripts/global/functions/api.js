@@ -14,6 +14,7 @@ const FETCH_PLATFORMS = {
 	tornstats: "https://www.tornstats.com/",
 	torntools: "https://torntools.gregork.com/",
 	nukefamily: "https://www.nukefamily.org/",
+	uhc: "https://tornuhc.eu/",
 };
 
 async function fetchData(location, options = {}) {
@@ -83,6 +84,16 @@ async function fetchData(location, options = {}) {
 
 					path = pathSections.join("/");
 					await ttUsage.add(location);
+					break;
+				case "nukefamily":
+					url = FETCH_PLATFORMS.nukefamily;
+
+					path = options.section;
+					break;
+				case "uhc":
+					url = FETCH_PLATFORMS.uhc;
+
+					path = options.section;
 					break;
 			}
 

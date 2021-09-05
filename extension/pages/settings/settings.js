@@ -448,10 +448,9 @@ async function setupPreferences() {
 
 		let origin;
 		if (provider === "nuke") origin = FETCH_PLATFORMS.nukefamily;
-		else if (provider === "uhc") origin = false;
+		else if (provider === "uhc") origin = FETCH_PLATFORMS.uhc;
 
 		if (!origin) return;
-		console.log("DKK origin", origin);
 
 		chrome.permissions.request({ origins: [origin] }, (granted) => {
 			if (!granted) {

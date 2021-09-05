@@ -67,6 +67,8 @@
 	}
 
 	function showButton() {
+		removeButton();
+
 		const button = document.newElement({
 			type: "button",
 			class: "tt-revive",
@@ -100,42 +102,69 @@
 			button.setAttribute("disabled", "");
 
 			const { id, name } = details;
+			const faction = getSidebar().statusIcons.icons.faction?.subtitle.split(" of ")[1] || "";
 
 			let country = document.body.dataset.country;
 			if (country === "uk") country = "United Kingdom";
 			else if (country === "uae") country = "UAE";
 			else country = capitalizeText(country.replaceAll("-", " "), { everyWord: true });
 
-			if (provider === "nuke") {
-				const faction = "Damage Inc";
+			const source = `TornTools v${chrome.runtime.getManifest().version}`;
 
+			if (provider === "nuke") {
 				const response = await fetchData("nukefamily", {
 					section: "dev/reviveme.php",
 					method: "POST",
-					body: {
-						uid: id,
-						Player: name,
-						Faction: faction,
-						Country: country,
-						AppInfo: `TornTools v${chrome.runtime.getManifest().version}`,
-					},
+					body: { uid: id, Player: name, Faction: faction, Country: country, AppInfo: source },
 					relay: true,
 					silent: true,
 					succeedOnError: true,
 				});
 
-				if (response.error) {
-					// FIXME - Show error message.
-					button.removeAttribute("disabled");
-					console.log("DKK nuke error", response);
+				if (response.success) {
+					displayMessage("Revive requested!");
 				} else {
-					// FIXME - Handle response.
-					console.log("DKK nuke", response);
+					displayMessage("Failed to request!", true);
+					button.removeAttribute("disabled");
+					console.log("TT - Failed to request a revive with Nuke!", response);
+				}
+			} else if (provider === "uhc") {
+				const response = await fetchData("uhc", {
+					section: "api/request",
+					method: "POST",
+					body: { userID: id, userName: name, factionName: faction, source },
+					relay: true,
+					silent: true,
+					succeedOnError: true,
+				});
+
+				if (response.success) {
+					displayMessage("Revive requested!");
+				} else {
+					displayMessage("Failed to request!", true);
+					button.removeAttribute("disabled");
+					console.log("TT - Failed to request a revive with UHC!", response);
 				}
 			} else {
-				// FIXME - Implement others.
-				console.log("DKK request revive", settings.pages.global.reviveProvider);
+				console.error("There was an attempt to request revives from an non-existing provider.", settings.pages.global.reviveProvider);
 			}
+		}
+
+		function getSidebar() {
+			const key = Object.keys(sessionStorage).find((key) => /sidebarData\d+/.test(key));
+
+			return JSON.parse(sessionStorage.getItem(key));
+		}
+
+		function displayMessage(message, error) {
+			const element = button.find("span");
+			element.textContent = message;
+			if (!error) element.classList.add("tt-revive-success");
+
+			setTimeout(() => {
+				element.textContent = "Request Revive";
+				element.classList.remove("tt-revive-success");
+			}, 2500);
 		}
 	}
 
