@@ -356,6 +356,7 @@ const DEFAULT_STORAGE = {
 				hideQuitButtons: new DefaultSetting({ type: "boolean", defaultValue: false }),
 				keepAttackHistory: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				miniProfileLastAction: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				reviveProvider: new DefaultSetting({ type: "string", defaultValue: "" }),
 			},
 			profile: {
 				statusIndicator: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -379,6 +380,8 @@ const DEFAULT_STORAGE = {
 				highlights: new DefaultSetting({ type: "array", defaultValue: [{ name: "$player", color: "#7ca900" }] }),
 				titleHighlights: new DefaultSetting({ type: "array", defaultValue: [] }),
 				tradeTimer: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				hideChatButton: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				hideChat: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			},
 			sidebar: {
 				notes: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -458,6 +461,7 @@ const DEFAULT_STORAGE = {
 				flyingTime: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				itemFilter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				energyWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				cooldownWarnings: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			stocks: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
