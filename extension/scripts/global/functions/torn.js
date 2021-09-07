@@ -1485,7 +1485,7 @@ async function createMessageBox(content, options = {}) {
 			document.newElement({
 				type: "div",
 				class: "tt-message-wrap",
-				children: [document.newElement({ type: "div", class: "tt-message", text: content })],
+				children: [document.newElement({ type: "div", class: "tt-message", html: content })],
 			}),
 		],
 	});
