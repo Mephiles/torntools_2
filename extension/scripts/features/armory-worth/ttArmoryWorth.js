@@ -92,7 +92,7 @@
 
 	function removeWorth() {
 		document.findAll(".tt-armory-worth").forEach((x) => {
-			x.classList.remove("tt-modified");
+			x.parentElement.classList.remove("tt-modified");
 			x.remove();
 		});
 	}
