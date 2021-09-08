@@ -69,18 +69,16 @@
 
 					document.find(".display-cabinet").insertAdjacentElement(
 						"beforebegin",
-						await createMessageBox(`This display cabinet is worth <span>${formatNumber(total, { currency: true })}</span>.`, {
+						createMessageBox(`This display cabinet is worth <span>${formatNumber(total, { currency: true })}</span>.`, {
 							class: "tt-display-worth",
+							isHTML: true,
 						})
 					);
 				})
 				.catch(async (error) => {
 					document
 						.find(".display-cabinet")
-						.insertAdjacentElement(
-							"beforebegin",
-							await createMessageBox(`TORN API returned error: ${error.toString()}.`, { class: "tt-display-worth" })
-						);
+						.insertAdjacentElement("beforebegin", createMessageBox(`TORN API returned error: ${error.toString()}.`, { class: "tt-display-worth" }));
 					console.log("TT - Display Cabinet Worth API Error:", error);
 				});
 		}

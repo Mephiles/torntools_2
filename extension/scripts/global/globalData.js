@@ -349,6 +349,7 @@ const DEFAULT_STORAGE = {
 		customLinks: new DefaultSetting({ type: "array", defaultValue: [] }),
 		employeeInactivityWarning: new DefaultSetting({ type: "array", defaultValue: [] }),
 		factionInactivityWarning: new DefaultSetting({ type: "array", defaultValue: [] }),
+		csvDelimiter: new DefaultSetting({ type: "string", defaultValue: ";" }),
 		pages: {
 			global: {
 				alignLeft: new DefaultSetting({ type: "boolean", defaultValue: false }),
@@ -558,6 +559,7 @@ const DEFAULT_STORAGE = {
 			attack: {
 				bonusInformation: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				timeoutWarning: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				weaponExperience: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			city: {
 				items: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -1190,6 +1192,7 @@ const API_USAGE = {
 		},
 		weaponexp: {
 			"*": {
+				name: true,
 				exp: true,
 			},
 		},

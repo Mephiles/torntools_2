@@ -222,6 +222,13 @@
 							<input id="formatting-time__us" type="radio" name="formatTime" value="us" />
 							<label for="formatting-time__us">12 hours</label>
 						</div>
+
+						<div class="header">CSV</div>
+						<div class="option">
+							<label for="csvDelimiter">Use </label>
+							<input id="csvDelimiter" class="short-input" type="text" />
+							<label for="csvDelimiter"> as delimiter for CSV files.</label>
+						</div>
 					</section>
 					<section name="global">
 						<div class="header">Global</div>
@@ -1543,6 +1550,13 @@
 						</ul>
 					</li>
 				</ul>
+
+				<h4>Force Update</h4>
+				<div class="force-update-data">
+					<button id="update-torndata" class="update-button">Torndata</button>
+					<button id="update-stocks" class="update-button">Stocks</button>
+					<button id="update-factiondata" class="update-button">Factiondata</button>
+				</div>
 
 				<h4>Current Usage</h4>
 				<div class="current-usage">
