@@ -575,6 +575,9 @@ const DEFAULT_STORAGE = {
 			userlist: {
 				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
+			itemmarket: {
+				highlightCheapItems: new DefaultSetting({ type: "number|empty", defaultValue: "" }),
+			},
 		},
 		scripts: {
 			noConfirm: {
