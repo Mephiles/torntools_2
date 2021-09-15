@@ -552,6 +552,7 @@ const DEFAULT_STORAGE = {
 				disableStats: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				graph: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				steadfast: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				progress: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 			missions: {
 				hints: new DefaultSetting({ type: "boolean", defaultValue: true }),
@@ -577,6 +578,9 @@ const DEFAULT_STORAGE = {
 			},
 			itemmarket: {
 				highlightCheapItems: new DefaultSetting({ type: "number|empty", defaultValue: "" }),
+			},
+			competition: {
+				filter: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		scripts: {
@@ -614,6 +618,7 @@ const DEFAULT_STORAGE = {
 				factions: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				wars: new DefaultSetting({ type: "boolean", defaultValue: true }),
 				abroad: new DefaultSetting({ type: "boolean", defaultValue: true }),
+				competition: new DefaultSetting({ type: "boolean", defaultValue: true }),
 			},
 		},
 		external: {
@@ -622,9 +627,6 @@ const DEFAULT_STORAGE = {
 		},
 	},
 	filters: {
-		preferences: {
-			showAdvanced: new DefaultSetting({ type: "boolean", defaultValue: false }),
-		},
 		hospital: {
 			timeStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
 			timeEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
@@ -739,6 +741,11 @@ const DEFAULT_STORAGE = {
 		profile: {
 			relative: new DefaultSetting({ type: "boolean", defaultValue: false }),
 			stats: new DefaultSetting({ type: "array", defaultValue: [] }),
+		},
+		competition: {
+			levelStart: new DefaultSetting({ type: "number", defaultValue: 0 }),
+			levelEnd: new DefaultSetting({ type: "number", defaultValue: 100 }),
+			estimates: new DefaultSetting({ type: "array", defaultValue: [] }),
 		},
 	},
 	userdata: new DefaultSetting({ type: "object", defaultValue: {} }),

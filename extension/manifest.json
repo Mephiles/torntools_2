@@ -654,7 +654,8 @@
 				"scripts/features/specialist-gyms/ttSpecialistGyms.css",
 				"scripts/features/gym-disable-stats/ttGymDisableStats.css",
 				"scripts/features/gym-graph/ttGymGraph.css",
-				"scripts/features/gym-steadfast/ttGymSteadfast.css"
+				"scripts/features/gym-steadfast/ttGymSteadfast.css",
+				"scripts/features/gym-progress/ttGymProgress.css"
 			],
 			"js": [
 				"vendor/chartjs/chart.min.js",
@@ -662,7 +663,8 @@
 				"scripts/features/specialist-gyms/ttSpecialistGyms.js",
 				"scripts/features/gym-disable-stats/ttGymDisableStats.js",
 				"scripts/features/gym-graph/ttGymGraph.js",
-				"scripts/features/gym-steadfast/ttGymSteadfast.js"
+				"scripts/features/gym-steadfast/ttGymSteadfast.js",
+				"scripts/features/gym-progress/ttGymProgress.js"
 			],
 			"run_at": "document_end"
 		},
@@ -716,6 +718,22 @@
 			"matches": ["https://www.torn.com/halloffame.php*"],
 			"css": ["scripts/features/stats-estimate/ttStatsEstimate.css"],
 			"js": ["scripts/features/stats-estimate/statsEstimate.js", "scripts/features/stats-estimate/ttStatsEstimateHOF.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["https://www.torn.com/competition.php*"],
+			"css": [
+				"scripts/global/functions/filters.css",
+				"scripts/features/competition-filter/ttCompetitionFilter.css",
+				"scripts/features/stats-estimate/ttStatsEstimate.css"
+			],
+			"js": [
+				"scripts/global/functions/filters.js",
+				"scripts/content/competition/ttCompetition.js",
+				"scripts/features/competition-filter/ttCompetitionFilter.js",
+				"scripts/features/stats-estimate/statsEstimate.js",
+				"scripts/features/stats-estimate/ttStatsEstimateCompetition.js"
+			],
 			"run_at": "document_end"
 		}
 	]
