@@ -52,7 +52,7 @@
 			for (const alias of Object.values(settings.userAlias)) {
 				if (chatPlayerTitle === alias.name.trim()) {
 					const nameNode = chatTitle.find("[class*='name_']");
-					nameNode.setAttribute("data-user-name", nameNode.textContent);
+					nameNode.dataset.userName = nameNode.textContent;
 					nameNode.textContent = alias.alias;
 				}
 			}
@@ -63,7 +63,7 @@
 		if (!message) {
 			for (const [userID, alias] of Object.entries(settings.userAlias)) {
 				document.findAll(`#chatRoot [class*="message_"] a[href*='/profiles.php?XID=${userID}']`).forEach((profileLink) => {
-					profileLink.setAttribute("data-user-name", profileLink.textContent);
+					profileLink.dataset.userName = profileLink.textContent;
 					profileLink.textContent = alias.alias + ": ";
 				});
 			}
@@ -71,7 +71,7 @@
 			const profileLink = message.find("a[href*='/profiles.php?XID=']");
 			const messageUserID = profileLink.href.split("=")[1];
 			if (messageUserID in settings.userAlias) {
-				profileLink.setAttribute("data-user-name", profileLink.textContent);
+				profileLink.dataset.userName = profileLink.textContent;
 				profileLink.textContent = settings.userAlias[messageUserID].alias + ": ";
 			}
 		}
@@ -80,6 +80,7 @@
 	function removeAlias() {
 		document.findAll("#chatRoot [class*='message_'] a[href*='/profiles.php?XID='], #chatRoot [class*='chat-box-title_'] [class*='name_']").forEach(x => {
 			if (x.dataset.userName) x.textContent = x.dataset.userName;
+			delete x.dataset.userName;
 		});
 	}
 })();
