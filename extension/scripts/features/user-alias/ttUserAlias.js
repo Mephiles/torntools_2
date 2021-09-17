@@ -16,11 +16,9 @@
 	);
 
 	async function addListeners() {
-		if (feature.enabled()) {
-			await requireElement("#chatRoot [class*='chat-box-title_']");
-			addAliasTitle();
-			addAliasMessage();
-		}
+		await requireElement("#chatRoot [class*='chat-box-title_']");
+		addAliasTitle();
+		addAliasMessage();
 
 		CUSTOM_LISTENERS[EVENT_CHANNELS.CHAT_NEW].push(() => {
 			if (feature.enabled()) addAliasTitle();
@@ -72,7 +70,7 @@
 		} else {
 			const profileLink = message.find("a[href*='/profiles.php?XID=']");
 			const messageUserID = profileLink.href.split("=")[1];
-			if (Object.keys(settings.userAlias).includes(messageUserID)) {
+			if (messageUserID in settings.userAlias) {
 				profileLink.setAttribute("data-user-name", profileLink.textContent);
 				profileLink.textContent = settings.userAlias[messageUserID].alias + ": ";
 			}
@@ -80,11 +78,8 @@
 	}
 
 	function removeAlias() {
-		document.findAll("#chatRoot [class*='message_'] a[href*='/profiles.php?XID=']").forEach((profileLink) => {
-			if (profileLink.dataset.userName) profileLink.textContent = profileLink.dataset.userName;
-		});
-		document.findAll("#chatRoot [class*='chat-box-title_'] [class*='name_']").forEach((nameNode) => {
-			if (nameNode.dataset.userName) nameNode.textContent = nameNode.dataset.userName;
+		document.findAll("#chatRoot [class*='message_'] a[href*='/profiles.php?XID='], #chatRoot [class*='chat-box-title_'] [class*='name_']").forEach(x => {
+			if (x.dataset.userName) x.textContent = x.dataset.userName;
 		});
 	}
 })();
