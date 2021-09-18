@@ -58,7 +58,6 @@ function interceptXHR(channel) {
 		arguments[0] = method;
 		arguments[1] = url;
 
-		console.log("DKK XHR open", arguments);
 		return oldXHROpen.apply(this, arguments);
 	};
 	window.XMLHttpRequest.prototype.send = function (body) {
@@ -75,7 +74,6 @@ function interceptXHR(channel) {
 
 		arguments[0] = body;
 
-		console.log("DKK XHR send", arguments);
 		return oldXHRSend.apply(this, arguments);
 	};
 
