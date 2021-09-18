@@ -209,6 +209,16 @@
 			}
 
 			// Time
+			{
+				const element = li.find(".info-wrap .time");
+				const content = element.textContent;
+				const regex = content.match(/[0-9]*(?=h)/g);
+
+				if (!regex.length) {
+					console.log("DKK jail", { element, content, regex });
+				}
+			}
+
 			const timeLeftHrs = parseInt(li.find(".info-wrap .time").textContent.match(/[0-9]*(?=h)/g)[0]);
 			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
 				hideRow(li);
