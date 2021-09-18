@@ -214,7 +214,7 @@
 				const content = element.textContent;
 				const regex = content.match(/[0-9]*(?=h)/g);
 
-				if (!regex.length) {
+				if (!regex || !regex.length) {
 					console.log("DKK jail", { element, content, regex });
 				}
 			}
