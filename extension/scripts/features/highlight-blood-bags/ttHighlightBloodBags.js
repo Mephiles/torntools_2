@@ -42,6 +42,7 @@
 
 	async function highlightBloodBags() {
 		await requireContent();
+		removeHighlights();
 
 		if (page === "item") {
 			await requireItemsLoaded();
@@ -87,10 +88,10 @@
 	}
 
 	async function removeHighlights() {
-		for (const highlight of document.findAll(".good-blood, .bad-blood")) {
+		for (const highlight of document.findAll(".items-wrap .good-blood, .items-wrap .bad-blood, #armoury-medical .good-blood, #armoury-medical .bad-blood")) {
 			highlight.classList.remove("good-blood", "bad-blood");
 
-			const price = highlight.find(".tt-item-price");
+			const price = highlight.find(".tt-blood-price");
 			if (price) price.remove();
 		}
 	}

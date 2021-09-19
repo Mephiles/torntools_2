@@ -11,7 +11,7 @@
 		loadQuickItems,
 		() => removeContainer("Quick Items"),
 		{
-			storage: ["settings.pages.items.quickItems"],
+			storage: ["settings.pages.items.quickItems", "settings.pages.items.highlightBloodBags"],
 		},
 		null
 	);
@@ -138,9 +138,13 @@
 			data.equipPosition = equipPosition;
 		}
 
+		const allowedBlood = settings.pages.items.highlightBloodBags !== "none" ? ALLOWED_BLOOD[settings.pages.items.highlightBloodBags] : "";
+
+		let quickItemClass = temporary ? "temp item" : "item";
+		if (allowedBlood && torndata.items[id].type === "Medical" && torndata.items[id].name.includes("Blood Bag : ") && id !== 1012) quickItemClass += allowedBlood.includes(id) ? " good-blood" : " bad-blood";
 		const itemWrap = document.newElement({
 			type: "div",
-			class: temporary ? "temp item" : "item",
+			class: quickItemClass,
 			dataset: data,
 			events: {
 				click: async () => {
