@@ -210,7 +210,8 @@
 			}
 
 			// Time
-			const timeLeftHrs = parseInt(li.find(".info-wrap .time").textContent.match(JAIL_FILTER_TIME_REGEX)[0]);
+			const timeMatch = li.find(".info-wrap .time").textContent.match(JAIL_FILTER_TIME_REGEX);
+			const timeLeftHrs = timeMatch ? parseInt(timeMatch[0]) : 0;
 			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
 				hideRow(li);
 				continue;
