@@ -197,7 +197,7 @@
 
 			// Time
 			const timeLeftHrs = li.find(".info-wrap .time").lastChild.textContent.trim().split(" ")[0].getNumber();
-			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && (timeLeftHrs === timeEnd || timeLeftHrs > timeEnd))) {
+			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs >= timeEnd)) {
 				hideRow(li);
 				continue;
 			}
