@@ -54,7 +54,62 @@
 				{ "message": "We've removed the loot times on the profile due to the NPCs being available in the sidebar." },
 				{
 					"message": "Shortening of the faction armory news has now been officially removed. It was broken for a couple of months already due to changes where it no longer is page based."
-				}
+				},
+				{ "message": "All features that show a warning when stacked have been removed. We've planned a replacement for a future version." },
+				{ "message": "All features that help with chains. We've planned a replacement for a future version." }
+			]
+		}
+	},
+	{
+		"version": { "major": 5, "minor": 11, "build": 1 },
+		"date": "2021/07/28",
+		"logs": {
+			"fixes": [{ "message": "Fix last action on mini profiles.", "contributor": "DeKleineKobini" }]
+		}
+	},
+	{
+		"version": { "major": 5, "minor": 11, "build": 0 },
+		"date": "2021/07/13",
+		"logs": {
+			"fixes": [
+				{ "message": "Potentially solve the issue where the database resets.", "contributor": "DeKleineKobini" },
+				{ "message": "Improve bounty filter loading.", "contributor": "bandirao" },
+				{ "message": "Fix sidebar issues.", "contributor": "bandirao" }
+			],
+			"changes": [{ "message": "Improve awards for visually impaired users.", "contributor": "DeKleineKobini" }]
+		}
+	},
+	{
+		"version": { "major": 5, "minor": 10, "build": 1 },
+		"date": "2021/6/25",
+		"logs": {
+			"fixes": [
+				{ "message": "Fix stock market total value not showing.", "contributor": "bandirao" },
+				{ "message": "Use correct Cruise Line company name.", "contributor": "bandirao" },
+				{ "message": "Fix TornStats error handling and caching while it shouldn't.", "contributor": "DeKleineKobini" },
+				{ "message": "Fix stock market filter not working properly when you have a panel selected.", "contributor": "DeKleineKobini" },
+				{ "message": "Add some minor error handling in hopes of the profile page breaking less.", "contributor": "DeKleineKobini" }
+			]
+		}
+	},
+	{
+		"version": { "major": 5, "minor": 10, "build": 0 },
+		"date": "2021/6/3",
+		"logs": {
+			"features": [{ "message": "Added toggle to hide stakeout on profile page.", "contributor": "hvr-lust" }],
+			"fixes": [
+				{ "message": "Apply proper rounding on the racing winning rate.", "contributor": "bandirao" },
+				{ "message": "Fix max buy on mobile.", "contributor": "DeKleineKobini" },
+				{ "message": "Settings sidebar link not going down when hospitalized or jailed.", "contributor": "bandirao" },
+				{ "message": "Fix probability calculation in the high-low helper.", "contributor": "smikula" },
+				{ "message": "Various tweaks to dark mode.", "contributor": "Allo" },
+				{ "message": "Fix chat features.", "contributor": "bandirao" }
+			],
+			"changes": [
+				{ "message": "Disable loot timers on mobile devices.", "contributor": "bandirao" },
+				{ "message": "Change notification bar links.", "contributor": "DeKleineKobini" },
+				{ "message": "Show new lingerie store specials.", "contributor": "ORAN" },
+				{ "message": "Implement timeout on requests.", "contributor": "DeKleineKobini" }
 			]
 		}
 	},
@@ -359,7 +414,9 @@
 	{
 		"version": { "major": 5, "minor": 1, "build": 1 },
 		"date": "2020/9/26",
-		"logs": { "changes": [{ "message": "Change watchlist export to stakeouts.", "contributor": "DeKleineKobini" }] }
+		"logs": {
+			"changes": [{ "message": "Change watchlist export to stakeouts.", "contributor": "DeKleineKobini" }]
+		}
 	},
 	{
 		"version": { "major": 5, "minor": 1, "build": 0 },
@@ -485,12 +542,16 @@
 	{
 		"version": { "major": 4, "minor": 10, "build": 2 },
 		"date": "2020/8/19",
-		"logs": { "fixes": [{ "message": "Fix OC data not updating.", "contributor": "Mephiles" }] }
+		"logs": {
+			"fixes": [{ "message": "Fix OC data not updating.", "contributor": "Mephiles" }]
+		}
 	},
 	{
 		"version": { "major": 4, "minor": 10, "build": 1 },
 		"date": "2020/8/16",
-		"logs": { "fixes": [{ "message": "Fix Notifications not appearing on Firefox.", "contributor": "Mephiles" }] }
+		"logs": {
+			"fixes": [{ "message": "Fix Notifications not appearing on Firefox.", "contributor": "Mephiles" }]
+		}
 	},
 	{
 		"version": { "major": 4, "minor": 10, "build": 0 },
@@ -689,7 +750,7 @@
 				{ "message": "Fixed Stakeouts continuing requests if user was no longer watched", "contributor": "Mephiles" },
 				{ "message": "Fixed TTS working even when disabled", "contributor": "Mephiles" },
 				{ "message": "Fixed Profile Stats view for Mobile users", "contributor": "Mephiles" },
-				{ "message": "Added all Profile Stats keys as normal text", "contributor": "Thanks Allo" }
+				{ "message": "Added all Profile Stats keys as normal text", "contributor": "Allo" }
 			],
 			"changes": [
 				{
@@ -968,7 +1029,9 @@
 	},
 	{
 		"version": { "major": 3, "minor": 8, "build": 1 },
-		"logs": { "fixes": [{ "message": "Fixed \"Remove info boxes on some pages\" option not disabling", "contributor": "Mephiles" }] }
+		"logs": {
+			"fixes": [{ "message": "Fixed \"Remove info boxes on some pages\" option not disabling", "contributor": "Mephiles" }]
+		}
 	},
 	{
 		"version": { "major": 3, "minor": 8, "build": 0 },
