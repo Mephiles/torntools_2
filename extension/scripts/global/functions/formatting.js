@@ -1,6 +1,6 @@
 "use strict";
 
-const Regexes = {
+const REGEXES = {
 	getNumber: /\D/g,
 	formatNumber: /\B(?=(\d{3})+(?!\d))/g,
 };
@@ -17,7 +17,7 @@ String.prototype.camelCase = function (lowerCamelCase) {
 };
 
 String.prototype.getNumber = function () {
-	return parseInt(this.replace(Regexes.getNumber, ""));
+	return parseInt(this.replace(REGEXES.getNumber, ""));
 };
 
 function toSeconds(milliseconds) {
@@ -402,7 +402,7 @@ function formatNumber(number, options = {}) {
 		}
 	}
 
-	if (!text) text = abstract.toString().replace(Regexes.formatNumber, ",");
+	if (!text) text = abstract.toString().replace(REGEXES.formatNumber, ",");
 
 	return `${operation}${options.currency ? "$" : ""}${text}`;
 }
