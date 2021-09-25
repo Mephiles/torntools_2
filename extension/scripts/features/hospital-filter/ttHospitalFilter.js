@@ -25,7 +25,6 @@
 	}
 
 	const localFilters = {};
-	const HOSPITAL_FILTER_TIME_REGEX = /[hs]/g;
 
 	async function addFilters() {
 		await requireElement(".userlist-wrapper.hospital-list-wrapper .users-list .time");
@@ -197,8 +196,8 @@
 			}
 
 			// Time
-			const timeLeftHrs = li.find(".info-wrap .time").lastChild.textContent.trim().split(" ")[0].replace(HOSPITAL_FILTER_TIME_REGEX, "");
-			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs > timeEnd)) {
+			const timeLeftHrs = li.find(".info-wrap .time").lastChild.textContent.trim().split(" ")[0].getNumber();
+			if ((timeStart && timeLeftHrs < timeStart) || (timeEnd !== 100 && timeLeftHrs >= timeEnd)) {
 				hideRow(li);
 				continue;
 			}
