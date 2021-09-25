@@ -9,8 +9,11 @@
 	margin-bottom: 10px;
 }
 
-#faction-info-members .table-body.tt-modified > li[style*="display: none"] + .tt-last-action,
-#faction-info-members .table-body.tt-modified > li[style*="display: none"] + .tt-stats-estimate,
-#faction-info-members .table-body.tt-modified > li[style*="display: none"] + .tt-last-action + .tt-stats-estimate {
+#faction-info-members .table-body > li[style*="display: none"] + .tt-last-action,
+#faction-info-members .table-body > li[style*="display: none"] + .tt-stats-estimate,
+#faction-info-members .table-body > li[style*="display: none"] + .tt-member-info,
+#faction-info-members .table-body > li[style*="display: none"] + .tt-last-action + .tt-stats-estimate,
+#faction-info-members .table-body > li[style*="display: none"] + .tt-last-action + .tt-member-info,
+#faction-info-members .table-body > li[style*="display: none"] + .tt-member-info + .tt-stats-estimate {
 	display: none;
 }
